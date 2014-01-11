@@ -15,11 +15,10 @@ class BedTerminator : ButterMiddleware {
 	
 	** The session used by the client. Returns 'null' if it has not yet been created.
 	WebSession?	session	:= BounceWebSession() {
-		// emulate wisp behaviour, so BedSheet gets a *real* experience
+		// the null thing is for bounce clients to know if the session has been created or not. Technically this is not 
+		// perfect wisp behaviour, for if an obj were to be added then immediately removed, a wisp session would still 
+		// be created - pfft! Edge case! 
 		get {
-			// technically this is not perfect wisp behaviour, for if an obj were to be added then 
-			// immediately removed, a wisp session would still be created - pfft! Edge case! 
-			// Besides if you need exact wisp behaviour, then use wisp!
 			&session.map.isEmpty ? null : &session 
 		}
 		private set { }
@@ -34,12 +33,13 @@ class BedTerminator : ButterMiddleware {
 		try {
 			bounceWebRes := BounceWebRes()
 			
-			Actor.locals["web.req"] = toWebReq(req, session)
+			Actor.locals["web.req"] = toWebReq(req, &session)
 			Actor.locals["web.res"] = bounceWebRes
 
 			httpPipeline := (HttpPipeline) bedServer.registry.dependencyByType(HttpPipeline#)
 			httpPipeline.service
 			
+			// TODO: handle cookies
 //			bounceWebRes.cookies.each |cookie| { this.cookies[cookie.name] = cookie }
 
 			return bounceWebRes.toButterResponse
@@ -49,7 +49,6 @@ class BedTerminator : ButterMiddleware {
 			Actor.locals.remove("web.res")
 		}		
 	}
-	
 	
 	** Shuts down the associated 'BedServer' and the running web app.
 	Void shutdown() {
@@ -61,9 +60,9 @@ class BedTerminator : ButterMiddleware {
 			it.version	= req.version
 			it.method	= req.method
 			it.uri		= req.uri
-			it.headers	= req.headers
+			it.headers	= req.headers.map
 			it.session	= session
-			it.in		= req.in ?: "".in
+			it.in		= req.asInStream
 		}
 	}
 }
@@ -83,7 +82,7 @@ internal class BounceWebReq : WebReq {
 	override Str:Str 	headers
 	override WebSession	session
 	override InStream 	in
-
+	
 	new make(|This|in) { in(this) }
 }
 
@@ -95,14 +94,13 @@ internal class BounceWebRes : WebRes {
 	new make() {
 		this.buf		= Buf() 
 		this.webOut		= WebOutStream(buf.out)
-		this.headers	= [:] { it.caseInsensitive = true }
+		this.headers	= Str:Str[:] { it.caseInsensitive = true }
 		this.cookies	= [,]
 	}
 
 	override Int statusCode := 200 {
 		set {
 			checkUncommitted
-			if (statusMsg[it] == null) throw Err("Unknown status code: $it");
 			&statusCode = it
 		}
 	}
@@ -165,7 +163,7 @@ internal class BounceWebRes : WebRes {
 		if (isCommitted) return
 		isCommitted = true
 		
-		// TODO: what do we do about these? We should print them and let other middleware decode them
+		// TODO: what do we do about these? should we print them and let other middleware decode them
 //	    // write response line and headers
 //	    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(toStatusMsg).print("\r\n");
 //	    &headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") };
@@ -179,7 +177,11 @@ internal class BounceWebRes : WebRes {
 	}
 
 	internal ButterResponse toButterResponse() {
-		ButterResponse()
+		ButterResponse(this.buf.flip.in) {
+			headers			:= this.&headers
+			it.statusCode 	 = this.&statusCode
+			it.headers		 = HttpResponseHeaders(headers)
+		}
 	}
 }
 

@@ -5,7 +5,10 @@ using afIoc::RegistryBuilder
 using wisp::MemWispSessionStore
 using wisp::WispSessionStore
 using afBedSheet::BedSheetModule
-using afBedSheet::BedSheetMetaDataImpl
+using afBedSheet::BedSheetMetaData
+using afBedSheet::BedSheetWebMod
+using afButter::Butter
+using afButter::ErrOn500Middleware
 
 ** For testing 'BedSheet' apps: Run tests against 'BedSheet' without starting a 'wisp' web server.
 ** Testing your web app is as simple as:
@@ -42,8 +45,7 @@ const class BedServer {
 		if (iocModule != null)
 			addModule(iocModule)
 		
-		// FIXME: needs BedSheet to be opened up
-//		bsMeta.val = BedSheetMetaDataImpl(iocModule?.pod, iocModule, [:])
+		bsMeta.val = BedSheetMetaDataImpl(iocModule?.pod, iocModule, [:])
 	}
 
 	** Create a instance of 'afBedSheet' with afIoc dependencies from the given pod (usually your web app)
@@ -51,9 +53,8 @@ const class BedServer {
 		addModulesFromDependencies(webApp)
 		addModule(BedSheetModule#)
 		
-		// FIXME: needs BedSHeet to be opened up
-//		mod := BedSheetWebMod.findModFromPod(webApp)		
-//		bsMeta.val = BedSheetMetaDataImpl(webApp, mod, [:])
+		mod := BedSheetWebMod.findModFromPod(webApp)
+		bsMeta.val = BedSheetMetaDataImpl(webApp, mod, [:])
 	}
 
 	** Add extra (test) modules should you wish to override behaviour in your tests
@@ -86,7 +87,12 @@ const class BedServer {
 		bob.addModules(mods)
 
 		bedSheetMetaData := bsMeta.val		
-		registry = bob.build(["bannerText":bannerText, "bedSheetMetaData":bedSheetMetaData, "appName":"BedServer"]).startup
+		registry = bob.build([
+			"bannerText"					: bannerText, 
+			"bedSheetMetaData"				: bedSheetMetaData, 
+			"suppressStartupServiceList"	: true,
+			"appName"						: "BedServer"
+		]).startup
 		
 		started.val = true
 		return this
@@ -102,12 +108,17 @@ const class BedServer {
 		return this
 	}
 	
-	// FIXME: bedClient?
+	// FIXME: bedClient? - add middleware
 	** Create a `BedClient` that makes requests against this server
-//	BedClient makeClient() {
-//		checkHasStarted
-//		return BedClient(this)
-//	}
+	Butter makeClient() {
+		checkHasStarted
+		// add BounceDish for shutdown()
+		return BounceButterDish(Butter.churnOut([
+			SizzleMiddleware(),
+			ErrOn500Middleware(),
+			BedTerminator(this)
+		]))
+	}
 
 	// ---- Registry Methods ----
 	
@@ -154,3 +165,15 @@ const class BedServer {
 	}
 }
 
+
+internal const class BedSheetMetaDataImpl : BedSheetMetaData {
+	override const Pod? 		appPod
+	override const Type?		appModule
+	override const [Str:Obj] 	options
+	
+	internal new make(Pod? appPod, Type? appModule, [Str:Obj] options) {
+		this.appPod 	= appPod
+		this.appModule 	= appModule
+		this.options 	= options.toImmutable
+	}
+}
