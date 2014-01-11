@@ -23,12 +23,14 @@ class Build : BuildPod {
 			"wisp 1.0",
 			"web 1.0",
 			"inet 1.0",
+			"xml 1.0",
 			"afIoc 1.5+", 
-			"afBedSheet 1.2+",
-			"afButter 0+"
+			"afBedSheet 1.2.5+",
+			"afButter 0+",
+			"afSizzle 0+"
 		]
 		
-		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`test/`, `test/unit-tests/`, `test/app-tests/`, `test/app/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
 		resDirs = [`doc/`]
 
 		docApi = true
