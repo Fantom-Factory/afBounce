@@ -8,21 +8,12 @@ using afBedSheet::BedSheetModule
 using afBedSheet::BedSheetMetaData
 using afBedSheet::BedSheetWebMod
 using afButter::Butter
-using afButter::ErrOn500Middleware
+using afButter::HttpTerminator
 
-** For testing 'BedSheet' apps: Run tests against 'BedSheet' without starting a 'wisp' web server.
-** Testing your web app is as simple as:
+** Initialises a Bed App without the overhead of starting the 'wisp' web server. 
 ** 
-**   Void testMywebApp() {
-**     server   := BedServer(AppModule#).startup
-**     client   := server.makeClient
-**     response := client.get(`/hello`)
-** 
-**     verifyEq(response.statusCode, 200)
-**     verifyEq(response.asStr, "Hello!")
-**         
-**     server.shutdown
-**   }
+** 'BedServer' is a 'const' class so it may be used in multiple threads. Do this to create 'BedClients' in different
+** threads to make concurrent calls - handy for load testing.
 ** 
 const class BedServer {
 	private const static Log log := Utils.getLog(BedServer#)
@@ -52,8 +43,9 @@ const class BedServer {
 	new makeWithPod(Pod webApp) {
 		addModulesFromDependencies(webApp)
 		addModule(BedSheetModule#)
-		
-		mod := BedSheetWebMod.findModFromPod(webApp)
+
+		// TODO: BedSheet 1.2.6
+		mod := BedSheetWebMod#.method("findModFromPod").call(webApp)
 		bsMeta.val = BedSheetMetaDataImpl(webApp, mod, [:])
 	}
 
@@ -108,16 +100,15 @@ const class BedServer {
 		return this
 	}
 	
-	// FIXME: bedClient? - add middleware
-	** Create a `BedClient` that makes requests against this server
-	Butter makeClient() {
+	** Creates a pack of 'Butter' whose middleware ends with a BedTerminator which makes requests to the Bed app.  
+	BedClient makeClient() {
 		checkHasStarted
-		// add BounceDish for shutdown()
-		return BounceButterDish(Butter.churnOut([
-			SizzleMiddleware(),
-			ErrOn500Middleware(),
-			BedTerminator(this)
-		]))
+		return BedClient(Butter.churnOut(
+			Butter.defaultStack
+				.exclude { it.typeof == HttpTerminator# }
+				.add(BedTerminator(this))
+				.insert(0, SizzleMiddleware())
+		))
 	}
 
 	// ---- Registry Methods ----

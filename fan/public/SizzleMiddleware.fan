@@ -2,6 +2,15 @@ using afButter
 using afSizzle
 using xml
 
+** Middleware that lets you make CSS selector queries against the HTTP response.
+** 
+** You need to make sure the 'ButterResponse' holds a well formed XML document else an 'XErr' is thrown. If rendering
+** [Slim]`http://www.fantomfactory.org/pods/afSlim` templates then make sure it compiles XHTML documents (and not HTML):
+** 
+**   slim := Slim(TagStyle.xhtml) 
+** 
+** 'SizzleMiddleware' lazily parses the 'ButterResponse' into a 'SizzleDoc' so you can still make requests for non XML
+** documents - just don't query them!  
 class SizzleMiddleware : ButterMiddleware {
 	
 	SizzleDoc sizzleDoc {
@@ -24,13 +33,11 @@ class SizzleMiddleware : ButterMiddleware {
 	}
 
 	private SizzleDoc getSizzleDoc() {
+		if (res == null)
+			throw Err("No requests have been made!")
 		if (doc != null)
 			return doc
-		if (matchesType(res.headers.contentType, ["text/html", "application/xhtml+xml", "application/xml", "text/xml"])) {
-			doc = SizzleDoc(res.asStr)
-			return doc
-		}
-		throw Err("Wrong content type: ${res.headers.contentType}")
+		return SizzleDoc(res.asStr)
 	}
 
 	private Bool matchesType(MimeType? mimeType, Str[] types) {
@@ -41,18 +48,4 @@ class SizzleMiddleware : ButterMiddleware {
 	}
 }
 
-mixin SizzleDish : ButterDish {
-	
-	SizzleDoc sizzleDoc() {
-		sizzle.sizzleDoc
-	}
-
-	XElem[] select(Str cssSelector) {
-		sizzle.select(cssSelector)
-	}
-	
-	private SizzleMiddleware sizzle() {
-		findMiddleware(SizzleMiddleware#)
-	}
-}
 
