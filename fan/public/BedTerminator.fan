@@ -1,5 +1,6 @@
 using afButter
 using afBedSheet::HttpPipeline
+using afBedSheet::HttpResponseHeaders
 using web::Cookie
 using web::WebOutStream
 using web::WebMod
@@ -9,9 +10,11 @@ using web::WebSession
 using inet
 using concurrent::Actor
 
+** A 'Butter' terminator that makes requests against a given `BedServer`.
 class BedTerminator : ButterMiddleware {
 	
-	private BedServer bedServer
+	** The 'BedServer' this terminator makes calls against.
+	BedServer bedServer
 	
 	** The session used by the client. Returns 'null' if it has not yet been created.
 	WebSession?	session	:= BounceWebSession() {
@@ -30,6 +33,7 @@ class BedTerminator : ButterMiddleware {
 	}
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
+		// TODO: test req uri is not absolute!
 		try {
 			bounceWebRes := BounceWebRes()
 			
@@ -39,9 +43,6 @@ class BedTerminator : ButterMiddleware {
 			httpPipeline := (HttpPipeline) bedServer.registry.dependencyByType(HttpPipeline#)
 			httpPipeline.service
 			
-			// TODO: handle cookies
-//			bounceWebRes.cookies.each |cookie| { this.cookies[cookie.name] = cookie }
-
 			return bounceWebRes.toButterResponse
 
 		} finally {
@@ -62,10 +63,11 @@ class BedTerminator : ButterMiddleware {
 			it.uri		= req.uri
 			it.headers	= req.headers.map
 			it.session	= session
-			it.in		= req.asInStream
+			it.in		= req.body.seek(0).in
 		}
 	}
 }
+
 
 
 internal class BounceWebReq : WebReq {
@@ -86,9 +88,11 @@ internal class BounceWebReq : WebReq {
 	new make(|This|in) { in(this) }
 }
 
+
+
 ** Adapted from WispReq to mimic the same uncommitted behaviour 
 internal class BounceWebRes : WebRes {
-			Buf				buf
+	private Buf				buf
 	private WebOutStream	webOut
 
 	new make() {
@@ -162,13 +166,6 @@ internal class BounceWebRes : WebRes {
 	internal Void commit() {
 		if (isCommitted) return
 		isCommitted = true
-		
-		// TODO: what do we do about these? should we print them and let other middleware decode them
-//	    // write response line and headers
-//	    sout.print("HTTP/1.1 ").print(statusCode).print(" ").print(toStatusMsg).print("\r\n");
-//	    &headers.each |Str v, Str k| { sout.print(k).print(": ").print(v).print("\r\n") };
-//	    &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
-//	    sout.print("\r\n").flush		
 	}
 
 	internal Void close() {
@@ -177,13 +174,14 @@ internal class BounceWebRes : WebRes {
 	}
 
 	internal ButterResponse toButterResponse() {
-		ButterResponse(this.buf.flip.in) {
-			headers			:= this.&headers
-			it.statusCode 	 = this.&statusCode
-			it.headers		 = HttpResponseHeaders(headers)
-		}
+		// FIXME: WebUtil.parseHeaders() can't handle more than 1 Set-Cookie, as the max-age contains a ','
+		if (!&cookies.isEmpty)
+			&headers["Set-Cookie"] = &cookies.first.toStr
+		return ButterResponse(&statusCode, statusMsg[statusCode], &headers, buf)
 	}
 }
+
+
 
 internal class BounceWebSession : WebSession {
 	override const Str id := "69"
@@ -192,5 +190,7 @@ internal class BounceWebSession : WebSession {
 		map.clear
 	}
 }
+
+
 
 internal const class BounceDefaultMod : WebMod { }
