@@ -3,7 +3,7 @@ Overview [#overview]
 'Bounce' - use it to test your [Bed Apps]`http://www.fantomfactory.org/pods/afBedSheet`!
 
 'Bounce' is a testing framework that makes requests to a [Bed App]`http://www.fantomfactory.org/pods/afBedSheet` without the
-overhead of starting up a 'wisp' web server and making expensive network requests.
+overhead of starting up a web server and making expensive network requests.
 
 
 
