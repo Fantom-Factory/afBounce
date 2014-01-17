@@ -16,6 +16,9 @@ class Example : Test {
 		// then
 		title := client.select("#title").first
 		verifyEq(title.text.writeToStr, "Sizzle Kicks Ass!")
+		
+		// cleanup
+		server.shutdown
 	}	
 }
 

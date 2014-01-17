@@ -3,7 +3,9 @@ Overview [#overview]
 'Bounce' - use it to test your [Bed Apps]`http://www.fantomfactory.org/pods/afBedSheet`!
 
 'Bounce' is a testing framework that makes requests to a [Bed App]`http://www.fantomfactory.org/pods/afBedSheet` without the
-overhead of starting up a web server and making expensive network requests.
+overhead of starting a web server, opening ports, and making expensive network connections.
+
+You're still testing your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`, you're just cutting out the middle man!
 
 
 
@@ -41,6 +43,9 @@ class Example : Test {
         // then
         title := client.select("#title").first
         verifyEq(title.text.writeToStr, "Sizzle Kicks Ass!")
+
+        // clean up
+        server.shutdown
     }
 }
 
@@ -51,7 +56,6 @@ class AppModule {
         config.add(Route(`/index`, Text.fromHtml("""<html><p id="title">Sizzle Kicks Ass!</p></html>""")))
     }
 }
-
 <pre
 
 2). Run 'Example.fan' as a Fantom test script ( [fant]`http://fantom.org/doc/docTools/Fant.html` ) from the command line:
@@ -86,25 +90,118 @@ Time: 2052ms
 
 Usage [#usage]
 **************
-The 'Quick Start' example pretty much sums up 'Bounce' usage.
+Use `BedServer` to start an instance of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`, and then use `BedClient`
+make repeated requests against it.
 
-'BedClient' is just a 'ButterDish' that wraps a 'Butter' instance - all the functionality is provided by [Butter]`http://www.fantomfactory.org/pods/afButter`
-middleware. `BedTerminator` is the terminator of the stack, which sends requests to the `BedServer`, which holds the instance
-of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`.
+'BedClient' is a 'ButterDish' that wraps a 'Butter' instance - all functionality is provided by
+[Butter]`http://www.fantomfactory.org/pods/afButter` middleware. `BedTerminator` is the terminator of the stack, which sends
+requests to `BedServer`, which holds the instance of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`.
 
+
+
+Inspect the WebSession [#webSession]
+====================================
+It can be useful to inspect, assert against, or even set values in, a client's web session. As the 'BedClient' holds the
+session, this is easy!
+
+pre>
+using afBounce
+
+class TestMyBedApp : Test {
+    Void testBedApp() {
+        server := BedServer(AppModule#).startup
+        client := server.makeClient
+
+        ....
+
+        // set values in the user's session
+        client.webSession["userName"] = "Emma"
+
+        // assert against session values
+        verifyNotNull(client.webSession["shoppingCart"])
+    }
+}
+<pre
+
+
+
+Inject Services Into Tests [#injectServices]
+============================================
+'BedServer' has access to the [Ioc]`http://www.fantomfactory.org/pods/afIoc` registry used by your Bed App, this lets you
+inject services into your test.
+
+pre>
+using afBounce
+using afIoc
+
+class TestMyBedApp : Test {
+
+    @Inject
+    MyService myService
+
+    Void testBedApp() {
+        server := BedServer(AppModule#).startup
+
+        // inject services into test
+        server.injectIntoFields(this)
+
+        ...
+    }
+}
+<pre
+
+
+
+Override Services [#overrideServices]
+=====================================
+'BedServer' lets you specify additional Ioc modules, meaning you can add custom test modules that override or stub out real
+services with test ones.
+
+pre>
+using afBounce
+
+class TestMyBedApp : Test {
+
+    Void testBedApp() {
+        server := BedServer(AppModule#)
+
+        // override services with test implementations
+        server.addModule(TestOverrides#)
+
+        server.startup
+
+        ....
+    }
+}
+<pre
+
+
+
+Test Outside The Box! [#outsideTheBox]
+**************************************
 By creating 'BedClient' with a 'Butter' stack that ends with a real HTTP terminator, 'Bounce' can also be used to test web
 applications in any environment. Example:
 
 pre>
-Void testFantomFactory() {
-    client := BedClient(Butter.churnOut)
+using afBounce
+using afButter
 
-    // make real calls out to the web / your integration environment
-    client.get(`http://www.fantomfactory.org/`)
+class TestFantomFactory : Test {
 
-    elems := client.select("h1 small")
+    Void testFantomFactory() {
+        // add Sizzle to the middleware stack
+        client := BedClient(Butter.churnOut(
+            Butter.defaultStack.insert(0, SizzleMiddleware())
+        ))
 
-    echo(elems.first.toStr)  // --> Where Pods Are Made
+        // make real http requests to your integration environment
+        client.get(`http://www.fantomfactory.org/`)
+
+        // use sizzle
+        elems := client.select("h1 small")
+
+        verifyEq(elems.first.text.writeToStr, "Where Pods Are Made")
+    }
 }
 <pre
 
