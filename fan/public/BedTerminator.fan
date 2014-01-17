@@ -33,7 +33,11 @@ class BedTerminator : ButterMiddleware {
 	}
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		// TODO: test req uri is not absolute!
+		if (!req.uri.isPathOnly)
+			throw Err("Request URIs for Bed App testing should only be a path, e.g. `/index` vs `${req.uri}`")
+		if (!req.uri.isPathAbs)
+			throw Err("Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `${req.uri}`")
+
 		try {
 			bounceWebRes := BounceWebRes()
 			

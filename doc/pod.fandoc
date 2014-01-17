@@ -2,8 +2,8 @@ Overview [#overview]
 ********************
 'Bounce' - use it to test your [Bed Apps]`http://www.fantomfactory.org/pods/afBedSheet`!
 
-'Bounce' is a testing framework that makes requests to [Bed Apps]`http://www.fantomfactory.org/pods/afBedSheet` without the
-overhead of startup up 'wisp' web servers.
+'Bounce' is a testing framework that makes requests to a [Bed App]`http://www.fantomfactory.org/pods/afBedSheet` without the
+overhead of starting up a 'wisp' web server and making expensive network requests.
 
 
 
@@ -57,13 +57,13 @@ class AppModule {
 2). Run 'Example.fan' as a Fantom test script ( [fant]`http://fantom.org/doc/docTools/Fant.html` ) from the command line:
 pre>
 C:\> fant Example.fan
+
 -- Run:  Example_0::Example.testBedApp...
 [info] [afIoc] Adding modules from dependencies of 'afBedSheet'
 [info] [afIoc] Adding module definition for afBedSheet::BedSheetModule
 [info] [afIoc] Adding module definition for afIocConfig::IocConfigModule
 [info] [afIoc] Adding module definition for afIocEnv::IocEnvModule
 [info] [afIoc] Adding module definition for Example_0::AppModule
-[info] [afIocEnv] Setting from environment variable 'env' : development
 [info] [afIoc]
    ___    __                 _____        _
   / _ |  / /  _____  _____  / ___/__  ___/ /_________  __ __
@@ -86,13 +86,13 @@ Time: 2052ms
 
 Usage [#usage]
 **************
-The 'Quick Start' example pretty much sums 'Bounce'.
+The 'Quick Start' example pretty much sums up 'Bounce' usage.
 
-'BedClient' is just a 'ButterDish', that is, it wraps a 'Butter' instance - all the functionality is provided by 'Butter'
-middleware. The terminator of the stack is `BedTerminator`, which sends requests to the `BedServer`, which holds the instance
-of your Bed App.
+'BedClient' is just a 'ButterDish' that wraps a 'Butter' instance - all the functionality is provided by [Butter]`http://www.fantomfactory.org/pods/afButter`
+middleware. `BedTerminator` is the terminator of the stack, which sends requests to the `BedServer`, which holds the instance
+of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`.
 
-By creating 'BedClient' with a 'Butter' stack that includes a real HTTP terminator, 'Bounce' can also be used to test web
+By creating 'BedClient' with a 'Butter' stack that ends with a real HTTP terminator, 'Bounce' can also be used to test web
 applications in any environment. Example:
 
 pre>

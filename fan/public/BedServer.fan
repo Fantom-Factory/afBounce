@@ -92,8 +92,8 @@ const class BedServer {
 
 	** Shutdown 'afBedSheet'
 	BedServer shutdown() {
-		checkHasStarted
-		registry.shutdown
+		if (started.val)
+			registry.shutdown
 		reg.val = null
 		started.val = false
 		modules.val	= Type#.emptyList
