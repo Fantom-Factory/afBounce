@@ -1,6 +1,8 @@
+using afIocConfig
 using afButter
-using afBedSheet::HttpPipeline
+using afBedSheet::BedSheetConfigIds
 using afBedSheet::HttpResponseHeaders
+using afBedSheet::MiddlewarePipeline
 using web::Cookie
 using web::WebOutStream
 using web::WebMod
@@ -38,14 +40,31 @@ class BedTerminator : ButterMiddleware {
 		if (!req.uri.isPathAbs)
 			throw Err("Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `${req.uri}`")
 
+		// set the Host (as configured in BedSheet), if it's not been already
+		if (req.headers.host == null) {
+			confSrc := (IocConfigSource) bedServer.dependencyByType(IocConfigSource#)
+			bsHost 	:= (Uri) confSrc.get(BedSheetConfigIds.host, Uri#)
+			isHttps := bsHost.scheme == "https"
+			defPort := isHttps ? 443 : 80
+			host 	:= bsHost.host
+			if (bsHost.port != null && bsHost.port != defPort)
+				host += ":${bsHost.port}"
+			req.headers.host = host.toUri
+		}
+
+		// set the Content-Length, if it's not been already
+		if (req.headers.contentLength == null && req.method != "GET") {
+			req.headers.contentLength = req.body.size
+		}
+
 		try {
 			bounceWebRes := BounceWebRes()
 			
 			Actor.locals["web.req"] = toWebReq(req, &session)
 			Actor.locals["web.res"] = bounceWebRes
 
-			httpPipeline := (HttpPipeline) bedServer.registry.dependencyByType(HttpPipeline#)
-			httpPipeline.service
+			pipeline := (MiddlewarePipeline) bedServer.registry.dependencyByType(MiddlewarePipeline#)
+			pipeline.service
 			
 			return bounceWebRes.toButterResponse
 
