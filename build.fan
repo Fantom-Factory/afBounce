@@ -24,8 +24,10 @@ class Build : BuildPod {
 			"web 1.0",
 			"inet 1.0",
 			"xml 1.0",
-			"afIoc 1.5+", 
-			"afBedSheet 1.2.4.1+",
+			
+			"afIoc 1.5.2+", 
+			"afIocConfig 1.0.2+", 
+			"afBedSheet 1.3.0+",
 			"afButter 0+",
 			"afSizzle 0+"
 		]

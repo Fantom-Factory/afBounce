@@ -15,7 +15,7 @@ class BedClient : ButterDish {
 		sizzle.sizzleDoc.rootElement
 	}
 
-	XElem[] select(Str cssSelector) {
+	XElem[] selectCss(Str cssSelector) {
 		sizzle.select(cssSelector)
 	}
 

@@ -44,8 +44,7 @@ const class BedServer {
 		addModulesFromDependencies(webApp)
 		addModule(BedSheetModule#)
 
-		// TODO: BedSheet 1.2.6
-		mod := BedSheetWebMod#.method("findModFromPod").call(webApp)
+		mod := BedSheetWebMod.findModFromPod(webApp)
 		bsMeta.val = BedSheetMetaDataImpl(webApp, mod, [:])
 	}
 
@@ -160,11 +159,13 @@ const class BedServer {
 internal const class BedSheetMetaDataImpl : BedSheetMetaData {
 	override const Pod? 		appPod
 	override const Type?		appModule
+	override const Int			port
 	override const [Str:Obj] 	options
 	
 	internal new make(Pod? appPod, Type? appModule, [Str:Obj] options) {
 		this.appPod 	= appPod
 		this.appModule 	= appModule
+		this.port 		= 0	// we're not really listening!
 		this.options 	= options.toImmutable
 	}
 }

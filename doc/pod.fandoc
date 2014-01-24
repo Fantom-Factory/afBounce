@@ -210,6 +210,11 @@ class TestFantomFactory : Test {
 Release Notes [#releaseNotes]
 *****************************
 
+v0.0.4 [#v0.0.4]
+----------------
+ - Chg: 'BedTerminator' more closely follows [Butter's]`http://www.fantomfactory.org/pods/afButter` 'HttpTerminator'
+ - Chg: Renamed 'BedClient.select()' to 'BedClient().selectCss()'
+
 v0.0.2 [#v0.0.2]
 ----------------
  - New: Preview Release
