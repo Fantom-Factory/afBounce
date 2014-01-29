@@ -1,5 +1,4 @@
 using afButter
-using afSizzle
 using xml::XElem
 using web::WebSession
 
@@ -11,12 +10,12 @@ class BedClient : ButterDish {
 	
 	// ---- Sizzle Methods ---------------------------------------------------------------------------------------------
 	
-	XElem rootElement() {
-		sizzle.sizzleDoc.rootElement
+	Element rootElement() {
+		BounceNode([sizzle.sizzleDoc.rootElement])
 	}
 
-	XElem[] selectCss(Str cssSelector) {
-		sizzle.select(cssSelector)
+	Element selectCss(Str cssSelector) {
+		BounceNode(sizzle.select(cssSelector), cssSelector)
 	}
 
 	
