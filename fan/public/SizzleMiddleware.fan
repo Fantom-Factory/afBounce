@@ -1,6 +1,7 @@
 using afButter
 using afSizzle
 using xml
+using concurrent
 
 ** Middleware that lets you make CSS selector queries against the HTTP response.
 ** 
@@ -25,6 +26,11 @@ class SizzleMiddleware : ButterMiddleware {
 	private SizzleDoc?		doc
 	private ButterResponse? res
 
+	new make() {
+		// enable threaded sizzledoc 
+		Actor.locals["afBounce.sizzleMiddleware"] = this		
+	}
+	
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		this.res = null
 		this.doc = null
@@ -32,6 +38,13 @@ class SizzleMiddleware : ButterMiddleware {
 		return res
 	}
 
+	static SizzleDoc getThreadedSizzleDoc() {
+		middleware := (SizzleMiddleware?) Actor.locals["afBounce.sizzleMiddleware"]
+		if (middleware == null)
+			throw Err("SizzleDoc does not exist until you make a request!")
+		return middleware.sizzleDoc
+	}
+	
 	private SizzleDoc getSizzleDoc() {
 		if (res == null)
 			throw Err("No requests have been made!")
@@ -47,5 +60,4 @@ class SizzleMiddleware : ButterMiddleware {
 		return types.any { it == type }
 	}
 }
-
 

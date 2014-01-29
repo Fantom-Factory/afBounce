@@ -210,6 +210,10 @@ class TestFantomFactory : Test {
 Release Notes [#releaseNotes]
 *****************************
 
+v0.0.6 [#v0.0.6]
+----------------
+ - New: 'Element' instances are returned by 'BedClient' with an abundance of HTML helper methods.
+
 v0.0.4 [#v0.0.4]
 ----------------
  - Chg: 'BedTerminator' more closely follows [Butter's]`http://www.fantomfactory.org/pods/afButter` 'HttpTerminator'
