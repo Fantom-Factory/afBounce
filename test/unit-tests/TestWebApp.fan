@@ -17,7 +17,7 @@ class TestWebApp : Test {
 		
 		// then
 		title := Element("#title")
-		title.verifyText("Sizzle Kicks Ass!")
+		title.verifyTextEq("Sizzle Kicks Ass!")
 
 		client.shutdown
 	}	

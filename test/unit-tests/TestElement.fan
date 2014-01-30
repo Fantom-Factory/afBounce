@@ -6,25 +6,25 @@ internal class TestElement : Test {
 		xml := XElem("div") {
 			XText("Hello!"),
 		}
-		elem := Element([xml])
+		elem := Element(FindUnsafeRefs([xml]))
 		
 		verifyEq(elem.text, 		"Hello!")
-		verifyEq(elem.markup, 		"<div>Hello!</div>")
-		verifyEq(elem.childMarkup,	"Hello!")
+		verifyEq(elem.html, 		"<div>Hello!</div>")
+		verifyEq(elem.innerHtml,	"Hello!")
 	}
 
 	Void testTextNested() {
-		elem := Element([XParser(
+		elem := Element(FindUnsafeRefs([XParser(
 			"<div>Hello
 			 	<span> Mum</span>
-			 !</div>".in).parseDoc.root])
+			 !</div>".in).parseDoc.root]))
 		verifyEq(elem.text, 		"Hello\n\t Mum\n!")
-		verifyEq(elem.markup,		"<div>Hello\n\t<span> Mum</span>\n!</div>")
-		verifyEq(elem.childMarkup,	"Hello\n\t<span> Mum</span>\n!")
+		verifyEq(elem.html,			"<div>Hello\n\t<span> Mum</span>\n!</div>")
+		verifyEq(elem.innerHtml,	"Hello\n\t<span> Mum</span>\n!")
 	}
 	
 	Void testNotFoundErrSingle() {
-		elem := Element([,])
+		elem := Element(FindUnsafeRefs([,]))
 		verifyErr(Test#.pod.type("TestErr")) {
 			elem.text
 		}		
@@ -34,10 +34,9 @@ internal class TestElement : Test {
 		xml := XElem("div") {
 			XText("Hello!"),
 		}
-		elem := Element([xml, xml])
+		elem := Element(FindUnsafeRefs([xml, xml]))
 		verifyErr(Test#.pod.type("TestErr")) {
 			elem.text
 		}
 	}
-
 }
