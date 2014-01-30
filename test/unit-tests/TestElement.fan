@@ -6,7 +6,7 @@ internal class TestElement : Test {
 		xml := XElem("div") {
 			XText("Hello!"),
 		}
-		elem := BounceNode([xml])
+		elem := Element([xml])
 		
 		verifyEq(elem.text, 		"Hello!")
 		verifyEq(elem.markup, 		"<div>Hello!</div>")
@@ -14,7 +14,7 @@ internal class TestElement : Test {
 	}
 
 	Void testTextNested() {
-		elem := BounceNode([XParser(
+		elem := Element([XParser(
 			"<div>Hello
 			 	<span> Mum</span>
 			 !</div>".in).parseDoc.root])
@@ -24,7 +24,7 @@ internal class TestElement : Test {
 	}
 	
 	Void testNotFoundErrSingle() {
-		elem := BounceNode([,])
+		elem := Element([,])
 		verifyErr(Test#.pod.type("TestErr")) {
 			elem.text
 		}		
@@ -34,7 +34,7 @@ internal class TestElement : Test {
 		xml := XElem("div") {
 			XText("Hello!"),
 		}
-		elem := BounceNode([xml, xml])
+		elem := Element([xml, xml])
 		verifyErr(Test#.pod.type("TestErr")) {
 			elem.text
 		}

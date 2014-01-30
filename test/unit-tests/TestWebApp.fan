@@ -16,7 +16,7 @@ class TestWebApp : Test {
 		client.get(`/index`)
 		
 		// then
-		title := client.selectCss("#title")
+		title := Element("#title")
 		title.verifyText("Sizzle Kicks Ass!")
 
 		client.shutdown

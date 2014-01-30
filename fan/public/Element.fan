@@ -3,20 +3,18 @@ using xml
 
 // TODO: expose the XElems
 ** Represents a number of HTML elements as returned from `BedClient` select CSS methods.
-mixin Element {
+class Element {
 	
-	internal abstract XElem[]	elems
-		
 	// ---- Standard Methods -------------------------------------------------------------------------------------------
 	
 	** Returns 'true' if this element exists.
 	Bool exists() {
-		!elems.isEmpty
+		!findElems.isEmpty
 	}
 	
 	** Returns 'true' if this element does not exists.
 	Bool doesNotExist() {
-		elems.isEmpty
+		findElems.isEmpty
 	}
 	
 	** Returns the text content of this element and it's child elements.
@@ -41,21 +39,31 @@ mixin Element {
 
 	@Operator
 	This getAtIndex(Int index) {
-		newElement(elems[index], index)
+		elems := findElems
+		if (index >= elems.size)
+			fail("CSS not found: ")
+		return newElement(findElems[index], css, index)
 	}
 
 	** Returns the number of elements found by the selector
 	Int size() {
-		elems.size
+		findElems.size
 	}
 
 	** Finds elements *inside* this element.
-	abstract Element find(Str cssSelector)
+	Element find(Str cssSelector) {
+		elems := SizzleDoc(findElem).select(cssSelector)
+		return newElements(elems, css + " " + cssSelector)		
+	}
 	
 	** Return all elements as a list.
-	abstract Element[] list()
+	Element[] list() {
+		findElems.map |elem, i| { newElement(elem, css, (index?:0) + i) }
+	}
 	
-	// ---- Internal Methods -------------------------------------------------------------------------------------------
+	
+	
+	// ---- Verify Methods ---------------------------------------------------------------------------------------------
 	
 	Void verifyExists() {
 		verifyTrue(exists, "CSS does NOT exist: ")
@@ -68,7 +76,7 @@ mixin Element {
 	Void verifyText(Obj expected) {
 		verifyEq(text, expected)
 	}
-	
+
 	Void verifyTextContains(Obj contains) {
 		verifyTrue(text.trim.lower.contains(contains.toStr.trim.lower), "Text does NOT contain '${contains}': ")
 	}
@@ -98,27 +106,69 @@ mixin Element {
 		verifyEq(size.toStr, expectedSize)
 	}
 	
-	// ---- Internal Methods -------------------------------------------------------------------------------------------
-
-	abstract internal This newElement(XElem elem, Int index)
-
-	abstract internal Void fail(Str msg)
 	
-	abstract internal Void verifyTrue(Bool condition, Str msg)
-
-	abstract internal Void verifyEq(Str actual, Obj expected)
 	
-	internal XElem findElem() {
+	// ---- Protected Methods ------------------------------------------------------------------------------------------
+	
+	private XElem[]?	elems
+	private const Str		css
+	// TODO: convert index to :nth-child with CSS3 & kill elems field
+	private const Int?		index
+	
+	new make(Str cssSelector) {
+		this.elems 	= null
+		this.css 	= cssSelector
+		this.index	= null		
+	}
+	
+	protected new makeInternal(XElem[] elems, Str css := "", Int? index := null) {
+		indx := (index == null) ? Str.defVal : " at [${index}]"
+		this.elems 	= elems
+		this.css 	= css + indx
+		this.index	= index
+	}
+
+	virtual protected This newElement(XElem elem, Str css := "", Int? index := null) {
+		Element([elem], css, index)
+	}
+
+	virtual protected This newElements(XElem[] elems, Str css := "", Int? index := null) {
+		Element(elems, css, index)
+	}
+	
+	virtual protected Void verifyTrue(Bool condition, Str msg) {
+		Verify().verify(condition, msg + toStr)
+	}
+	
+	virtual protected Void verifyEq(Str actual, Obj expected) {
+		if (actual.trim.lower != expected.toStr.trim.lower)
+			Verify().verifyEq(actual, expected)
+	}
+
+	virtual protected Void fail(Str msg) {
+		Verify().fail(msg + toStr)
+	}
+
+
+	
+	// ---- Private Methods --------------------------------------------------------------------------------------------
+	
+	private XElem findElem() {
+		elems := findElems
 		if (elems.size != 1)
 			fail("CSS does not exist: ")
 		return elems.first
+	}
+
+	private XElem[] findElems() {
+		(elems != null) ? elems : BedClient.getThreadedClient.selectCss(css)
 	}
 
 	private Str getMarkup(XElem elem) {
 		elem.writeToStr
 	}
 
-	internal Str getChildMarkup(XElem elem) {
+	private Str getChildMarkup(XElem elem) {
 		elem.children.map |XNode node->Str| { node.writeToStr }.join
 	}
 
@@ -129,6 +179,10 @@ mixin Element {
 			return ((XElem) node).children.map { getText(it) }.join
 		return Str.defVal
 	}
+
+	override Str toStr() {
+		return css + "\n" + findElems.map { getChildMarkup(it) }.join("\n")
+	}
 }
 
-
+internal class Verify : Test {}
