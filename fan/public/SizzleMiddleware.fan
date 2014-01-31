@@ -38,7 +38,8 @@ class SizzleMiddleware : ButterMiddleware {
 			throw Err("No requests have been made!")
 		if (doc != null)
 			return doc
-		return SizzleDoc(res.asStr)
+		doc = SizzleDoc(res.asStr)
+		return doc
 	}
 
 	private Bool matchesType(MimeType? mimeType, Str[] types) {

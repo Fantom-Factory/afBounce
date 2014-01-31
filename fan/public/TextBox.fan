@@ -1,18 +1,25 @@
 using xml
 using afButter
 
+** (HTML Element) 
 const class TextBox : Element {
 	
 	@NoDoc
-	new fromFinder(ElemFinder elemFinder) : super(elemFinder) { }
+	new makeFromFinder	(ElemFinder elemFinder)	: super(elemFinder)  { }
+	new makeFromCss		(Str cssSelector) 		: super(cssSelector) { }
 	
+	Str name() {
+		getAttr("name") ?: ""
+	}
+
 	Str value {
-		get { isTextArea ? innerHtml : getAttr("value") }
+		get { isTextArea ? text : getAttr("value") }
 		set { 
 			elem := findElem
 			if (isTextArea(elem)) {
 				elem.children.each { elem.remove(it) }
 				elem.add(XText(it))
+				return
 			}
 			setAttr("value", it, elem)
 		}
@@ -28,8 +35,8 @@ const class TextBox : Element {
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
-	override ButterResponse submitForm() {
-		super.submitForm
+	ButterResponse submitForm() {
+		super.submitEnclosingForm
 	}
 	
 	Void verifyValueEq(Obj expected) {

@@ -11,16 +11,18 @@ abstract const class ElemFinder {
 
 internal const class FindFromBedClient : ElemFinder {
 	const Str css
-	new make(Str css, ElemFinder? finder := null) {
+	const |->BedClient| bedClientFunc
+	new make(|->BedClient| bedClientFunc, Str css, ElemFinder? finder := null) {
+		this.bedClientFunc = bedClientFunc
 		this.css = css
 		this.finder = finder
 	}
 	override XElem[] findElems(XElem[]? elems := null) {
-		found := BedClient.getThreadedClient.selectCss(css)
+		found := bedClientFunc().selectCss(css)
 		return finder?.findElems(found) ?: found
 	}
 	override ElemFinder clone(ElemFinder deepFinder) {
-		FindFromBedClient(css, (finder == null) ? deepFinder : finder.clone(deepFinder))
+		FindFromBedClient(bedClientFunc, css, (finder == null) ? deepFinder : finder.clone(deepFinder))
 	}
 	override Str toStr() {
 		css + (finder?.toStr ?: "")

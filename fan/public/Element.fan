@@ -2,17 +2,17 @@ using afSizzle
 using afButter
 using xml
 
-** Represents a number of HTML elements as returned from `BedClient` select CSS methods.
+** (HTML Element) Represents a number of HTML elements as returned from `BedClient` select CSS methods.
 const class Element {
 	
 	private const ElemFinder finder
 	
-	static new fromCss(Str cssSelector) {
-		Element(FindFromBedClient(cssSelector)) 
+	new makeFromCss(Str cssSelector) {
+		this.finder = FindFromBedClient(|->BedClient| { bedClient }, cssSelector) 
 	}
 	
 	@NoDoc
-	new fromFinder(ElemFinder elemFinder) {
+	new makeFromFinder(ElemFinder elemFinder) {
 		this.finder = elemFinder 
 	}
 
@@ -25,7 +25,7 @@ const class Element {
 		getAttr("id")
 	}
 
-	** Returns the 'class' attribute as declared by the element, otherwise null.
+	** Returns the 'class' attribute as declared by the element, otherwise 'null'.
 	Str? classs() {
 		getAttr("class")
 	}
@@ -72,7 +72,7 @@ const class Element {
 	** Note this method is *safe* and does NOT throw an Err should the index be out of bounds. 
 	** Instead use 'verifyDoesNotExist()'.
 	** 
-	** Also Note that this returns different results to the CSS selector ':nth-child'.  
+	** Also note that this returns different results to the CSS selector ':nth-child'.  
 	@Operator
 	This getAtIndex(Int index) {
 		newElementAtIndex(index)
@@ -102,38 +102,38 @@ const class Element {
 	
 	// ---- Verify Methods ---------------------------------------------------------------------------------------------
 	
-	// Verify that at least one element is selected from the document, otherwise throw a test failure exception.
+	** Verify that at least one element is selected from the document, otherwise throw a test failure exception.
 	Void verifyExists() {
 		verifyTrue(exists, "CSS does NOT exist: ")
 	}
 	
-	// Verify that the current selection heralds no elements, otherwise throw a test failure exception.
+	** Verify that the current selection heralds no elements, otherwise throw a test failure exception.
 	Void verifyDoesNotExist() {
 		verifyTrue(!exists, "CSS DOES exist: ")
 	}
 	
-	// Verify that the given text matches the text of the element. The match is case insensitive. 
+	** Verify that the given text matches the text of the element. The match is case insensitive. 
 	Void verifyTextEq(Obj expected) {
 		verifyEq(text, expected)
 	}
 
-	// Verify that the element text contains the given str. The match is case insensitive. 
+	** Verify that the element text contains the given str. The match is case insensitive. 
 	Void verifyTextContains(Obj contains) {
 		verifyTrue(text.trim.lower.contains(contains.toStr.trim.lower), "Text does NOT contain '${contains}': ")
 	}
 	
-	// Verify that the element has the given attribute. 
+	** Verify that the element has the given attribute. 
 	Void verifyAttrEq(Str attrName, Obj expected) {
 		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
 		verifyEq(findElem.attr(attrName).val, expected)
 	}
 	
-	// Verify that the current selection has the given size. 
+	** Verify that the current selection has the given size. 
 	Void verifySizeEq(Int expectedSize) {
 		verifyEq(size.toStr, expectedSize)
 	}
 
-	// Verify that the current selection has the given size. 
+	** Verify that the current selection has the given size. 
 	Void verifyClassContains(Obj expected) {
 		attrName := "class"
 		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
@@ -144,18 +144,22 @@ const class Element {
 	
 	// ---- Conversion Methods -----------------------------------------------------------------------------------------
 	
+	** Returns this element as a `CheckBox`
 	CheckBox toCheckBox() {
 		CheckBox(finder)
 	}
 	
+	** Returns this element as a `Link`
 	Link toLink() {
 		Link(finder)
 	}
 	
+	** Returns this element as a `SelectBox`
 	SelectBox toSelectBox() {
 		SelectBox(finder)
 	}
 
+	** Returns this element as a `TextBox`
 	TextBox toTextBox() {
 		TextBox(finder)
 	}
@@ -175,14 +179,16 @@ const class Element {
 			Verify().verifyEq(actual, expected)
 	}
 
+	** Returns Obj? so it may be in-lined as a return value
 	@NoDoc
-	protected Void fail(Str msg) {
+	protected Obj? fail(Str msg) {
 		Verify().fail(msg + toStr)
+		return null
 	}
 	
 
 	
-	// ---- Finder Methods ---------------------------------------------------------------------------------------------
+	// ---- Helper Methods ---------------------------------------------------------------------------------------------
 
 	@NoDoc
 	virtual protected XElem findElem() {
@@ -197,23 +203,84 @@ const class Element {
 		finder.findElems
 	}
 
-	
-
-	// ---- Private Methods --------------------------------------------------------------------------------------------
-
-	virtual protected ButterResponse submitForm() {
-		// TODO: submitForm
-		BedClient.getThreadedClient.postForm(``, [:])
+	@NoDoc
+	virtual protected BedClient bedClient() {
+		BedClient.getThreadedClient
 	}
 
+	@NoDoc
+	virtual protected ButterResponse submitEnclosingForm(Str:Str xtraVals := [:], Uri? action := null) {
+		values	:= [Str:Str][:] { caseInsensitive = true }.addAll(xtraVals)
+		form	:= findForm
+		
+			SizzleDoc(form).select("input")
+		.addAll(
+			SizzleDoc(form).select("textarea")
+		).addAll(
+			SizzleDoc(form).select("button")
+		).each |input| {
+			type := (input.attr("type", false)?.val ?: "text").trim.lower
+
+			if (type == "submit") {
+				// only the value of the 'clicked' submit button is sent to the server
+				return
+			}
+			
+			name := input.attr("name", false)?.val 
+				 ?: fail("Input element has NO name: " + getHtml(input))
+
+			if (input.name.lower == "textarea") {
+				values[name] = getText(input)
+				return
+			}
+			
+			if (type == "checkbox") {
+				if (input.attr("checked", false) != null)
+					values[name] = "on"
+				return
+			}
+			
+			// TODO: select boxes and radio buttons
+			
+			// TODO: don't send disabled data
+			
+			value := input.attr("value", false)?.val ?: ""
+			values[name] = value
+		}
+		
+		if (action == null)
+			action = (form.attr("action", false)?.val ?: "").toUri
+		if (action.toStr.isEmpty)
+			action = bedClient.lastRequest?.uri
+		if (action == null || action.toStr.isEmpty)
+			fail("Form has not 'action' attribute: ")
+		
+		// TODO: implement GET reqs
+		return bedClient.postForm(action, values)
+	}
+
+	@NoDoc
+	virtual protected XElem findForm(XElem elem := findElem) {
+		if (elem.name.equalsIgnoreCase("form"))
+			return elem
+		if (elem.parent != null)
+			return findForm(elem.parent)
+		return fail("Could not find enclosing Form element")
+	}
+	
 	** Sets the attribute. A value of 'null' removes it.
-	protected Void setAttr(Str name, Str? value, XElem elem := findElem) {
+	@NoDoc
+	virtual protected Void setAttr(Str name, Str? value, XElem elem := findElem) {
 		attr := elem.attr(name, false)
 		if (attr != null)
 			elem.removeAttr(attr)
 		if (value != null) 
 			elem.addAttr(name, value)
 	}
+
+	
+	
+	// ---- Private Methods --------------------------------------------------------------------------------------------
 
 	private Element newElementAtIndex(Int index) {
 		Element(finder.clone(FindAtIndex(index)))
@@ -239,6 +306,7 @@ const class Element {
 		return Str.defVal
 	}
 
+	** Returns the complete CSS selector and the resulting HTML.
 	override Str toStr() {
 		return finder.toStr + "\n" + findElems.map { getHtml(it) }.join("\n")
 	}

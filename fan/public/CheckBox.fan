@@ -1,11 +1,17 @@
 using xml
 using afButter
 
+** (HTML Element) 
 const class CheckBox : Element {
 	
 	@NoDoc
-	new fromFinder(ElemFinder elemFinder) : super(elemFinder) { }
+	new makeFromFinder	(ElemFinder elemFinder)	: super(elemFinder)  { }
+	new makeFromCss		(Str cssSelector) 		: super(cssSelector) { }
 	
+	Str name() {
+		getAttr("name") ?: ""
+	}
+
 	Bool checked {
 		get { getAttr("checked") == null }
 		set { setAttr("checked", it ? "checked" : null) }
@@ -21,13 +27,16 @@ const class CheckBox : Element {
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
-	override ButterResponse submitForm() {
-		super.submitForm
+	
+	// TODO: verify Checked & NotChecked
+	
+	ButterResponse submitForm() {
+		super.submitEnclosingForm
 	}
 	
 	override protected XElem findElem() {
 		elem := super.findElem
-		if (!elem.name.equalsIgnoreCase("input") && !(getAttr("type")?.equalsIgnoreCase("checkbox") ?: false))
+		if (!elem.name.equalsIgnoreCase("input") && !(elem.attr("type", false)?.val?.equalsIgnoreCase("checkbox") ?: false))
 			fail("Element is NOT a checkbox")
 		return elem
 	}
