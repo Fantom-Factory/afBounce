@@ -1,4 +1,5 @@
 using afSizzle
+using afButter
 using xml
 
 ** Represents a number of HTML elements as returned from `BedClient` select CSS methods.
@@ -18,6 +19,23 @@ const class Element {
 	
 	
 	// ---- Standard Methods -------------------------------------------------------------------------------------------
+	
+	** Returns the 'id' as declared by the element. Returns 'null' if the element does not have an 'id' attribute.
+	Str? id() {
+		getAttr("id")
+	}
+
+	** Returns the 'class' attribute as declared by the element, otherwise null.
+	Str? classs() {
+		getAttr("class")
+	}
+	
+	** Returns 'true' if the element contains the given value. 
+	** 
+	** The match is done on a whitespace split of the class attribute and is case insensitive.
+	Bool hasClass(Str value) {
+		getAttr("class")?.lower?.split?.contains(value.trim.lower) ?: false
+	}
 	
 	** Returns 'true' if this element exists.
 	Bool exists() {
@@ -39,11 +57,22 @@ const class Element {
 		getInnerHtml(findElem)
 	}
 
+	** Returns the value of the named attribute. Returns 'null' if it does not exist.
+	** Usage:
+	**   value := element["value"]
 	@Operator
-	Str? getAttribute(Str name) {
-		findElem.attr(name, false).val
+	Str? getAttr(Str name) {
+		findElem.attr(name, false)?.val
 	}
 
+	** Returns the element of the current selection at the specified index. Use -1 to select from the end of the list.
+	** Usage:
+	**   value := element[-2]
+	** 
+	** Note this method is *safe* and does NOT throw an Err should the index be out of bounds. 
+	** Instead use 'verifyDoesNotExist()'.
+	** 
+	** Also Note that this returns different results to the CSS selector ':nth-child'.  
 	@Operator
 	This getAtIndex(Int index) {
 		newElementAtIndex(index)
@@ -73,41 +102,62 @@ const class Element {
 	
 	// ---- Verify Methods ---------------------------------------------------------------------------------------------
 	
+	// Verify that at least one element is selected from the document, otherwise throw a test failure exception.
 	Void verifyExists() {
 		verifyTrue(exists, "CSS does NOT exist: ")
 	}
 	
-	Void verifyDoesNotExists() {
+	// Verify that the current selection heralds no elements, otherwise throw a test failure exception.
+	Void verifyDoesNotExist() {
 		verifyTrue(!exists, "CSS DOES exist: ")
 	}
 	
+	// Verify that the given text matches the text of the element. The match is case insensitive. 
 	Void verifyTextEq(Obj expected) {
 		verifyEq(text, expected)
 	}
 
+	// Verify that the element text contains the given str. The match is case insensitive. 
 	Void verifyTextContains(Obj contains) {
 		verifyTrue(text.trim.lower.contains(contains.toStr.trim.lower), "Text does NOT contain '${contains}': ")
 	}
 	
-	Void verifyInnerHtmlEq(Obj expected) {
-		verifyEq(innerHtml, expected)
-	}
-	
-	Void verifyHtmlEq(Obj expected) {
-		verifyEq(html, expected)
-	}
-	
-	Void verifyAttrExists(Str attrName) {
-		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
-	}
-
+	// Verify that the element has the given attribute. 
 	Void verifyAttrEq(Str attrName, Obj expected) {
-		verifyAttrExists(attrName)
+		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
 		verifyEq(findElem.attr(attrName).val, expected)
 	}
 	
+	// Verify that the current selection has the given size. 
 	Void verifySizeEq(Int expectedSize) {
 		verifyEq(size.toStr, expectedSize)
+	}
+
+	// Verify that the current selection has the given size. 
+	Void verifyClassContains(Obj expected) {
+		attrName := "class"
+		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
+		verifyTrue(hasClass(expected.toStr), "Class attribute does NOT exist: ")
+	}
+
+	
+	
+	// ---- Conversion Methods -----------------------------------------------------------------------------------------
+	
+	CheckBox toCheckBox() {
+		CheckBox(finder)
+	}
+	
+	Link toLink() {
+		Link(finder)
+	}
+	
+	SelectBox toSelectBox() {
+		SelectBox(finder)
+	}
+
+	TextBox toTextBox() {
+		TextBox(finder)
 	}
 	
 	
@@ -150,6 +200,20 @@ const class Element {
 	
 
 	// ---- Private Methods --------------------------------------------------------------------------------------------
+
+	virtual protected ButterResponse submitForm() {
+		// TODO: submitForm
+		BedClient.getThreadedClient.postForm(``, [:])
+	}
+
+	** Sets the attribute. A value of 'null' removes it.
+	protected Void setAttr(Str name, Str? value, XElem elem := findElem) {
+		attr := elem.attr(name, false)
+		if (attr != null)
+			elem.removeAttr(attr)
+		if (value != null) 
+			elem.addAttr(name, value)
+	}
 
 	private Element newElementAtIndex(Int index) {
 		Element(finder.clone(FindAtIndex(index)))

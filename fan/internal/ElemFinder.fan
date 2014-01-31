@@ -1,6 +1,7 @@
 using xml
 using afSizzle
 
+** All this so I can have a getAtIndex(n) method!
 @NoDoc
 abstract const class ElemFinder {
 	const ElemFinder? finder
@@ -33,7 +34,7 @@ internal const class FindAtIndex : ElemFinder {
 		this.finder = finder
 	}
 	override XElem[] findElems(XElem[]? elems := null) {
-		found := [elems[index]]	// TODO: fail
+		found := (index < elems.size) ? [elems[index]] : XElem#.emptyList
 		return finder?.findElems(found) ?: found
 	}
 	override ElemFinder clone(ElemFinder deepFinder) {
