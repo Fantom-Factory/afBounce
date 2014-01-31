@@ -6,7 +6,12 @@ using web::WebSession
 ** Use to send requests to your Bed App. 
 class BedClient : ButterDish {
 	
-	** The response to the last request. Is 'null' if no requests have been made.  
+	** The last request. 
+	** Returns 'null' if no requests have been made.  
+	ButterRequest? lastRequest
+
+	** The response to the last request. 
+	** Returns 'null' if no requests have been made.  
 	ButterResponse? lastResponse
 	
 	new make(Butter butter) : super(butter) { }
@@ -60,6 +65,7 @@ class BedClient : ButterDish {
 	override ButterResponse sendRequest(ButterRequest req) {
 		// enable threaded sizzledoc 
 		Actor.locals["afBounce.bedClient"] = this
+		lastRequest = req
 		lastResponse = super.sendRequest(req)
 		return lastResponse
 	}
