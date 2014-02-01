@@ -169,6 +169,11 @@ const class Element {
 		SelectBox(finder)
 	}
 
+	** Returns this element as a `SubmitButton`
+	SubmitButton toSubmitButton() {
+		SubmitButton(finder)
+	}
+
 	** Returns this element as a `TextBox`
 	TextBox toTextBox() {
 		TextBox(finder)
@@ -263,7 +268,8 @@ const class Element {
 				if (type == "checkbox")
 					return (attr["checked"] == null) ? null : "on" 
 	
-				// TODO: radio buttons
+				if (type == "radio")
+					return (attr["checked"] == null) ? null : (attr["value"] ?: "") 
 	
 				return attr["value"] ?: ""
 			}
@@ -274,9 +280,10 @@ const class Element {
 			action = bedClient.lastRequest?.uri
 		if (action == null || action.toStr.isEmpty)
 			fail("Form has not 'action' attribute: ", false)
-		
-		// TODO: implement GET reqs
-		return bedClient.postForm(action, values)
+
+		return (Attr(form.rootElement)["method"]?.lower == "post")
+			? bedClient.postForm(action, values)
+			: bedClient.get(action.plusQuery(values))
 	}
 
 	@NoDoc

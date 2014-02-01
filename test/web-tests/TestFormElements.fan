@@ -40,7 +40,7 @@ internal class TestFormInputs : WebTest {
 	Void testSubmitButton() {
 		client.get(`/formTest`)
 		
-		submit := Button("#submit")
+		submit := SubmitButton("#submit")
 		
 		verifyEq(submit.name, "submit")
 		verifyEq(submit.value, "Desoxypipradrol")
@@ -201,5 +201,38 @@ internal class TestFormInputs : WebTest {
 		selectbox.disabled = true
 		map = (Map) selectbox.submitForm.asStr.in.readObj
 		verifyFalse(map.containsKey("selectbox"))
+	}
+
+	Void testRadioButton() {
+		client.get(`/formTest`)
+		
+		radio1 := RadioButton("#m1")
+		radio2 := RadioButton("#m2")
+		radio3 := RadioButton("#m3")
+		
+		verifyEq(radio1.name, "Mescaline")
+		verifyEq(radio1.checked, false)
+		verifyEq(radio2.checked, true)
+		verifyEq(radio3.checked, false)
+		verifyEq(radio1.enabled, true)
+		verifyEq(radio1.disabled, false)
+		radio1.verifyNotChecked
+		radio2.verifyChecked
+		radio3.verifyNotChecked
+		
+		res := radio1.submitForm
+		map := (Map) res.asStr.in.readObj
+		verifyEq(map["Mescaline"].toStr.trim, "Beer")
+		
+		client.get(`/formTest`)
+		radio1.checked = true
+		radio2.verifyNotChecked
+		map = radio2.submitForm.asStr.in.readObj
+		verifyEq(map["Mescaline"], "Water")
+
+		client.get(`/formTest`)
+		radio2.disabled = true
+		map = (Map) radio2.submitForm.asStr.in.readObj
+		verifyFalse(map.containsKey("Mescaline"))
 	}
 }
