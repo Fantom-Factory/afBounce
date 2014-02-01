@@ -1,54 +1,67 @@
 using xml
 using afButter
 
-** (HTML Element) 
+** (HTML Element) Represents a form '<input>' of type 'submit'.
 const class Button : Element {
 	
 	@NoDoc
 	new makeFromFinder	(ElemFinder elemFinder)	: super(elemFinder)  { }
 	new makeFromCss		(Str cssSelector) 		: super(cssSelector) { }
 
+	** Returns the 'name' attribute.
 	Str? name() {
 		getAttr("name")
 	}
 
-	Uri? action() {
-		getAttr("action")?.toUri
-	}
-
+	** Gets and sets the 'value' attribute.
 	Str value {
 		get { getAttr("value") }
-		set { setAttr("value", it) }
+		set { 
+			elem := findElem
+			if (isButton(elem)) {
+				elem.children.each { elem.remove(it) }
+				elem.add(XText(it))
+				return
+			}
+			setAttr("value", it) 
+		}
 	}
 
+	** Gets and sets the 'disabled' attribute (inverted).
 	Bool enabled {
 		get { getAttr("disabled") == null }
 		set { setAttr("disabled", it ? null : "disabled") }
 	}
 
+	** Gets and sets the 'disabled' attribute.
 	Bool disabled {
 		get { getAttr("disabled") != null }
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
+	** Submits the enclosing form, complete with this button's value.
 	ButterResponse click() {
 		submitForm
 	}
 
+	** Submits the enclosing form, complete with this button's value.
 	ButterResponse submitForm() {
-		values := [:]
-		if (name != null)
-			values[name] = value
-		return super.submitEnclosingForm(values, action)
+		super.submitEnclosingForm(findElem)
 	}
 	
+	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem
-		name := elem.name.lower
-		if (name == "button")
-			return elem
-		if (name == "input" && (elem.attr("type", false)?.val?.equalsIgnoreCase("submit") ?: false))
-			return elem
-		return fail("Element is NOT a button")
+		if (!isButton(elem) && !isSubmit(elem))
+			return fail("Element is NEITHER a button nor a submit input", false)
+		return elem
+	}
+
+	private Bool isButton(XElem elem := findElem) {
+		elem.name.equalsIgnoreCase("button")
+	}
+	
+	private Bool isSubmit(XElem elem) {
+		elem.name.equalsIgnoreCase("input") && (elem.attr("type", false)?.val?.equalsIgnoreCase("submit") ?: false)
 	}
 }

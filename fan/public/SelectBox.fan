@@ -34,7 +34,7 @@ const class SelectBox : Element {
 	override protected XElem findElem() {
 		elem := super.findElem
 		if (!elem.name.equalsIgnoreCase("select"))
-			fail("Element is NOT a <select>")
+			fail("Element is NOT a <select>", false)
 		return elem
 	}
 }
