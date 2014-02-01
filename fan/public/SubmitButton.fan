@@ -2,7 +2,7 @@ using xml
 using afButter
 
 ** (HTML Element) Represents a form '<input>' of type 'submit'.
-const class Button : Element {
+const class SubmitButton : Element {
 	
 	@NoDoc
 	new makeFromFinder	(ElemFinder elemFinder)	: super(elemFinder)  { }
@@ -16,15 +16,7 @@ const class Button : Element {
 	** Gets and sets the 'value' attribute.
 	Str value {
 		get { getAttr("value") }
-		set { 
-			elem := findElem
-			if (isButton(elem)) {
-				elem.children.each { elem.remove(it) }
-				elem.add(XText(it))
-				return
-			}
-			setAttr("value", it) 
-		}
+		set { setAttr("value", it) }
 	}
 
 	** Gets and sets the 'disabled' attribute (inverted).
@@ -52,16 +44,8 @@ const class Button : Element {
 	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem
-		if (!isButton(elem) && !isSubmit(elem))
-			return fail("Element is NEITHER a button nor a submit input: ", false)
+		if (Attr(elem).name != "input" && Attr(elem)["type"]?.lower != "submit")
+			return fail("Element is NOT a submit button: ", false)
 		return elem
-	}
-
-	private Bool isButton(XElem elem := findElem) {
-		elem.name.equalsIgnoreCase("button")
-	}
-	
-	private Bool isSubmit(XElem elem) {
-		(Attr(elem).name == "input") && (Attr(elem)["type"]?.lower == "submit") 
 	}
 }
