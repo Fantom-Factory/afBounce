@@ -1,5 +1,5 @@
 
-abstract internal class BounceTest : Test {
+abstract internal class UnitTest : Test {
 	
 	protected Void verifyErrTypeAndMsg(Type errType, Str errMsg, |Obj| func) {
 		try {

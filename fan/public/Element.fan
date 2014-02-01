@@ -2,7 +2,7 @@ using afSizzle
 using afButter
 using xml
 
-** (HTML Element) Represents a number of HTML elements as returned from `BedClient` select CSS methods.
+** (HTML Element) Represents a generic HTML element.
 const class Element {
 	
 	private const ElemFinder finder
@@ -149,6 +149,11 @@ const class Element {
 		CheckBox(finder)
 	}
 	
+	** Returns this element as a `Hidden` input
+	Hidden toHidden() {
+		Hidden(finder)
+	}
+	
 	** Returns this element as a `Link`
 	Link toLink() {
 		Link(finder)
@@ -181,8 +186,11 @@ const class Element {
 
 	** Returns Obj? so it may be in-lined as a return value
 	@NoDoc
-	protected Obj? fail(Str msg) {
-		Verify().fail(msg + toStr)
+	protected Obj? fail(Str msg, Bool showFullPageHtml) {
+		if (showFullPageHtml) {
+			Verify().fail(msg + toStr + "\n" + bedClient.lastResponse.asStr)
+		} else
+			Verify().fail(msg + toStr)
 		return null
 	}
 	
@@ -193,8 +201,10 @@ const class Element {
 	@NoDoc
 	virtual protected XElem findElem() {
 		elems := findElems
-		if (elems.size != 1)
-			fail("CSS does not exist: ")
+		if (elems.isEmpty)
+			fail("CSS does not exist: ", true)
+		if (elems.size > 1)
+			fail("CSS returned multiple elements: ", false)
 		return elems.first
 	}
 
@@ -209,8 +219,8 @@ const class Element {
 	}
 
 	@NoDoc
-	virtual protected ButterResponse submitEnclosingForm(Str:Str xtraVals := [:], Uri? action := null) {
-		values	:= [Str:Str][:] { caseInsensitive = true }.addAll(xtraVals)
+	virtual protected ButterResponse submitEnclosingForm(XElem? submitElem := null) {
+		values	:= [Str:Str][:] { caseInsensitive = true }
 		form	:= findForm
 		
 			SizzleDoc(form).select("input")
@@ -221,13 +231,16 @@ const class Element {
 		).each |input| {
 			type := (input.attr("type", false)?.val ?: "text").trim.lower
 
-			if (type == "submit") {
-				// only the value of the 'clicked' submit button is sent to the server
+			// only the value of the 'clicked' submit button is sent to the server
+			if (type == "submit" && input != submitElem)
 				return
-			}
-			
+
+			// don't submit values of disabled inputs
+			if (input.attr("disabled", false) != null)
+				return
+
 			name := input.attr("name", false)?.val 
-				 ?: fail("Input element has NO name: " + getHtml(input))
+				 ?: fail("Input element has NO name: " + getHtml(input), false)
 
 			if (input.name.lower == "textarea") {
 				values[name] = getText(input)
@@ -239,21 +252,18 @@ const class Element {
 					values[name] = "on"
 				return
 			}
-			
+
 			// TODO: select boxes and radio buttons
-			
-			// TODO: don't send disabled data
-			
+
 			value := input.attr("value", false)?.val ?: ""
 			values[name] = value
 		}
 		
-		if (action == null)
-			action = (form.attr("action", false)?.val ?: "").toUri
+		action := (Uri?) (form.attr("action", false)?.val ?: "").toUri
 		if (action.toStr.isEmpty)
 			action = bedClient.lastRequest?.uri
 		if (action == null || action.toStr.isEmpty)
-			fail("Form has not 'action' attribute: ")
+			fail("Form has not 'action' attribute: ", false)
 		
 		// TODO: implement GET reqs
 		return bedClient.postForm(action, values)
@@ -265,7 +275,7 @@ const class Element {
 			return elem
 		if (elem.parent != null)
 			return findForm(elem.parent)
-		return fail("Could not find enclosing Form element")
+		return fail("Could not find enclosing Form element", true)
 	}
 	
 	** Sets the attribute. A value of 'null' removes it.

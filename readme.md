@@ -46,7 +46,7 @@ Full API & fandocs are available on the [status302 repository](http://repo.statu
             client.get(`/index`)
     
             // then
-            title := client.select("#title").first
+            title := client.selectCss("#title").first
             verifyEq(title.text.writeToStr, "Sizzle Kicks Ass!")
         }
     }

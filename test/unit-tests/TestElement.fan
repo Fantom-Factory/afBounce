@@ -1,6 +1,6 @@
 using xml
 
-internal class TestElement : Test {
+internal class TestElement : UnitTest {
 	
 	Void testTextSimple() {
 		xml := XElem("div") {
