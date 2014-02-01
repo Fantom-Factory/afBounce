@@ -53,7 +53,7 @@ const class Button : Element {
 	override protected XElem findElem() {
 		elem := super.findElem
 		if (!isButton(elem) && !isSubmit(elem))
-			return fail("Element is NEITHER a button nor a submit input", false)
+			return fail("Element is NEITHER a button nor a submit input: ", false)
 		return elem
 	}
 
@@ -62,6 +62,6 @@ const class Button : Element {
 	}
 	
 	private Bool isSubmit(XElem elem) {
-		elem.name.equalsIgnoreCase("input") && (elem.attr("type", false)?.val?.equalsIgnoreCase("submit") ?: false)
+		(Attr(elem).name == "input") && (Attr(elem)["type"]?.lower == "submit") 
 	}
 }

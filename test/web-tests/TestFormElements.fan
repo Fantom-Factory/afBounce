@@ -1,9 +1,19 @@
 
 internal class TestFormInputs : WebTest {
-	
+
 	Void testExerciseElementMethods() {
 		client.get(`/formTest`)
-		
+
+		elem := Element("#elemTest1")
+		verifyEq(elem.text, 		"Hello!")
+		verifyEq(elem.html, 		"<div id='elemTest1'>Hello!</div>")
+		verifyEq(elem.innerHtml,	"Hello!")
+
+		elem = Element("#elemTest2")
+		verifyEq(elem.text, 		"Hello\n\t Mum\n!")
+		verifyEq(elem.html,			"<div id='elemTest2'>Hello\n\t<span> Mum</span>\n!</div>")
+		verifyEq(elem.innerHtml,	"Hello\n\t<span> Mum</span>\n!")
+
 		// don't so much care for the results - just want to check the code doesn't throw any errors!
 		
 		verifyEq(Element("h1").id, "head1")
@@ -70,7 +80,7 @@ internal class TestFormInputs : WebTest {
 		client.get(`/formTest`)
 		checkbox.checked = false
 		checkbox.verifyNotChecked
-		map = checkbox.submitForm.asStr.in.readObj
+		map = (Map) checkbox.submitForm.asStr.in.readObj
 		verifyFalse(map.containsKey("checkbox"))
 
 		client.get(`/formTest`)
@@ -162,5 +172,34 @@ internal class TestFormInputs : WebTest {
 		textbox.disabled = true
 		map = (Map) textbox.submitForm.asStr.in.readObj
 		verifyFalse(map.containsKey("textarea"))
+	}
+
+	Void testSelectBox() {
+		client.get(`/formTest`)
+		
+		selectbox := SelectBox("#selectbox")
+		
+		verifyEq(selectbox.name, "selectbox")
+		verifyEq(selectbox.checked.value.trim, "herb")
+		verifyEq(selectbox.enabled, true)
+		verifyEq(selectbox.disabled, false)
+		selectbox.verifyCheckedValueEq("herb")
+		selectbox.checked.verifyChecked
+		
+		res := selectbox.submitForm
+		map := (Map) res.asStr.in.readObj
+		verifyEq(map["selectbox"].toStr.trim, "herb")
+		
+		client.get(`/formTest`)
+		selectbox.optionByText("Herb DUDE").verifyChecked
+		selectbox.optionByValue("hawk").checked = true
+		selectbox.optionByText("Herb DUDE").verifyNotChecked
+		map = selectbox.submitForm.asStr.in.readObj
+		verifyEq(map["selectbox"], "hawk")
+
+		client.get(`/formTest`)
+		selectbox.disabled = true
+		map = (Map) selectbox.submitForm.asStr.in.readObj
+		verifyFalse(map.containsKey("selectbox"))
 	}
 }

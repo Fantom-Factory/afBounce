@@ -48,9 +48,9 @@ const class CheckBox : Element {
 	
 	@NoDoc
 	override protected XElem findElem() {
-		elem := super.findElem
-		if (!elem.name.equalsIgnoreCase("input") && !(elem.attr("type", false)?.val?.equalsIgnoreCase("checkbox") ?: false))
-			fail("Element is NOT a checkbox", false)
-		return elem
+		elem := Attr(super.findElem)
+		if (elem.name == "input" && elem["type"]?.lower == "checkbox")
+			return elem.elem
+		return fail("Element is NOT a checkbox: ", false)
 	}
 }

@@ -53,7 +53,7 @@ const class TextBox : Element {
 	override protected XElem findElem() {
 		elem := super.findElem
 		if (!isTextArea(elem) && !isInput(elem))
-			fail("TextBox is NEITHER a <textarea> nor <input>", false)
+			fail("TextBox is NEITHER a <textarea> nor <input>: ", false)
 		// we could assert on the input type here, but with do many HTML5 types being added and removed, I think we'll
 		// wait for a standard to emerge first!
 		return elem
