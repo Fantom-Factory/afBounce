@@ -27,7 +27,7 @@ const class Link : Element {
 	override protected XElem findElem() {
 		elem := super.findElem
 		if (!elem.name.equalsIgnoreCase("a"))
-			fail("Element is NOT a link", false)
+			fail("Element is NOT a link: ", false)
 		return elem
 	}
 }

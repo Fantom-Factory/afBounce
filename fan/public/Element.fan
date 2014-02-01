@@ -159,6 +159,11 @@ const class Element {
 		Link(finder)
 	}
 	
+	** Returns this element as a `Link`
+	Option toOption() {
+		Option(finder)
+	}
+	
 	** Returns this element as a `SelectBox`
 	SelectBox toSelectBox() {
 		SelectBox(finder)
@@ -218,48 +223,53 @@ const class Element {
 		BedClient.getThreadedClient
 	}
 
+	private Void processInput(Str:Str values, XElem elem, |Attr attr->Str?| func) {
+		attr := Attr(elem)
+		name := attr["name"] ?: fail("Textarea element has NO name: " + getHtml(elem), false)
+		// don't submit values of disabled inputs
+		if (attr["disabled"] != null)
+			return
+		val := func.call(attr)
+		if (val != null)
+			values[name] = val
+	}
+	
 	@NoDoc
 	virtual protected ButterResponse submitEnclosingForm(XElem? submitElem := null) {
 		values	:= [Str:Str][:] { caseInsensitive = true }
-		form	:= findForm
+		form	:= SizzleDoc(findForm)
 		
-			SizzleDoc(form).select("input")
-		.addAll(
-			SizzleDoc(form).select("textarea")
-		).addAll(
-			SizzleDoc(form).select("button")
-		).each |input| {
-			type := (input.attr("type", false)?.val ?: "text").trim.lower
-
-			// only the value of the 'clicked' submit button is sent to the server
-			if (type == "submit" && input != submitElem)
-				return
-
-			// don't submit values of disabled inputs
-			if (input.attr("disabled", false) != null)
-				return
-
-			name := input.attr("name", false)?.val 
-				 ?: fail("Input element has NO name: " + getHtml(input), false)
-
-			if (input.name.lower == "textarea") {
-				values[name] = getText(input)
-				return
+		form.select("textarea").each |elem| {
+			processInput(values, elem) |attr->Str?| {
+				return getText(elem)
 			}
-			
-			if (type == "checkbox") {
-				if (input.attr("checked", false) != null)
-					values[name] = "on"
-				return
+		}
+
+		form.select("select").each |elem| {
+			processInput(values, elem) |attr->Str?| {
+				options := SizzleDoc(elem).select("option[checked]")
+				return (options.isEmpty) ? null : Attr(options.first)["value"]
 			}
+		}
 
-			// TODO: select boxes and radio buttons
-
-			value := input.attr("value", false)?.val ?: ""
-			values[name] = value
+		form.select("input").each |elem| {
+			processInput(values, elem) |attr->Str?| {
+				type := attr["type"]?.trim?.lower ?: "text"
+	
+				// only the value of the 'clicked' submit button is sent to the server
+				if (type == "submit" && elem != submitElem)
+					return null
+	
+				if (type == "checkbox")
+					return (attr["checked"] == null) ? null : "on" 
+	
+				// TODO: radio buttons
+	
+				return attr["value"] ?: ""
+			}
 		}
 		
-		action := (Uri?) (form.attr("action", false)?.val ?: "").toUri
+		action := (Uri?) (form.rootElement.attr("action", false)?.val ?: "").toUri
 		if (action.toStr.isEmpty)
 			action = bedClient.lastRequest?.uri
 		if (action == null || action.toStr.isEmpty)
@@ -281,11 +291,7 @@ const class Element {
 	** Sets the attribute. A value of 'null' removes it.
 	@NoDoc
 	virtual protected Void setAttr(Str name, Str? value, XElem elem := findElem) {
-		attr := elem.attr(name, false)
-		if (attr != null)
-			elem.removeAttr(attr)
-		if (value != null) 
-			elem.addAttr(name, value)
+		Attr(elem)[name] = value
 	}
 
 	
@@ -322,4 +328,28 @@ const class Element {
 	}
 }
 
+internal class Attr {
+	XElem elem
+	new make(XElem elem) {
+		this.elem = elem
+	}
+	@Operator
+	Str? getAttr(Str name) {
+		elem.attr(name, false)?.val
+	}
+	@Operator
+	Void set(Str name, Str? value) {
+		attr := elem.attr(name, false)
+		if (attr != null)
+			elem.removeAttr(attr)
+		if (value != null) 
+			elem.addAttr(name, value)
+	}
+	Str name() {
+		elem.name.trim.lower
+	}
+}
+
 internal class Verify : Test {}
+
+

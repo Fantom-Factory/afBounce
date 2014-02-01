@@ -31,9 +31,9 @@ const class Hidden : Element {
 
 	@NoDoc
 	override protected XElem findElem() {
-		elem := super.findElem
-		if (!elem.name.equalsIgnoreCase("input") && !(elem.attr("type", false)?.val?.equalsIgnoreCase("hidden") ?: false))
-			fail("Element is NOT a hidden input", false)
-		return elem
+		elem := Attr(super.findElem)
+		if (elem.name == "input" && elem["type"]?.lower == "hidden")
+			return elem.elem
+		return fail("Element is NOT a hidden input: ", false)
 	}
 }
