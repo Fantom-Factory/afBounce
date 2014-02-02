@@ -1,5 +1,6 @@
 using afIocConfig
 using afButter
+using afButter::HttpResponseHeaders as ButtHead
 using afBedSheet::BedSheetConfigIds
 using afBedSheet::HttpResponseHeaders
 using afBedSheet::MiddlewarePipeline
@@ -197,10 +198,23 @@ internal class BounceWebRes : WebRes {
 	}
 
 	internal ButterResponse toButterResponse() {
-		// FIXME: WebUtil.parseHeaders() can't handle more than 1 Set-Cookie, as the max-age contains a ','
-		if (!&cookies.isEmpty)
-			&headers["Set-Cookie"] = &cookies.first.toStr
-		return ButterResponse(&statusCode, statusMsg[statusCode], &headers, buf)
+		myStatusCode := &statusCode
+		myCookies 	 := &cookies
+		myStatusRes	 := statusMsg[myStatusCode]
+		myHeaders	 :=	ButtHead {
+			keyVals  := it.convertMap(&headers)
+			myCookies.each |cookie| {
+				keyVals.add(KeyVal("Set-Cookie", cookie.toStr))
+			}
+			it.keyVals = keyVals
+		}
+		
+		return ButterResponse {
+			it.statusCode 	= myStatusCode
+			it.statusMsg	= myStatusRes
+			it.body			= buf
+			it.headers 		= myHeaders 
+		}
 	}
 }
 
