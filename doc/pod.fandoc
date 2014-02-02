@@ -26,9 +26,7 @@ Quick Start [#quickStart]
 1). Create a text file called 'Example.fan':
 pre>
 using afBounce
-using afBedSheet::Text
-using afBedSheet::Route
-using afBedSheet::Routes
+using afBedSheet
 using afIoc
 
 class Example : Test {
@@ -41,8 +39,8 @@ class Example : Test {
         client.get(`/index`)
 
         // then
-        title := client.selectCss("#title").first
-        verifyEq(title.text.writeToStr, "Sizzle Kicks Ass!")
+        title := Element("#title")
+        title.verifyTextEq("Sizzle Kicks Ass!")
 
         // clean up
         server.shutdown
@@ -91,11 +89,31 @@ Time: 2052ms
 Usage [#usage]
 **************
 Use `BedServer` to start an instance of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`, and then use `BedClient`
-make repeated requests against it.
+make repeated requests against it. The HTML elements are then used to verify that correct content is rendered.
 
 'BedClient' is a 'ButterDish' that wraps a 'Butter' instance - all functionality is provided by
 [Butter]`http://www.fantomfactory.org/pods/afButter` middleware. `BedTerminator` is the terminator of the stack, which sends
 requests to `BedServer`, which holds the instance of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`.
+
+
+
+Verify HTML Content [#verifyHtml]
+=================================
+When queried, the HTML classes (`Element`, `TextBox`, etc...) use the last response from the client.
+The client stores itself in the 'Actor.locals()' map, and the HTML elements implicitly use this value.
+This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track
+response they're querying. Example:
+
+    // deinfe your elements
+    title := Element("h1")
+    link  := Element("#page2")
+
+    // use them
+    client.get(`/index`)
+    title.verifyTextEq("Home Page")
+
+    link.click
+    title.verifyTextEq("Page2")
 
 
 
