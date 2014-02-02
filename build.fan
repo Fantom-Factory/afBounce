@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing Bed applications!"
-		version = Version("0.0.6")
+		version = Version("0.0.7")
 
 		meta	= [
 			"org.name"		: "Alien-Factory",
@@ -14,7 +14,7 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afBounce",
 			"vcs.uri"		: "https://bitbucket.org/Alien-Factory/afbounce",
 			"license.name"	: "BSD 2-Clause License",	
-			"repo.private"	: "false"
+			"repo.private"	: "true"
 		]
 
 		depends = [
@@ -28,8 +28,8 @@ class Build : BuildPod {
 			"afIoc 1.5.2+", 
 			"afIocConfig 1.0.2+", 
 			"afBedSheet 1.3.0+",
-			"afButter 0+",
-			"afSizzle 0+"
+			"afButter 0.0.4+",
+			"afSizzle 1.0.0+"
 		]
 		
 		srcDirs = [`test/`, `test/web-tests/`, `test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
