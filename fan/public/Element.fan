@@ -230,13 +230,17 @@ const class Element {
 
 	private Void processInput(Str:Str values, XElem elem, |Attr attr->Str?| func) {
 		attr := Attr(elem)
-		name := attr["name"] ?: fail("Textarea element has NO name: " + getHtml(elem), false)
 		// don't submit values of disabled inputs
 		if (attr["disabled"] != null)
 			return
 		val := func.call(attr)
-		if (val != null)
+		if (val != null) {
+			// only care about the name if we need to submit the value
+			name := attr["name"]
+			if (name == null)
+				Verify().fail("Form element has NO name: " + getHtml(elem))
 			values[name] = val
+		}
 	}
 	
 	@NoDoc
