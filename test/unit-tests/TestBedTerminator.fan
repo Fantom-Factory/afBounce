@@ -22,4 +22,15 @@ internal class TestBedTerminator : UnitTest {
 		mw := BedTerminator(BedServer(T_AppModule#))
 		mw.shutdown
 	}
+	
+	Void testCanHandleUnknownStatusCodes() {
+		res := BounceWebRes()
+		res.statusCode = 666
+		
+		cde := res.toButterResponse.statusCode
+		msg := res.toButterResponse.statusMsg
+		
+		verifyEq(cde, 666)
+		verifyEq(msg, "Unknown Status Code")
+	}
 }
