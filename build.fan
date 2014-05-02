@@ -29,7 +29,7 @@ class Build : BuildPod {
 			"afIoc 1.6.0+", 
 			"afIocConfig 1.0.4+", 
 			"afBedSheet 1.3.6+",
-			"afButter 0.0.4+",
+			"afButter 0.0.6+",
 			"afSizzle 1.0.0+"
 		]
 		
