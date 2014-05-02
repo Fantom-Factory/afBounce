@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing Bed applications!"
-		version = Version("1.0.0")
+		version = Version("1.0.1")
 
 		meta = [
 			"org.name"		: "Alien-Factory",
@@ -14,7 +14,7 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afBounce",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afbounce",
 			"license.name"	: "The MIT Licence",	
-			"repo.private"	: "false"
+			"repo.private"	: "true"
 		]
 
 		depends = [
