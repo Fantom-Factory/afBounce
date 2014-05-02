@@ -7,15 +7,15 @@
 //internal class Example : Test {
 //	Void testBedApp() {
 //		// given
-//		server := BedServer(Type.find("Example_0::AppModule")).startup
+//		server := BedServer(AppModule#).startup
 //		client := server.makeClient
 //		
 //		// when
 //		client.get(`/index`)
 //		
 //		// then
-//		title := client.selectCss("#title").first
-//		verifyEq(title.text.writeToStr, "Sizzle Kicks Ass!")
+//		title := Element("#title")
+//		title.verifyTextEq("Bed Bouncing!")
 //		
 //		// cleanup
 //		server.shutdown
@@ -26,6 +26,6 @@
 //internal class AppModule {
 //	@Contribute { serviceType=Routes# }
 //	static Void contributeRoutes(OrderedConfig config) {
-//		config.add(Route(`/index`, Text.fromHtml("""<html><p id="title">Sizzle Kicks Ass!</p></html>""")))
+//		config.add(Route(`/index`, Text.fromHtml("""<html><p id="title">Bed Bouncing!</p></html>""")))
 //	}
 //}

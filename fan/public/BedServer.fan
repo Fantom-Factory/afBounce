@@ -1,5 +1,6 @@
 using concurrent::AtomicBool
 using concurrent::AtomicRef
+using afConcurrent::AtomicList
 using afIoc::Registry
 using afIoc::RegistryBuilder
 using wisp::MemWispSessionStore
@@ -14,15 +15,13 @@ using afButter::HttpTerminator
 ** 
 ** 'BedServer' is a 'const' class so it may be used in multiple threads. Do this to create 'BedClients' in different
 ** threads to make concurrent calls - handy for load testing.
-** 
 const class BedServer {
 	private const static Log log := Utils.getLog(BedServer#)
 
 	private const AtomicRef		reg			:= AtomicRef()
 	private const AtomicBool	started		:= AtomicBool()
-	private const AtomicRef		modules		:= AtomicRef(Type#.emptyList)
-	private const AtomicRef		moduleDeps	:= AtomicRef(Pod#.emptyList)
-	private const AtomicRef		bsMeta		:= AtomicRef()
+	private const AtomicRef		moduleName	:= AtomicRef()
+	private const AtomicList	modules		:= AtomicList()
 
 	** The 'afIoc' registry - read only.
 	Registry registry {
@@ -30,61 +29,38 @@ const class BedServer {
 		private set { reg.val = it }
 	}
 
-	** Create a instance of 'afBedSheet' with the given afIoc module (usually your web app)
-	new makeWithModule(Type? iocModule := null) {
-		addModulesFromDependencies(BedSheetModule#.pod)
-		if (iocModule != null)
-			addModule(iocModule)
-		
-		bsMeta.val = BedSheetMetaDataImpl(iocModule?.pod, iocModule, [:])
+	** Create a instance of 'BedSheet' with the given qname of either a Pod or a Type. 
+	new makeWithName(Str qname) {
+		this.moduleName.val = qname
 	}
 
-	** Create a instance of 'afBedSheet' with afIoc dependencies from the given pod (usually your web app)
+	** Create a instance of 'BedSheet' with the given IoC module (usually your web app).
+	new makeWithModule(Type iocModule) {
+		this.moduleName.val = iocModule.qname
+	}
+
+	** Create a instance of 'BedSheet' with the given pod (usually your web app).
 	new makeWithPod(Pod webApp) {
-		addModulesFromDependencies(webApp)
-		addModule(BedSheetModule#)
-
-		mod := BedSheetWebMod.findModFromPod(webApp)
-		bsMeta.val = BedSheetMetaDataImpl(webApp, mod, [:])
+		this.moduleName.val = webApp.name
 	}
 
-	** Add extra (test) modules should you wish to override behaviour in your tests
+	** Adds an extra (test) module, should you wish to override service behaviour.
 	BedServer addModule(Type iocModule) {
 		checkHasNotStarted
-		mods := (Type[]) modules.val
-		modules.val = mods.rw.add(iocModule).toImmutable
-		return this
-	}
-
-	BedServer addModulesFromDependencies(Pod dependency) {
-		checkHasNotStarted
-		deps := (Pod[]) moduleDeps.val
-		moduleDeps.val = deps.rw.add(dependency).toImmutable
+		this.modules.add(iocModule)
 		return this
 	}
 
 	** Startup 'afBedSheet'
 	BedServer startup() {
 		checkHasNotStarted
-		bannerText := "Alien-Factory BedServer v${typeof.pod.version}, IoC v${Registry#.pod.version}"
 		
-		bob := RegistryBuilder()
-		
-		((Pod[]) moduleDeps.val).each |pod| {
-			bob.addModulesFromDependencies(pod)			
-		}
-		
-		mods := (Type[]) modules.val
-		bob.addModules(mods)
-
-		bedSheetMetaData := bsMeta.val		
-		registry = bob.build([
-			"bannerText"					: bannerText, 
-			"bedSheetMetaData"				: bedSheetMetaData, 
-			"suppressStartupServiceList"	: true,
-			"appName"						: "BedServer"
-		]).startup
-		
+		bob := BedSheetWebMod.createBob(moduleName.val, 0)		
+		bob.addModules(modules.list)
+		bob.options["bannerText"]	= "Alien-Factory BedServer v${typeof.pod.version}, IoC v${Registry#.pod.version}" 
+		bob.options["appName"]		= "BedServer"
+			
+		registry = bob.build.startup
 		started.val = true
 		return this
 	}
@@ -95,7 +71,7 @@ const class BedServer {
 			registry.shutdown
 		reg.val = null
 		started.val = false
-		modules.val	= Type#.emptyList
+		modules.clear
 		return this
 	}
 	
@@ -152,20 +128,5 @@ const class BedServer {
 	private Void checkHasNotStarted() {
 		if (started.val)
 			throw Err("${BedServer#.name} has not already been started!")
-	}
-}
-
-
-internal const class BedSheetMetaDataImpl : BedSheetMetaData {
-	override const Pod? 		appPod
-	override const Type?		appModule
-	override const Int			port
-	override const [Str:Obj] 	options
-	
-	internal new make(Pod? appPod, Type? appModule, [Str:Obj] options) {
-		this.appPod 	= appPod
-		this.appModule 	= appModule
-		this.port 		= 0	// we're not really listening!
-		this.options 	= options.toImmutable
 	}
 }

@@ -36,7 +36,7 @@ class BedTerminator : ButterMiddleware {
 	}
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		if (!req.uri.isPathOnly)
+		if (!req.uri.isRel)
 			throw Err("Request URIs for Bed App testing should only be a path, e.g. `/index` vs `${req.uri}`")
 		if (!req.uri.isPathAbs)
 			throw Err("Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `${req.uri}`")
@@ -211,7 +211,7 @@ internal class BounceWebRes : WebRes {
 		
 		return ButterResponse {
 			it.statusCode 	= myStatusCode
-			it.statusMsg	= myStatusRes
+			it.statusMsg	= myStatusRes ?: "Unknown Status Code"
 			it.body			= buf
 			it.headers 		= myHeaders 
 		}
