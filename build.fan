@@ -14,7 +14,9 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afBounce",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afbounce",
 			"license.name"	: "The MIT Licence",	
-			"repo.private"	: "true"
+			"repo.private"	: "true",
+			
+			"tags"			: "testing, web"
 		]
 
 		depends = [

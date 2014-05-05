@@ -1,7 +1,7 @@
 using xml
 using afButter
 
-** (HTML Element) Represents a form '<input>' of type 'text' or a <textarea>.
+** (HTML Element) Represents a form '<input>' of type 'text' or a '<textarea>'.
 const class TextBox : Element {
 	
 	@NoDoc
