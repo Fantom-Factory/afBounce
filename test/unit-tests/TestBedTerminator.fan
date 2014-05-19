@@ -18,6 +18,13 @@ internal class TestBedTerminator : UnitTest {
 		}
 	}
 
+	Void testUrisCanHaveQueryStrings() {
+		mw := BedTerminator(BedServer(T_AppModule#))
+		verifyErrTypeAndMsg(Err#, "${BedServer#.name} has not yet started!") {
+			mw.sendRequest(Butter.churnOut, ButterRequest(`/dude?af=4&z=1`))
+		}
+	}
+
 	Void testCanShutdownWithoutError() {
 		mw := BedTerminator(BedServer(T_AppModule#))
 		mw.shutdown

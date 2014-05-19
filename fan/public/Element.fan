@@ -1,3 +1,4 @@
+using concurrent
 using afSizzle
 using afButter
 using xml
@@ -8,7 +9,9 @@ const class Element {
 	private const ElemFinder finder
 	
 	new makeFromCss(Str cssSelector) {
-		this.finder = FindFromBedClient(|->BedClient| { bedClient }, cssSelector) 
+		this.finder = FindFromSizzleThreadLocal(|->SizzleDoc| { 
+			Actor.locals["afBounce.sizzleDoc"] ?: bedClient.sizzleDoc 
+		}, cssSelector) 
 	}
 	
 	@NoDoc
