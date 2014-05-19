@@ -1,23 +1,29 @@
 Overview [#overview]
 ********************
-'Bounce' - use it to test your [Bed Apps]`http://www.fantomfactory.org/pods/afBedSheet`!
+'Bounce' - use it to test your [Bed Apps]`pod:afBedSheet`!
 
-'Bounce' is a testing framework that makes requests to a [Bed App]`http://www.fantomfactory.org/pods/afBedSheet` without the
-overhead of starting a web server, opening ports, and making expensive network connections.
+'Bounce' is a testing framework that makes requests to your [Bed App]`pod:afBedSheet` without the
+expensive overhead of starting a web server, opening ports, and making network connections.
 
-You're still testing your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`, you're just cutting out the middle man!
+'Bounce' uses rich [CSS selectors]`pod:afSizzle` and a simple API to let you query and verify your web pages.
 
 
 
 Install [#Install]
 ******************
-Install 'Bounce' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::Tool.install` ):
 
-  C:\> fanr install -r http://repo.status302.com/fanr/ afBounce
+  C:\> fanr install -r http://repo.status302.com/fanr/ @{pod.name}
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "afBounce 0+"]
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}+"]
+
+
+
+Documentation [#documentation]
+******************************
+Full API & fandocs are available on the [Status302 repository]`http://repo.status302.com/doc/@{pod.name}/`.
 
 
 
@@ -25,6 +31,8 @@ Quick Start [#quickStart]
 *************************
 1). Create a text file called 'Example.fan':
 pre>
+syntax: fantom
+
 using afBounce
 using afBedSheet
 using afIoc
@@ -56,7 +64,7 @@ class AppModule {
 }
 <pre
 
-2). Run 'Example.fan' as a Fantom test script ( [fant]`http://fantom.org/doc/docTools/Fant.html` ) from the command line:
+2). Run 'Example.fan' as a Fantom test script ( [fant]`docTools::Fant` ) from the command line:
 pre>
 C:\> fant Example.fan
 
@@ -88,12 +96,12 @@ Time: 2052ms
 
 Usage [#usage]
 **************
-Use `BedServer` to start an instance of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`, and then use `BedClient`
+Use `BedServer` to start an instance of your [Bed App]`pod:afBedSheet`, and then use `BedClient`
 make repeated requests against it. The HTML elements are then used to verify that correct content is rendered.
 
 'BedClient' is a 'ButterDish' that wraps a 'Butter' instance - all functionality is provided by
-[Butter]`http://www.fantomfactory.org/pods/afButter` middleware. `BedTerminator` is the terminator of the stack, which sends
-requests to `BedServer`, which holds the instance of your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`.
+[Butter]`pod:afButter` middleware. `BedTerminator` is the terminator of the stack, which sends
+requests to `BedServer`, which holds the instance of your [Bed App]`pod:afBedSheet`.
 
 
 
@@ -103,6 +111,9 @@ When queried, the HTML classes (`Element`, `TextBox`, etc...) use the last respo
 The client stores itself in the 'Actor.locals()' map, and the HTML elements implicitly use this value.
 This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track
 response they're querying. Example:
+
+pre>
+syntax: fantom
 
     // deinfe your elements
     title := Element("h1")
@@ -114,15 +125,18 @@ response they're querying. Example:
 
     link.click
     title.verifyTextEq("Page2")
+<pre
 
 
 
 Inspect the WebSession [#webSession]
 ====================================
-It can be useful to inspect, assert against, or even set values in, a client's web session. As the 'BedClient' holds the
+It is often useful to inspect, assert against, or even set values in, a client's web session. As the 'BedClient' holds the
 session, this is easy!
 
 pre>
+syntax: fantom
+
 using afBounce
 
 class TestMyBedApp : Test {
@@ -145,10 +159,12 @@ class TestMyBedApp : Test {
 
 Inject Services Into Tests [#injectServices]
 ============================================
-'BedServer' has access to the [Ioc]`http://www.fantomfactory.org/pods/afIoc` registry used by your Bed App, this lets you
+'BedServer' has access to the [IoC]`pod:afIoc` registry used by your Bed App, this lets you
 inject services into your test.
 
 pre>
+syntax: fantom
+
 using afBounce
 using afIoc
 
@@ -172,10 +188,12 @@ class TestMyBedApp : Test {
 
 Override Services [#overrideServices]
 =====================================
-'BedServer' lets you specify additional Ioc modules, meaning you can add custom test modules that override or stub out real
+'BedServer' lets you specify additional Ioc modules, letting you add custom test modules that override or stub out real
 services with test ones.
 
 pre>
+syntax: fantom
+
 using afBounce
 
 class TestMyBedApp : Test {
@@ -201,6 +219,8 @@ By creating 'BedClient' with a 'Butter' stack that ends with a real HTTP termina
 applications in any environment. Example:
 
 pre>
+syntax: fantom
+
 using afBounce
 using afButter
 
@@ -224,11 +244,43 @@ class TestFantomFactory : Test {
 
 
 
+Not Just for Bed Apps! [#notJustForBedApps]
+*******************************************
+The HTML element classes ( `Element`, `TextBox`, etc...) are not just for testing Bed Applications!
+By setting a [SizzleDoc]`afSizzle::SizzleDoc` instance in 'Actor.locals()' with the key 'afBounce.sizzleDoc' you can use the
+HTML classes with any XHTML:
+
+pre>
+syntax: fantom
+
+using afBounce
+using afSizzle
+
+class TestHtml : Test {
+
+    Void testHtml() {
+        xhtml := "<html xmlns="http://www.w3...  // --> your XHTML
+        Actor.locals["afBounce.sizzleDoc"] = SizzleDoc.fromStr(xhtml)
+
+        success := Element("span.success")
+        success.verifyTextEq("Awesome!")
+
+        Actor.locals.remove("afBounce.sizzleDoc")
+    }
+}
+<pre
+
+
+
 Release Notes [#releaseNotes]
 *****************************
+v1.0.2 [#v1.0.2]
+----------------
+ - New: Can now use the HTML Elements outside of a [BedSheet]`pod:afBedSheet` application.
+
 v1.0.0 [#v1.0.0]
 ----------------
- - Chg: Updated to use [Ioc 1.6.0]`http://www.fantomfactory.org/pods/afIoc` and [BedSheet 1.3.6]`http://www.fantomfactory.org/pods/afBedSheet`.
+ - Chg: Updated to use [Ioc 1.6.0]`pod:afIoc` and [BedSheet 1.3.6]`pod:afBedSheet`.
 
 v0.0.6 [#v0.0.6]
 ----------------
@@ -236,7 +288,7 @@ v0.0.6 [#v0.0.6]
 
 v0.0.4 [#v0.0.4]
 ----------------
- - Chg: 'BedTerminator' more closely follows [Butter's]`http://www.fantomfactory.org/pods/afButter` 'HttpTerminator'
+ - Chg: 'BedTerminator' more closely follows [Butter's]`pod:afButter` 'HttpTerminator'
  - Chg: Renamed 'BedClient.select()' to 'BedClient().selectCss()'
 
 v0.0.2 [#v0.0.2]

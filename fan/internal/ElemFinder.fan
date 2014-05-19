@@ -9,20 +9,20 @@ abstract const class ElemFinder {
 	abstract ElemFinder clone(ElemFinder deepFinder)
 }
 
-internal const class FindFromBedClient : ElemFinder {
+internal const class FindFromSizzleThreadLocal : ElemFinder {
 	const Str css
-	const |->BedClient| bedClientFunc
-	new make(|->BedClient| bedClientFunc, Str css, ElemFinder? finder := null) {
-		this.bedClientFunc = bedClientFunc
+	const |->SizzleDoc| sizzleDocFunc
+	new make(|->SizzleDoc| sizzleDocFunc, Str css, ElemFinder? finder := null) {
+		this.sizzleDocFunc = sizzleDocFunc
 		this.css = css
 		this.finder = finder
 	}
 	override XElem[] findElems(XElem[]? elems := null) {
-		found := bedClientFunc().selectCss(css)
+		found := sizzleDocFunc().select(css)
 		return finder?.findElems(found) ?: found
 	}
 	override ElemFinder clone(ElemFinder deepFinder) {
-		FindFromBedClient(bedClientFunc, css, (finder == null) ? deepFinder : finder.clone(deepFinder))
+		FindFromSizzleThreadLocal(sizzleDocFunc, css, (finder == null) ? deepFinder : finder.clone(deepFinder))
 	}
 	override Str toStr() {
 		css + (finder?.toStr ?: "")

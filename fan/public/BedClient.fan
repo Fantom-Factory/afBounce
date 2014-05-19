@@ -1,5 +1,6 @@
-using afButter
 using concurrent
+using afButter
+using afSizzle
 using xml::XElem
 using web::WebSession
 
@@ -28,10 +29,17 @@ class BedClient : ButterDish {
 	
 	// ---- Sizzle Methods ---------------------------------------------------------------------------------------------
 	
+	** Returns 'SizzleDoc' of the XML response.
+	SizzleDoc sizzleDoc() {
+		sizzle.sizzleDoc
+	}
+
+	** Returns the root XML element of the response
 	XElem rootElement() {
 		sizzle.sizzleDoc.rootElement
 	}
 
+	** Selects XML elements from the XML response
 	XElem[] selectCss(Str cssSelector) {
 		sizzle.select(cssSelector)
 	}
