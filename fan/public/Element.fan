@@ -9,9 +9,7 @@ const class Element {
 	private const ElemFinder finder
 	
 	new makeFromCss(Str cssSelector) {
-		this.finder = FindFromSizzleThreadLocal(|->SizzleDoc| { 
-			Actor.locals["afBounce.sizzleDoc"] ?: bedClient.sizzleDoc 
-		}, cssSelector) 
+		this.finder = FindFromSizzleThreadLocal(|->SizzleDoc| { sizzleDoc }, cssSelector) 
 	}
 	
 	@NoDoc
@@ -201,7 +199,7 @@ const class Element {
 	@NoDoc
 	protected Obj? fail(Str msg, Bool showFullPageHtml) {
 		if (showFullPageHtml) {
-			Verify().fail(msg + toStr + "\n" + bedClient.lastResponse.asStr)
+			Verify().fail(msg + toStr + "\n" + sizzleDoc.rootElement.writeToStr)
 		} else
 			Verify().fail(msg + toStr)
 		return null
@@ -229,6 +227,11 @@ const class Element {
 	@NoDoc
 	virtual protected BedClient bedClient() {
 		BedClient.getThreadedClient
+	}
+
+	@NoDoc
+	virtual protected SizzleDoc sizzleDoc() {
+		Actor.locals["afBounce.sizzleDoc"] ?: bedClient.sizzleDoc
 	}
 
 	private Void processInput(Str:Str values, XElem elem, |Attr attr->Str?| func) {

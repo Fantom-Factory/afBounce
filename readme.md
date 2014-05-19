@@ -1,4 +1,4 @@
-## Overview
+## Overview 
 
 `Bounce` - use it to test your [Bed Apps](http://www.fantomfactory.org/pods/afBedSheet)!
 
@@ -6,7 +6,7 @@
 
 `Bounce` uses rich [CSS selectors](http://www.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages.
 
-## Install
+## Install 
 
 Install `Bounce` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
@@ -16,11 +16,11 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 
     depends = ["sys 1.0", ..., "afBounce 1.0+"]
 
-## Documentation
+## Documentation 
 
 Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afBounce/).
 
-## Quick Start
+## Quick Start 
 
 1). Create a text file called `Example.fan`:
 
@@ -69,9 +69,9 @@ C:\> fant Example.fan
 [info] [afIoc] Adding module definition for Example_0::AppModule
 [info] [afIoc]
    ___    __                 _____        _
-  / _ |  / /  _____  _____  / ___/__  ___/ /_________  __ __
- / _  | / /_ / / -_|/ _  / / __// _ \/ _/ __/ _  / __|/ // /
-/_/ |_|/___//_/\__|/_//_/ /_/   \_,_/__/\__/____/_/   \_, /
+  / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
+ / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
+/_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
           Alien-Factory BedServer v1.0.0, IoC v1.6.0 /___/
 
 BedServer started up in 597ms
@@ -85,13 +85,13 @@ Time: 2052ms
 ***
 ```
 
-## Usage
+## Usage 
 
 Use [BedServer](http://repo.status302.com/doc/afBounce/BedServer.html) to start an instance of your [Bed App](http://www.fantomfactory.org/pods/afBedSheet), and then use [BedClient](http://repo.status302.com/doc/afBounce/BedClient.html) make repeated requests against it. The HTML elements are then used to verify that correct content is rendered.
 
 `BedClient` is a `ButterDish` that wraps a `Butter` instance - all functionality is provided by [Butter](http://www.fantomfactory.org/pods/afButter) middleware. [BedTerminator](http://repo.status302.com/doc/afBounce/BedTerminator.html) is the terminator of the stack, which sends requests to [BedServer](http://repo.status302.com/doc/afBounce/BedServer.html), which holds the instance of your [Bed App](http://www.fantomfactory.org/pods/afBedSheet).
 
-### Verify HTML Content
+### Verify HTML Content 
 
 When queried, the HTML classes (`Element`, [TextBox](http://repo.status302.com/doc/afBounce/TextBox.html), etc...) use the last response from the client. The client stores itself in the `Actor.locals()` map, and the HTML elements implicitly use this value. This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track response they're querying. Example:
 
@@ -108,7 +108,7 @@ When queried, the HTML classes (`Element`, [TextBox](http://repo.status302.com/d
     title.verifyTextEq("Page2")
 ```
 
-### Inspect the WebSession
+### Inspect the WebSession 
 
 It is often useful to inspect, assert against, or even set values in, a client's web session. As the `BedClient` holds the session, this is easy!
 
@@ -131,7 +131,7 @@ class TestMyBedApp : Test {
 }
 ```
 
-### Inject Services Into Tests
+### Inject Services Into Tests 
 
 `BedServer` has access to the [IoC](http://www.fantomfactory.org/pods/afIoc) registry used by your Bed App, this lets you inject services into your test.
 
@@ -155,7 +155,7 @@ class TestMyBedApp : Test {
 }
 ```
 
-### Override Services
+### Override Services 
 
 `BedServer` lets you specify additional Ioc modules, letting you add custom test modules that override or stub out real services with test ones.
 
@@ -177,7 +177,7 @@ class TestMyBedApp : Test {
 }
 ```
 
-## Test Outside The Box!
+## Test Outside The Box! 
 
 By creating `BedClient` with a `Butter` stack that ends with a real HTTP terminator, `Bounce` can also be used to test web applications in any environment. Example:
 
@@ -203,7 +203,7 @@ class TestFantomFactory : Test {
 }
 ```
 
-## Not Just for Bed Apps!
+## Not Just for Bed Apps! 
 
 The HTML element classes ( [Element](http://repo.status302.com/doc/afBounce/Element.html), [TextBox](http://repo.status302.com/doc/afBounce/TextBox.html), etc...) are not just for testing Bed Applications! By setting a [SizzleDoc](http://repo.status302.com/doc/afSizzle/SizzleDoc.html) instance in `Actor.locals()` with the key `afBounce.sizzleDoc` you can use the HTML classes with any XHTML:
 
