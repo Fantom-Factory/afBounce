@@ -5,7 +5,6 @@ using xml
 
 ** (HTML Element) Represents a generic HTML element.
 const class Element {
-	
 	private const ElemFinder finder
 	
 	new makeFromCss(Str cssSelector) {
@@ -244,8 +243,9 @@ const class Element {
 			// only care about the name if we need to submit the value
 			name := attr["name"]
 			if (name == null)
-				Verify().fail("Form element has NO name: " + getHtml(elem))
-			values[name] = val
+				Pod.of(this).log.warn("Form element has NO name: " + getHtml(elem))
+			else
+				values[name] = val
 		}
 	}
 	
