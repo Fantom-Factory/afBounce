@@ -23,13 +23,16 @@ class SizzleMiddleware : ButterMiddleware {
 		sizzleDoc.select(cssSelector)
 	}
 
+	private Uri?			reqUri
 	private SizzleDoc?		doc
 	private ButterResponse? res
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		this.res = null
 		this.doc = null
+		this.reqUri = null
 		this.res = butter.sendRequest(req)
+		this.reqUri = req.uri 
 		return res
 	}
 
@@ -38,8 +41,13 @@ class SizzleMiddleware : ButterMiddleware {
 			throw Err("No requests have been made!")
 		if (doc != null)
 			return doc
-		doc = SizzleDoc(res.asStr)
-		return doc
+		try {
+			doc = SizzleDoc(res.asStr)
+			return doc
+		} catch (Err e) {
+			Env.cur.err.printLine(res.asStr)
+			throw ParseErr("Response at `${reqUri}` is NOT XHTML - $e.msg", e)
+		}
 	}
 
 	private Bool matchesType(MimeType? mimeType, Str[] types) {

@@ -107,10 +107,10 @@ requests to `BedServer`, which holds the instance of your [Bed App]`pod:afBedShe
 
 Verify HTML Content [#verifyHtml]
 =================================
-When queried, the HTML classes (`Element`, `TextBox`, etc...) use the last response from the client.
+When queried, the HTML classes ( `Element`, `TextBox`, etc...) use the last response from the client.
 The client stores itself in the 'Actor.locals()' map, and the HTML elements implicitly use this value.
 This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track
-response they're querying. Example:
+the response they're querying. Example:
 
 pre>
 syntax: fantom
@@ -214,7 +214,7 @@ class TestMyBedApp : Test {
 
 
 Test Outside The Box! [#outsideTheBox]
-**************************************
+======================================
 By creating 'BedClient' with a 'Butter' stack that ends with a real HTTP terminator, 'Bounce' can also be used to test web
 applications in any environment. Example:
 
