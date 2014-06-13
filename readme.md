@@ -93,7 +93,7 @@ Use [BedServer](http://repo.status302.com/doc/afBounce/BedServer.html) to start 
 
 ### Verify HTML Content 
 
-When queried, the HTML classes (`Element`, [TextBox](http://repo.status302.com/doc/afBounce/TextBox.html), etc...) use the last response from the client. The client stores itself in the `Actor.locals()` map, and the HTML elements implicitly use this value. This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track response they're querying. Example:
+When queried, the HTML classes ( [Element](http://repo.status302.com/doc/afBounce/Element.html), [TextBox](http://repo.status302.com/doc/afBounce/TextBox.html), etc...) use the last response from the client. The client stores itself in the `Actor.locals()` map, and the HTML elements implicitly use this value. This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track the response they're querying. Example:
 
 ```
     // deinfe your elements
@@ -177,7 +177,7 @@ class TestMyBedApp : Test {
 }
 ```
 
-## Test Outside The Box! 
+### Test Outside The Box! 
 
 By creating `BedClient` with a `Butter` stack that ends with a real HTTP terminator, `Bounce` can also be used to test web applications in any environment. Example:
 
