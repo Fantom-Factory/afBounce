@@ -277,6 +277,7 @@ Release Notes [#releaseNotes]
 v1.0.2 [#v1.0.2]
 ----------------
  - New: Can now use the HTML Elements outside of a [BedSheet]`pod:afBedSheet` application.
+ - Chg: Updated 'WebSession' to work with new [BedSheet 1.3.8]`pod:afBedSheet` changes.
  - Chg: Form elements with no name now cause warning messages, not Errs.
 
 v1.0.0 [#v1.0.0]
