@@ -18,11 +18,6 @@ const class Link : Element {
 		bedClient.get(href.toUri)
 	}
 	
-	** Submits an enclosing form to Bed App.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm
-	}
-	
 	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem

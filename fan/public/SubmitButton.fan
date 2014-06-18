@@ -1,7 +1,8 @@
 using xml
 using afButter
 
-** (HTML Element) Represents a form '<input>' of type 'submit'.
+** (HTML Element) Represents a form '<input>' of type 'submit' or 'image'. 
+** May also be used for '<button>' elements of type 'submit'.
 const class SubmitButton : Element {
 	
 	@NoDoc
@@ -36,16 +37,28 @@ const class SubmitButton : Element {
 		submitForm
 	}
 
-	** Submits the enclosing form, complete with this button's value.
-	ButterResponse submitForm() {
+	@NoDoc
+	override ButterResponse submitForm() {
 		super.submitEnclosingForm(findElem)
 	}
-	
+
 	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem
-		if (Attr(elem).name != "input" && Attr(elem)["type"]?.lower != "submit")
-			return fail("Element is NOT a submit button: ", false)
+		if (!isSubmitInput(elem) && !isSubmitButton(elem) && !isImageInput(elem))
+			fail("Element is NOT a submit button: ", false)
 		return elem
+	}
+
+	private Bool isSubmitInput(XElem elem) {
+		Attr(elem).name == "input" && Attr(elem)["type"]?.lower == "submit"
+	}
+
+	private Bool isSubmitButton(XElem elem) {
+		Attr(elem).name == "button" && Attr(elem)["type"]?.lower == "submit"
+	}
+
+	private Bool isImageInput(XElem elem) {
+		Attr(elem).name == "input" && Attr(elem)["type"]?.lower == "image"		
 	}
 }

@@ -45,11 +45,6 @@ const class RadioButton : Element {
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
-	** Submits the enclosing form.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm(findElem)
-	}
-	
 	** Verify that the hidden element has the given value.
 	Void verifyValueEq(Obj expected) {
 		verifyEq(value, expected)	
@@ -68,8 +63,8 @@ const class RadioButton : Element {
 	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem
-		if (Attr(elem).name != "input" && Attr(elem)["type"]?.lower != "radio")
-			return fail("Element is NOT a submit button: ", false)
+		if (Attr(elem).name != "input" || Attr(elem)["type"]?.lower != "radio")
+			fail("Element is NOT a submit button: ", false)
 		return elem
 	}
 }

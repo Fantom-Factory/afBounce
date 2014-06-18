@@ -24,7 +24,7 @@ class Build : BuildPod {
 			"afConcurrent 1.0.4+", 
 			"afIoc 1.6.2+", 
 			"afIocConfig 1.0.6+", 
-			"afBedSheet 1.3.6+",
+			"afBedSheet 1.3.8+",
 			"afButter 0.0.6+",
 			"afSizzle 1.0.0+"
 		]

@@ -39,11 +39,6 @@ const class TextBox : Element {
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
-	** Submits the enclosing form to the Bed App.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm
-	}
-	
 	** Verify that the hidden element has the given value.
 	Void verifyValueEq(Obj expected) {
 		verifyEq(value, expected)	
