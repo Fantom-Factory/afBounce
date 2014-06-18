@@ -41,16 +41,11 @@ const class CheckBox : Element {
 		verifyTrue(!checked, "Checkbox IS checked")
 	}
 
-	** Submits the enclosing form to the Bed App.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm
-	}
-	
 	@NoDoc
 	override protected XElem findElem() {
 		elem := Attr(super.findElem)
-		if (elem.name == "input" && elem["type"]?.lower == "checkbox")
-			return elem.elem
-		return fail("Element is NOT a checkbox: ", false)
+		if (elem.name != "input" || elem["type"]?.lower != "checkbox")
+			fail("Element is NOT a checkbox: ", false)
+		return elem.elem
 	}
 }

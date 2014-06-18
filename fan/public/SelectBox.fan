@@ -50,11 +50,6 @@ const class SelectBox : Element {
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
-	** Submits the enclosing form, complete with this button's value.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm
-	}
-	
 	** Verify that the value of the checked option is equal to the given 
 	Void verifyCheckedValueEq(Obj expected) {
 		verifyEq(checked.value, expected)	
@@ -93,11 +88,6 @@ const class Option : Element {
 			setAttr("checked", it ? "checked" : null) 
 		}
 	}
-
-	** Submits the enclosing form to the Bed App.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm
-	}
 	
 	** Verify that the hidden element has the given value.
 	Void verifyValueEq(Obj expected) {
@@ -112,6 +102,13 @@ const class Option : Element {
 	** Verify the option is NOT checked. 
 	Void verifyNotChecked() {
 		verifyTrue(!checked, "Option IS checked: ")
+	}
+
+	override protected XElem findElem() {
+		elem := super.findElem
+		if (!elem.name.equalsIgnoreCase("option"))
+			fail("Element is NOT an <option>", false)
+		return elem
 	}
 
 	private XElem findSelect(XElem elem := findElem) {

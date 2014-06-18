@@ -19,11 +19,6 @@ const class Hidden : Element {
 		set { setAttr("value", it) }
 	}
 	
-	** Submits the enclosing form to the Bed App.
-	ButterResponse submitForm() {
-		super.submitEnclosingForm
-	}
-	
 	** Verify that the hidden element has the given value.
 	Void verifyValueEq(Obj expected) {
 		verifyEq(value, expected)	
@@ -32,8 +27,8 @@ const class Hidden : Element {
 	@NoDoc
 	override protected XElem findElem() {
 		elem := Attr(super.findElem)
-		if (elem.name == "input" && elem["type"]?.lower == "hidden")
-			return elem.elem
-		return fail("Element is NOT a hidden input: ", false)
+		if (elem.name != "input" || elem["type"]?.lower != "hidden")
+			fail("Element is NOT a hidden input: ", false)
+		return elem.elem
 	}
 }

@@ -26,6 +26,7 @@ internal class T_AppModule {
 		config.add(Route(`/formTest`, 	`test/web-tests/formTest.html`.toFile))
 		config.add(Route(`/bounce`, 	`test/web-tests/bounce.html`.toFile))
 		config.add(Route(`/printForm`, 	#printForm, "POST"))
+		config.add(Route(`/printFormAlt`, #printForm, "WEIRD"))
 	}
 	
 	static Text printForm(HttpRequest? req := null) {

@@ -98,7 +98,12 @@ const class Element {
 		findElems
 	}
 	
+	** Submits an enclosing form to Bed App.
+	virtual ButterResponse submitForm() {
+		submitEnclosingForm
+	}
 	
+
 	
 	// ---- Verify Methods ---------------------------------------------------------------------------------------------
 	
@@ -267,12 +272,21 @@ const class Element {
 			}
 		}
 
+		form.select("button").each |elem| {
+			processInput(values, elem) |attr->Str?| {
+				type := attr["type"]?.trim?.lower
+				if (type == "submit" && elem == submitElem)
+					return attr["value"]
+				return null
+			}
+		}
+
 		form.select("input").each |elem| {
 			processInput(values, elem) |attr->Str?| {
 				type := attr["type"]?.trim?.lower ?: "text"
 	
 				// only the value of the 'clicked' submit button is sent to the server
-				if (type == "submit" && elem != submitElem)
+				if ((type == "submit" || type == "image") && elem != submitElem)
 					return null
 	
 				if (type == "checkbox")
@@ -285,15 +299,48 @@ const class Element {
 			}
 		}
 		
-		action := (Uri?) (form.rootElement.attr("action", false)?.val ?: "").toUri
+		formAttrs   := Attr(form.rootElement) 
+		submitAttrs := Attr(submitElem)
+		
+		action := formAttrs["action"]?.toUri ?: ``
 		if (action.toStr.isEmpty)
-			action = bedClient.lastRequest?.uri
-		if (action == null || action.toStr.isEmpty)
-			fail("Form has not 'action' attribute: ", false)
+			action = bedClient.lastRequest?.uri ?: ``
+		
+		if (submitAttrs.has("formaction"))
+			action = submitAttrs["formaction"].toUri
+		
+		if (action.toStr.isEmpty)
+			fail("Form has no 'action' attribute: ", false)
 
-		return (Attr(form.rootElement)["method"]?.lower == "post")
-			? bedClient.postForm(action, values)
-			: bedClient.get(action.plusQuery(values))
+		request := ButterRequest(action)
+
+		method	:= formAttrs["method"]?.trim
+		if (submitAttrs.has("formmethod"))
+			method = submitAttrs["formmethod"]?.trim
+		
+		encType := formAttrs["formenc"]
+		if (submitAttrs.has("formenctype"))
+			encType = submitAttrs["formenctype"]
+		
+		if (method != null)
+			request.method = method
+
+		// favour setting the enctype rather than not
+		if (encType == null && method != "GET")
+			encType = "application/x-www-form-urlencoded"
+		
+		if (encType != null)
+			request.headers.contentType = MimeType(encType)
+		
+		if (request.method == "GET")
+			request.url = action.plusQuery(values)
+		else {
+			// TODO: not sure how to encode non-post stuff
+			enc := Uri.encodeQuery(values)
+			request.body.print(enc)
+		}
+		
+		return bedClient.sendRequest(request)
 	}
 
 	@NoDoc
@@ -352,18 +399,24 @@ internal class Attr {
 	}
 	@Operator
 	Str? getAttr(Str name) {
-		elem.attr(name, false)?.val
+		find(name)?.val
 	}
 	@Operator
 	Void set(Str name, Str? value) {
-		attr := elem.attr(name, false)
+		attr := find(name)
 		if (attr != null)
 			elem.removeAttr(attr)
 		if (value != null) 
 			elem.addAttr(name, value)
 	}
+	Bool has(Str name) {
+		find(name) != null
+	}
 	Str name() {
 		elem.name.trim.lower
+	}
+	private XAttr? find(Str name) {
+		elem.attrs.find { it.name.equalsIgnoreCase(name) }
 	}
 }
 

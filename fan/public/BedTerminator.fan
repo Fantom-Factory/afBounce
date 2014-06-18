@@ -36,10 +36,10 @@ class BedTerminator : ButterMiddleware {
 	}
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		if (!req.uri.isRel)
-			throw Err("Request URIs for Bed App testing should only be a path, e.g. `/index` vs `${req.uri}`")
-		if (!req.uri.isPathAbs)
-			throw Err("Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `${req.uri}`")
+		if (!req.url.isRel)
+			throw Err("Request URIs for Bed App testing should only be a path, e.g. `/index` vs `${req.url}`")
+		if (!req.url.isPathAbs)
+			throw Err("Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `${req.url}`")
 
 		// set the Host (as configured in BedSheet), if it's not been already
 		if (req.headers.host == null) {
@@ -84,7 +84,7 @@ class BedTerminator : ButterMiddleware {
 		BounceWebReq {
 			it.version	= req.version
 			it.method	= req.method
-			it.uri		= req.uri
+			it.uri		= req.url
 			it.headers	= req.headers.map
 			it.session	= session
 			it.in		= req.body.seek(0).in
