@@ -72,7 +72,7 @@ C:\> fant Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-          Alien-Factory BedServer v1.0.0, IoC v1.6.0 /___/
+          Alien-Factory BedServer v1.0.2, IoC v1.6.2 /___/
 
 BedServer started up in 597ms
 
