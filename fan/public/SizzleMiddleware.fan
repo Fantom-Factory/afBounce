@@ -32,7 +32,7 @@ class SizzleMiddleware : ButterMiddleware {
 		this.doc = null
 		this.reqUri = null
 		this.res = butter.sendRequest(req)
-		this.reqUri = req.uri 
+		this.reqUri = req.url
 		return res
 	}
 

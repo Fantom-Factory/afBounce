@@ -304,7 +304,7 @@ const class Element {
 		
 		action := formAttrs["action"]?.toUri ?: ``
 		if (action.toStr.isEmpty)
-			action = bedClient.lastRequest?.uri ?: ``
+			action = bedClient.lastRequest?.url ?: ``
 		
 		if (submitAttrs.has("formaction"))
 			action = submitAttrs["formaction"].toUri
