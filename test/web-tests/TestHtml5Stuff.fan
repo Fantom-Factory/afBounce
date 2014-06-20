@@ -11,10 +11,10 @@ internal class TestHtml5Stuff : WebTest {
 		verifyEq(map["submit"], "dex")
 		
 		echo(client.lastRequest.method)
-		echo(client.lastRequest.uri)
+		echo(client.lastRequest.url)
 		
 		verifyEq(client.lastRequest.method, "WEIRD")
-		verifyEq(client.lastRequest.uri, `/printFormAlt`)
+		verifyEq(client.lastRequest.url, `/printFormAlt`)
 	}
 	
 }
