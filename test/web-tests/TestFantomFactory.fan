@@ -14,6 +14,6 @@ class TestFantomFactory : Test {
 
         // use sizzle to test
         tagLine := Element(".jumbotron h1 + p")
-        tagLine.verifyTextEq("A library for testing Bed applications!")
+        tagLine.verifyTextEq("A library for testing BedSheet applications!")
     }
 }
