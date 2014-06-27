@@ -300,13 +300,13 @@ const class Element {
 		}
 		
 		formAttrs   := Attr(form.rootElement) 
-		submitAttrs := Attr(submitElem)
+		submitAttrs := (submitElem != null) ? Attr(submitElem) : null
 		
 		action := formAttrs["action"]?.toUri ?: ``
 		if (action.toStr.isEmpty)
 			action = bedClient.lastRequest?.url ?: ``
 		
-		if (submitAttrs.has("formaction"))
+		if (submitAttrs?.has("formaction") ?: false)
 			action = submitAttrs["formaction"].toUri
 		
 		if (action.toStr.isEmpty)
@@ -315,11 +315,11 @@ const class Element {
 		request := ButterRequest(action)
 
 		method	:= formAttrs["method"]?.trim
-		if (submitAttrs.has("formmethod"))
+		if (submitAttrs?.has("formmethod") ?: false)
 			method = submitAttrs["formmethod"]?.trim
 		
 		encType := formAttrs["formenc"]
-		if (submitAttrs.has("formenctype"))
+		if (submitAttrs?.has("formenctype") ?: false)
 			encType = submitAttrs["formenctype"]
 		
 		if (method != null)
@@ -393,8 +393,8 @@ const class Element {
 }
 
 internal class Attr {
-	XElem elem
-	new make(XElem elem) {
+	XElem? elem
+	new make(XElem? elem) {
 		this.elem = elem
 	}
 	@Operator
