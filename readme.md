@@ -72,7 +72,7 @@ C:\> fant Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-          Alien-Factory BedServer v1.0.2, IoC v1.6.2 /___/
+          Alien-Factory BedServer v1.0.6, IoC v1.6.4 /___/
 
 BedServer started up in 597ms
 
@@ -177,7 +177,7 @@ class TestMyBedApp : Test {
 }
 ```
 
-### Test Outside The Box! 
+## Test Outside The Box! 
 
 By creating `BedClient` with a `Butter` stack that ends with a real HTTP terminator, `Bounce` can also be used to test web applications in any environment. Example:
 
@@ -214,7 +214,7 @@ using afSizzle
 class TestHtml : Test {
 
     Void testHtml() {
-        xhtml := "<html xmlns="http://www.w3...  // --> your XHTML
+        xhtml := "<html xmlns="http://www.w3..."  // --> your XHTML
         Actor.locals["afBounce.sizzleDoc"] = SizzleDoc.fromStr(xhtml)
 
         success := Element("span.success")
