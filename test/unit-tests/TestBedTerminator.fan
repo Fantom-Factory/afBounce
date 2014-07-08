@@ -5,7 +5,7 @@ internal class TestBedTerminator : UnitTest {
 	Void testUrisMustNotHaveAuth() {
 		mw := BedTerminator(BedServer(T_AppModule#))
 		
-		verifyErrTypeAndMsg(Err#, "Request URIs for Bed App testing should only be a path, e.g. `/index` vs `http://www.alienfactory.co.uk/dude`") {
+		verifyErrMsg(Err#, "Request URIs for Bed App testing should only be a path, e.g. `/index` vs `http://www.alienfactory.co.uk/dude`") {
 			mw.sendRequest(Butter.churnOut, ButterRequest(`http://www.alienfactory.co.uk/dude`))
 		}
 	}
@@ -13,14 +13,14 @@ internal class TestBedTerminator : UnitTest {
 	Void testUrisMustStartWithSlash() {
 		mw := BedTerminator(BedServer(T_AppModule#))
 		
-		verifyErrTypeAndMsg(Err#, "Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `index`") {
+		verifyErrMsg(Err#, "Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `index`") {
 			mw.sendRequest(Butter.churnOut, ButterRequest(`index`))
 		}
 	}
 
 	Void testUrisCanHaveQueryStrings() {
 		mw := BedTerminator(BedServer(T_AppModule#))
-		verifyErrTypeAndMsg(Err#, "${BedServer#.name} has not yet started!") {
+		verifyErrMsg(Err#, "${BedServer#.name} has not yet started!") {
 			mw.sendRequest(Butter.churnOut, ButterRequest(`/dude?af=4&z=1`))
 		}
 	}
