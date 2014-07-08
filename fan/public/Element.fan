@@ -20,6 +20,11 @@ const class Element {
 	
 	// ---- Standard Methods -------------------------------------------------------------------------------------------
 	
+	** Returns the name of the the element. e.g. 'div'
+	Str elementName() {
+		findElem.name
+	}
+
 	** Returns the 'id' as declared by the element. Returns 'null' if the element does not have an 'id' attribute.
 	Str? id() {
 		getAttr("id")
@@ -362,8 +367,8 @@ const class Element {
 	
 	// ---- Private Methods --------------------------------------------------------------------------------------------
 
-	private Element newElementAtIndex(Int index) {
-		Element(finder.clone(FindAtIndex(index)))
+	private This newElementAtIndex(Int index) {
+		(Element) typeof.method(#makeFromFinder.name, true).call(finder.clone(FindAtIndex(index)))
 	}
 
 	private Element newElementFromCss(Str cssSelector) {

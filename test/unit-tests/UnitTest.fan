@@ -1,7 +1,7 @@
 
 abstract internal class UnitTest : Test {
 	
-	protected Void verifyErrTypeAndMsg(Type errType, Str errMsg, |Obj| func) {
+	protected Void verifyErrMsg(Type errType, Str errMsg, |Obj| func) {
 		try {
 			func(4)
 		} catch (Err e) {

@@ -67,21 +67,21 @@ internal const class FindFromCss : ElemFinder {
 	}
 }
 
-internal const class FindUnsafeRefs : ElemFinder {
-	const Unsafe elems	// for testing only
-	new make(XElem[] elems, ElemFinder? finder := null) {
-		this.elems = Unsafe(elems)
-		this.finder = finder
-	}
-	override XElem[] findElems(XElem[]? elems := null) {
-		found := elems
-		return finder?.findElems(found) ?: found
-	}
-	override ElemFinder clone(ElemFinder deepFinder) {
-		FindUnsafeRefs(elems.val, (finder == null) ? deepFinder : finder.clone(deepFinder))
-	}
-	override Str toStr() {
-		"XElem[] " + (finder?.toStr ?: "")
-	}
-}
+//internal const class FindUnsafeRefs : ElemFinder {
+//	const Unsafe elems	// for testing only
+//	new make(XElem[] elems, ElemFinder? finder := null) {
+//		this.elems = Unsafe(elems)
+//		this.finder = finder
+//	}
+//	override XElem[] findElems(XElem[]? elems := null) {
+//		found := elems
+//		return finder?.findElems(found) ?: found
+//	}
+//	override ElemFinder clone(ElemFinder deepFinder) {
+//		FindUnsafeRefs(elems.val, (finder == null) ? deepFinder : finder.clone(deepFinder))
+//	}
+//	override Str toStr() {
+//		"XElem[] " + (finder?.toStr ?: "")
+//	}
+//}
 
