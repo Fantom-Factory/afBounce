@@ -8,6 +8,9 @@ internal class WebTest : Test {
 	BedClient?	client
 	
 	override Void setup() {
+		Log.get("afIoc").level 		= LogLevel.warn
+		Log.get("afIocEnv").level	= LogLevel.warn
+		
 		server = BedServer(T_AppModule#).startup
 		client = server.makeClient
 	}	
