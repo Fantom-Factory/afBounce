@@ -2,6 +2,7 @@ using concurrent
 using afButter
 using afSizzle
 using xml::XElem
+using web::Cookie
 using web::WebSession
 
 ** Use to send requests to your Bed App. 
@@ -65,7 +66,9 @@ class BedClient : ButterDish {
 	** If a session has not yet been created then it returns 'null' - or creates a new session if 
 	** 'create' is 'true'.
 	WebSession?	webSession(Bool create := false) {
-		bedTerminator.webSession(create)
+		if (create) 
+			super.stickyCookies.setCookie(BounceWebSession.sessionCookie)
+		return bedTerminator.webSession(create)
 	}
 
 	

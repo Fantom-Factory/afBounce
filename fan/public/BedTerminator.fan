@@ -225,6 +225,7 @@ internal class BounceWebRes : WebRes {
 
 
 internal class BounceWebSession : WebSession {
+	static const Cookie sessionCookie	:= Cookie("fanws", "69")
 	
 	override Str id {
 		get { createSession; return "69" }
@@ -238,9 +239,13 @@ internal class BounceWebSession : WebSession {
 	new make() { this.map = Str:Obj?[:] }
 
 	override Void delete() {
-		map.clear
+		&map.clear
 	}
 	
+	override Str toStr() {
+		"id=${id}, ${&map.toStr}"
+	}
+
 	private Void createSession() {
 		webReq := (WebReq?) Actor.locals["web.req"]
 		webRes := (WebRes?) Actor.locals["web.res"]
@@ -250,7 +255,7 @@ internal class BounceWebSession : WebSession {
 		
 		if (!webReq.cookies.containsKey("fanws")) {
 			if (!webRes.cookies.any { it.name == "fanws" })
-			webRes.cookies.add(Cookie("fanws", "69"))
+			webRes.cookies.add(sessionCookie)
 		}
 	}
 }
