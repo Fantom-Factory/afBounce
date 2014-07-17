@@ -60,10 +60,12 @@ class BedClient : ButterDish {
 		set { }
 	}
 
-	** The 'WebSession' this client has in the Bed App. Returns 'null' if it has not yet been created.
-	WebSession?	webSession {
-		get { bedTerminator.session }
-		set { }
+	** The 'WebSession' this client has in the Bed App. 
+	** 
+	** If a session has not yet been created then it returns 'null' - or creates a new session if 
+	** 'create' is 'true'.
+	WebSession?	webSession(Bool create := false) {
+		bedTerminator.webSession(create)
 	}
 
 	

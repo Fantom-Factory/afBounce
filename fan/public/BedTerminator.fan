@@ -16,23 +16,16 @@ using concurrent::Actor
 ** A 'Butter' terminator that makes requests against a given `BedServer`.
 class BedTerminator : ButterMiddleware {
 	
+	private WebSession?	session
+
 	** The 'BedServer' this terminator makes calls against.
 	BedServer bedServer
-	
-	** The session used by the client. Returns 'null' if it has not yet been created.
-	WebSession?	session	:= BounceWebSession() {
-		// the null thing is for bounce clients to know if the session has been created or not. Technically this is not 
-		// perfect wisp behaviour, for if an obj were to be added then immediately removed, a wisp session would still 
-		// be created - pfft! Edge case! 
-		get {
-			&session.map.isEmpty ? null : &session 
-		}
-		private set { }
-	}
-	
+
+
 	** Create a BedTerminator attached to the given 'BedServer'
 	internal new make(BedServer bedServer) {
-		this.bedServer = bedServer
+		this.bedServer 	= bedServer
+		this.session	= BounceWebSession()
 	}
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
@@ -61,7 +54,7 @@ class BedTerminator : ButterMiddleware {
 		try {
 			bounceWebRes := BounceWebRes()
 			
-			Actor.locals["web.req"] = toWebReq(req, &session)
+			Actor.locals["web.req"] = toWebReq(req, session)
 			Actor.locals["web.res"] = bounceWebRes
 
 			pipeline := (MiddlewarePipeline) bedServer.registry.dependencyByType(MiddlewarePipeline#)
@@ -78,6 +71,17 @@ class BedTerminator : ButterMiddleware {
 	** Shuts down the associated 'BedServer' and the running web app.
 	Void shutdown() {
 		bedServer.shutdown
+	}
+
+	** The session used by the client.
+	** 
+	** If a session has not yet been created then it returns 'null' - or creates a new session if 
+	** 'create' is 'true'.
+	WebSession?	webSession(Bool create := false) {
+		// the null thing is for bounce clients to know if the session has been created or not. Technically this is not 
+		// perfect wisp behaviour, for if an obj were to be added then immediately removed, a wisp session would still 
+		// be created - pfft! Edge case! 
+		(session.map.isEmpty && !create) ? null : session 
 	}
 	
 	internal WebReq toWebReq(ButterRequest req, WebSession session) {
