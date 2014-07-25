@@ -67,7 +67,7 @@ class BedClient : ButterDish {
 	** 'create' is 'true'.
 	WebSession?	webSession(Bool create := false) {
 		if (create) 
-			super.stickyCookies.setCookie(BounceWebSession.sessionCookie)
+			super.stickyCookies.addCookie(BounceWebSession.sessionCookie)
 		return bedTerminator.webSession(create)
 	}
 

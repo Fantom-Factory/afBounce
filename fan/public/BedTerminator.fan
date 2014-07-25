@@ -36,14 +36,9 @@ class BedTerminator : ButterMiddleware {
 
 		// set the Host (as configured in BedSheet), if it's not been already
 		if (req.headers.host == null) {
-			confSrc := (IocConfigSource) bedServer.dependencyByType(IocConfigSource#)
+			confSrc := (IocConfigSource) bedServer.serviceById(IocConfigSource#.qname)
 			bsHost 	:= (Uri) confSrc.get(BedSheetConfigIds.host, Uri#)
-			isHttps := bsHost.scheme == "https"
-			defPort := isHttps ? 443 : 80
-			host 	:= bsHost.host
-			if (bsHost.port != null && bsHost.port != defPort)
-				host += ":${bsHost.port}"
-			req.headers.host = host.toUri
+			req.headers.host = HttpTerminator.normaliseHost(bsHost)
 		}
 
 		// set the Content-Length, if it's not been already

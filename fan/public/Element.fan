@@ -195,22 +195,22 @@ const class Element {
 
 	@NoDoc
 	protected Void verifyTrue(Bool condition, Str msg) {
-		Verify().verify(condition, msg + toStr)
+		testInstance.verify(condition, msg + toStr)
 	}
 	
 	@NoDoc
 	protected Void verifyEq(Str actual, Obj expected) {
 		if (actual.trim.lower != expected.toStr.trim.lower)
-			Verify().verifyEq(actual, expected)
+			testInstance.verifyEq(actual, expected)
 	}
 
 	** Returns Obj? so it may be in-lined as a return value
 	@NoDoc
 	protected Obj? fail(Str msg, Bool showFullPageHtml) {
 		if (showFullPageHtml) {
-			Verify().fail(msg + toStr + "\n" + sizzleDoc.rootElement.writeToStr)
+			testInstance.fail(msg + toStr + "\n" + sizzleDoc.rootElement.writeToStr)
 		} else
-			Verify().fail(msg + toStr)
+			testInstance.fail(msg + toStr)
 		return null
 	}
 	
@@ -391,6 +391,12 @@ const class Element {
 		return Str.defVal
 	}
 
+	private Test testInstance() {
+		// a small (external) hook so Test classes can notch up extra verify counts. 
+		testInstance := Actor.locals["afBounce.testInstance"]
+		return (testInstance != null && testInstance is Test) ? testInstance : Verify()
+	}
+	
 	** Returns the complete CSS selector and the resulting HTML.
 	override Str toStr() {
 		return finder.toStr + "\n" + findElems.map { getHtml(it) }.join("\n")

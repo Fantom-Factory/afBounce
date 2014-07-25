@@ -23,7 +23,7 @@ internal class WebTest : Test {
 
 internal class T_AppModule {
 	@Contribute { serviceType=Routes# }
-	static Void contributeRoutes(OrderedConfig config) {
+	static Void contributeRoutes(Configuration config) {
 		config.add(Route(`/index`,		Text.fromHtml("""<html><p id="title">Sizzle Kicks Ass!</p></html>""")))
 		config.add(Route(`/session`, 	T_PageHandler#countReqs))
 		config.add(Route(`/formTest`, 	`test/web-tests/formTest.html`.toFile))
