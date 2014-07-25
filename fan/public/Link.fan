@@ -18,6 +18,11 @@ const class Link : Element {
 		bedClient.get(href.toUri)
 	}
 	
+	** Verify that the value of the href is equal to the given. 
+	Void verifyHrefEq(Obj expected) {
+		verifyEq(href, expected)	
+	}
+	
 	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem
