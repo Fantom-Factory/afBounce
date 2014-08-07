@@ -6,7 +6,6 @@ using afIoc::RegistryBuilder
 using wisp::MemWispSessionStore
 using wisp::WispSessionStore
 using afBedSheet::BedSheetModule
-using afBedSheet::BedSheetMetaData
 using afBedSheet::BedSheetWebMod
 using afButter::Butter
 using afButter::HttpTerminator
