@@ -13,6 +13,9 @@ internal class WebTest : Test {
 		
 		server = BedServer(T_AppModule#).startup
 		client = server.makeClient
+		s:=server.dependencyByType(RegistryStartup#) as RegistryStartup
+		echo(s.printServiceList)
+		
 	}	
 
 	override Void teardown() {

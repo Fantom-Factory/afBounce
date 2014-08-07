@@ -36,7 +36,7 @@ class BedTerminator : ButterMiddleware {
 
 		// set the Host (as configured in BedSheet), if it's not been already
 		if (req.headers.host == null) {
-			confSrc := (IocConfigSource) bedServer.serviceById(IocConfigSource#.qname)
+			confSrc := (ConfigSource) bedServer.serviceById(ConfigSource#.qname)
 			bsHost 	:= (Uri) confSrc.get(BedSheetConfigIds.host, Uri#)
 			req.headers.host = HttpTerminator.normaliseHost(bsHost)
 		}
