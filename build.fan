@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing BedSheet applications!"
-		version = Version("1.0.13")
+		version = Version("1.0.14")
 
 		meta = [
 			"proj.name"		: "Bounce",
@@ -21,10 +21,13 @@ class Build : BuildPod {
 			"inet 1.0",
 			"xml 1.0",
 
+			// ---- Core ------------------------
 			"afConcurrent 1.0.6+", 
-			"afIoc 1.7.6+", 
-			"afIocConfig 1.0.14+", 
-			"afBedSheet 1.3.14+",
+			"afIoc 2.0.0+", 
+			"afIocConfig 1.0.16+",
+			
+			// ---- Web -------------------------
+			"afBedSheet 1.3.16+",
 			"afButter 1.0.2+",
 			"afSizzle 1.0.0+"
 		]
