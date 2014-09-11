@@ -201,7 +201,7 @@ const class Element {
 	@NoDoc
 	protected Void verifyEq(Str actual, Obj expected) {
 		if (actual.trim.lower != expected.toStr.trim.lower)
-			testInstance.verifyEq(actual, expected)
+			testInstance.verifyEq(actual.trim, expected.toStr.trim)
 	}
 
 	** Returns Obj? so it may be in-lined as a return value
