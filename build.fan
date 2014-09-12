@@ -10,7 +10,7 @@ class Build : BuildPod {
 		meta = [
 			"proj.name"		: "Bounce",
 			"tags"			: "testing, web",
-			"repo.private"	: "true",
+			"repo.private"	: "false"
 		]
 
 		depends = [
