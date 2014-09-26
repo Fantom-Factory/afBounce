@@ -15,7 +15,7 @@ using afButter::HttpTerminator
 ** 'BedServer' is a 'const' class so it may be used in multiple threads. Do this to create 'BedClients' in different
 ** threads to make concurrent calls - handy for load testing.
 const class BedServer {
-	private const static Log log := Utils.getLog(BedServer#)
+	private const static Log	log 		:= BedServer#.pod.log
 
 	private const AtomicRef		reg			:= AtomicRef()
 	private const AtomicBool	started		:= AtomicBool()

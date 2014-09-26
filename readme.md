@@ -72,7 +72,7 @@ C:\> fant Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-         Alien-Factory BedServer v1.0.10, IoC v1.7.2 /___/
+         Alien-Factory BedServer v1.0.16, IoC v2.0.0 /___/
 
 BedServer started up in 597ms
 
@@ -188,7 +188,7 @@ using afButter
 class TestFantomFactory : Test {
 
     Void testFantomFactory() {
-        // add Sizzle to the middleware stack
+        // add Sizzle to the default middleware stack
         client := BedClient(Butter.churnOut(
             Butter.defaultStack.insert(0, SizzleMiddleware())
         ))
@@ -197,7 +197,7 @@ class TestFantomFactory : Test {
         client.get(`http://www.fantomfactory.org/pods/afBounce`)
 
         // use sizzle to test
-        tagLine := Element(".jumbotron h1 + p")
+        tagLine := Element(".jumbotronic h1 + p")
         tagLine.verifyTextEq("A library for testing Bed applications!")
     }
 }
@@ -205,7 +205,7 @@ class TestFantomFactory : Test {
 
 ## Not Just for Bed Apps! 
 
-The HTML element classes ( [Element](http://repo.status302.com/doc/afBounce/Element.html), [TextBox](http://repo.status302.com/doc/afBounce/TextBox.html), etc...) are not just for testing Bed Applications! By setting a [SizzleDoc](http://repo.status302.com/doc/afSizzle/SizzleDoc.html) instance in `Actor.locals()` with the key `afBounce.sizzleDoc` you can use the HTML classes with any XHTML:
+The HTML element classes ( [Element](http://repo.status302.com/doc/afBounce/Element.html), [TextBox](http://repo.status302.com/doc/afBounce/TextBox.html), etc...) are not just for testing Bed Applications! By setting a [SizzleDoc](http://repo.status302.com/doc/afSizzle/SizzleDoc.html) instance in `Actor.locals()` with the key `afBounce.sizzleDoc` you can use the HTML classes with any HTML:
 
 ```
 using afBounce
