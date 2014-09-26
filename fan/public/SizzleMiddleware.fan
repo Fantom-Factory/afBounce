@@ -1,5 +1,6 @@
 using afButter
 using afSizzle
+using afHtmlParser
 using xml
 using concurrent
 
@@ -14,11 +15,18 @@ using concurrent
 ** documents - just don't query them!  
 class SizzleMiddleware : ButterMiddleware {
 	
+	** If 'true' (the default) then [HtmlParser]`http://www.fantomfactory.org/pods/afHtmlParser` is used to parse the response for HTML.
+	** 
+	** If 'false' then the standard Fantom XML parser is used. 
+	Bool useHtmlParser	:= true
+	
+	** The 'SizzleDoc' associated with the last request.
 	SizzleDoc sizzleDoc {
 		get { getSizzleDoc() }
 		private set { }
 	}
 
+	** Selects elements from the 'SizzleDoc'.
 	XElem[] select(Str cssSelector) {
 		sizzleDoc.select(cssSelector)
 	}
@@ -26,6 +34,7 @@ class SizzleMiddleware : ButterMiddleware {
 	private Uri?			reqUri
 	private SizzleDoc?		doc
 	private ButterResponse? res
+	private HtmlParser?		htmlParser
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		this.res = null
@@ -41,12 +50,27 @@ class SizzleMiddleware : ButterMiddleware {
 			throw Err("No requests have been made!")
 		if (doc != null)
 			return doc
+		type := "HTML"
 		try {
-			doc = SizzleDoc(res.asStr)
+			// only use HtmlParser to parse HTML, XParser is much faster at XML
+			if (useHtmlParser && res.headers.contentType.noParams.toStr.equalsIgnoreCase("text/html")) {
+				if (htmlParser == null)
+					htmlParser = HtmlParser()
+				xml := htmlParser.parseDoc(res.asStr)
+				doc = SizzleDoc(xml)
+			}
+			
+			// if HtmlParser didn't work (or disabled) then try the usual way
+			// it gives better error msgs anyway (for now).
+			if (doc == null) {
+				type = "XML"
+				doc = SizzleDoc(res.asStr)				
+			}
+			
 			return doc
 		} catch (Err e) {
 			Env.cur.err.printLine(res.asStr)
-			throw ParseErr("Response at `${reqUri}` is NOT XHTML - $e.msg", e)
+			throw ParseErr("Response at `${reqUri}` is NOT ${type} - $e.msg", e)
 		}
 	}
 

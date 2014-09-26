@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing BedSheet applications!"
-		version = Version("1.0.15")
+		version = Version("1.0.16")
 
 		meta = [
 			"proj.name"		: "Bounce",
@@ -29,10 +29,13 @@ class Build : BuildPod {
 			// ---- Web -------------------------
 			"afBedSheet 1.3.16+",
 			"afButter 1.0.2+",
-			"afSizzle 1.0.0+"
+			"afSizzle 1.0.0+",
+
+			// ---- Other -------------------------
+			"afHtmlParser 0+"
 		]
 		
-		srcDirs = [`test/`, `test/web-tests/`, `test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`test/`, `test/web-tests/`, `test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`]
 		resDirs = [,]
 	}
 }
