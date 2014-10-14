@@ -20,7 +20,7 @@ internal class WebTest : Test {
 
 	override Void teardown() {
 		client.shutdown
-	}	
+	}
 }
 
 
@@ -33,10 +33,16 @@ internal class T_AppModule {
 		config.add(Route(`/bounce`, 	`test/web-tests/bounce.html`.toFile))
 		config.add(Route(`/printForm`, 	#printForm, "POST"))
 		config.add(Route(`/printFormAlt`, #printForm, "WEIRD"))
+		config.add(Route(`/urlTest`, 	`test/web-tests/urlTest.html`.toFile))
+		config.add(Route(`/printUrl/***`, #printUrl, "*"))
 	}
 	
 	static Text printForm(HttpRequest? req := null) {
 		Text.fromPlain(req.form.toCode)
+	}
+	
+	static Text printUrl(Uri stuff, HttpRequest? req := null) {
+		Text.fromPlain(req.url.toStr)
 	}
 }
 

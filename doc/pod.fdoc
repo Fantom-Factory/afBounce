@@ -274,6 +274,10 @@ class TestHtml : Test {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.18 [#v1.0.18]
+------------------
+ - Bug: Link clicks and form submits now properly (percent) decode URLs.
+
 v1.0.16 [#v1.0.16]
 ------------------
  - New: Uses [HtmlParser]`pod:afHtmlParser` to parse documents of content type 'text/html'.
