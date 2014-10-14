@@ -307,17 +307,17 @@ const class Element {
 		formAttrs   := Attr(form.rootElement) 
 		submitAttrs := (submitElem != null) ? Attr(submitElem) : null
 		
-		action := formAttrs["action"]?.toUri ?: ``
+		action := formAttrs["action"] ?: Str.defVal
 		if (action.toStr.isEmpty)
-			action = bedClient.lastRequest?.url ?: ``
+			action = bedClient.lastRequest?.url?.encode ?: Str.defVal
 		
 		if (submitAttrs?.has("formaction") ?: false)
-			action = submitAttrs["formaction"].toUri
+			action = submitAttrs["formaction"]
 		
 		if (action.toStr.isEmpty)
 			fail("Form has no 'action' attribute: ", false)
 
-		request := ButterRequest(action)
+		request := ButterRequest(Uri.decode(action))
 
 		method	:= formAttrs["method"]?.trim
 		if (submitAttrs?.has("formmethod") ?: false)
@@ -338,8 +338,13 @@ const class Element {
 			request.headers.contentType = MimeType(encType)
 		
 		if (request.method == "GET")
-			request.url = action.plusQuery(values)
-		else {
+			request.url = request.url.plusQuery(values)
+		
+		else if (request.method == "POST") {
+			enc := Uri.encodeQuery(values)
+			request.body.print(enc)
+
+		} else {
 			// TODO: not sure how to encode non-post stuff
 			enc := Uri.encodeQuery(values)
 			request.body.print(enc)

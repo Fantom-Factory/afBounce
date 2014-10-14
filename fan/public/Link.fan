@@ -15,7 +15,7 @@ const class Link : Element {
 	
 	** Sends a GET request to the Bed App with the uri from the 'href' attribute. 
 	ButterResponse click() {
-		bedClient.get(href.toUri)
+		bedClient.get(Uri.decode(href))
 	}
 	
 	** Verify that the value of the href is equal to the given. 
