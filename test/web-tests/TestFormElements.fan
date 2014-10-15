@@ -35,6 +35,11 @@ internal class TestFormInputs : WebTest {
 		verifyEq(Element("p").xelems.size, 2)
 
 		verifyEq(Element("body").find("[name=textbox]").id, "textbox")
+		
+		// new'er Bounce 1.0.18 methods
+		verify(Element("#checkbox").hasAttr("checked"))
+		verifyEq(Element("#checkbox").xelem.name, "input")
+		Element("#checkbox").verifyAttrExists("checked")
 	}
 
 	Void testSubmitButton() {

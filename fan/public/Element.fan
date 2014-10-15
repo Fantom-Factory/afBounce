@@ -25,7 +25,7 @@ const class Element {
 		findElem.name
 	}
 
-	** Returns the 'id' as declared by the element. Returns 'null' if the element does not have an 'id' attribute.
+	** Returns the 'id' attribute as declared by the element. Returns 'null' if the element does not have an 'id' attribute.
 	Str? id() {
 		getAttr("id")
 	}
@@ -40,6 +40,11 @@ const class Element {
 	** The match is done on a whitespace split of the class attribute and is case insensitive.
 	Bool hasClass(Str value) {
 		getAttr("class")?.lower?.split?.contains(value.trim.lower) ?: false
+	}
+	
+	** Returns 'true' if the element defines the given attribute, regardless of its value. 
+	Bool hasAttr(Str value) {
+		getAttr(value) != null
 	}
 	
 	** Returns 'true' if this element exists.
@@ -63,18 +68,23 @@ const class Element {
 	}
 
 	** Returns the value of the named attribute. Returns 'null' if it does not exist.
-	** Usage:
-	**   value := element["value"]
+	** 
+	** Example using the operator shortcut:
+	** 
+	**   attrVal := element["attrName"]
 	@Operator
 	Str? getAttr(Str name) {
 		findElem.attr(name, false)?.val
 	}
 
 	** Returns the element of the current selection at the specified index. Use -1 to select from the end of the list.
-	** Usage:
+	** 
+	** Example using the operator shortcut:
+	** 
 	**   value := element[-2]
 	** 
 	** Note this method is *safe* and does NOT throw an Err should the index be out of bounds. 
+	** (Although subsequent method calls on the returned object would fail.)
 	** Instead use 'verifyDoesNotExist()'.
 	** 
 	** Also note that this returns different results to the CSS selector ':nth-child'.  
@@ -98,7 +108,20 @@ const class Element {
 		findElems.map |elem, i| { newElementAtIndex(i) }
 	}
 	
-	** Return the underlying 'XElem' objects
+	** Returns the first 'XElem' object. 
+	** 
+	** Returns 'null' if 'checked' is 'false' and no elements are found.
+	** Always throws an Err is multiple elements are returned.
+	XElem? xelem(Bool checked := true) {
+		elems := findElems
+		if (elems.isEmpty && checked)
+			fail("CSS does not exist: ", true)
+		if (elems.size > 1)
+			fail("CSS returned multiple elements: ", false)
+		return elems.first
+	}
+
+	** Returns a list of underlying 'XElem' objects. The list may be empty.
 	XElem[] xelems() {
 		findElems
 	}
@@ -132,10 +155,15 @@ const class Element {
 		verifyTrue(text.trim.lower.contains(contains.toStr.trim.lower), "Text does NOT contain '${contains}': ")
 	}
 	
-	** Verify that the element has the given attribute. 
+	** Verify that the element has the given attribute value. 
 	Void verifyAttrEq(Str attrName, Obj expected) {
 		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
 		verifyEq(findElem.attr(attrName).val, expected)
+	}
+	
+	** Verify that the element defines the given attribute, regardless of value. 
+	Void verifyAttrExists(Str attrName) {
+		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
 	}
 	
 	** Verify that the current selection has the given size. 
