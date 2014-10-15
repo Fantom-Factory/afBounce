@@ -277,6 +277,7 @@ Release Notes [#releaseNotes]
 v1.0.18 [#v1.0.18]
 ------------------
  - New: Element methods 'hasAttr()', 'verifyAttrExists()' and 'xelem()'.
+ - Chg: Renamed 'Element.classs() -> Element.cssClass()' along with other similar methods.
  - Bug: Link clicks and form submits now properly (percent) decode URLs.
 
 v1.0.16 [#v1.0.16]
