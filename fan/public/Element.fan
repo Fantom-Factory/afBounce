@@ -21,6 +21,8 @@ const class Element {
 	// ---- Standard Methods -------------------------------------------------------------------------------------------
 	
 	** Returns the name of the the element. e.g. 'div'
+	** 
+	** The method 'name()' is reserved for the 'name' attribute of form inputs.
 	Str elementName() {
 		findElem.name
 	}
@@ -31,16 +33,20 @@ const class Element {
 	}
 
 	** Returns the 'class' attribute as declared by the element, otherwise 'null'.
-	Str? classs() {
+	Str? cssClass() {
 		getAttr("class")
 	}
+	@NoDoc @Deprecated { msg="Use 'cssClass()' instead" }
+	Str? classs() { cssClass }
 	
-	** Returns 'true' if the element contains the given value. 
+	** Returns 'true' if the class attribute contains the given value. 
 	** 
 	** The match is done on a whitespace split of the class attribute and is case insensitive.
-	Bool hasClass(Str value) {
+	Bool hasCssClass(Str value) {
 		getAttr("class")?.lower?.split?.contains(value.trim.lower) ?: false
 	}
+	@NoDoc @Deprecated { msg="Use 'hasCssClass()' instead" }
+	Bool hasClass(Str value) { hasCssClass(value) }
 	
 	** Returns 'true' if the element defines the given attribute, regardless of its value. 
 	Bool hasAttr(Str value) {
@@ -172,11 +178,13 @@ const class Element {
 	}
 
 	** Verify that the current selection has the given size. 
-	Void verifyClassContains(Obj expected) {
+	Void verifyCssClassContains(Obj expected) {
 		attrName := "class"
 		verifyTrue(findElem.attr(attrName, false) != null, "Attribute '${attrName}' does NOT exist: ")
-		verifyTrue(hasClass(expected.toStr), "Class attribute does NOT exist: ")
+		verifyTrue(hasCssClass(expected.toStr), "Class attribute does NOT exist: ")
 	}
+	@NoDoc @Deprecated { msg="Use 'verifyCssClassContains()' instead" }
+	Void verifyClassContains(Obj expected) { verifyCssClassContains(expected) }
 
 	
 	

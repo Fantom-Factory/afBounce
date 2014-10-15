@@ -18,10 +18,10 @@ internal class TestFormInputs : WebTest {
 		
 		verifyEq(Element("h1").id, "head1")
 		verifyEq(Element("form").id, null)
-		verifyEq(Element("h1").classs, "very")
-		verify(Element("#p").hasClass("good"))
-		verify(Element("#p").hasClass("see"))
-		verifyFalse(Element("#p").hasClass("wotever"))
+		verifyEq(Element("h1").cssClass, "very")
+		verify(Element("#p").hasCssClass("good"))
+		verify(Element("#p").hasCssClass("see"))
+		verifyFalse(Element("#p").hasCssClass("wotever"))
 		
 		verify(Element("p")[0].exists)
 		verify(Element("p")[1].exists)
