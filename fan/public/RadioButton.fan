@@ -15,7 +15,8 @@ const class RadioButton : Element {
 	}
 
 	** Gets and sets the 'value' attribute.
-	Str value {
+	** Returns 'null' if the value has not been set.
+	Str? value {
 		get { getAttr("value") }
 		set { setAttr("value", it) }
 	}

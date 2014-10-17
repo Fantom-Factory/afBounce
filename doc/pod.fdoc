@@ -276,7 +276,9 @@ Release Notes [#releaseNotes]
 *****************************
 v1.0.18 [#v1.0.18]
 ------------------
+ - New: 'FormField' for a consistent means to get and set the value of *any* form field element. 
  - New: Element methods 'hasAttr()', 'verifyAttrExists()' and 'xelem()'.
+ - Chg: Form element values may return 'null' if a value has not been set.
  - Chg: Renamed 'Element.classs() -> Element.cssClass()' along with other similar methods.
  - Bug: Link clicks and form submits now properly (percent) decode URLs.
 

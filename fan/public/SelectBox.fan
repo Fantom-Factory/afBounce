@@ -22,20 +22,24 @@ const class SelectBox : Element {
 	}
 
 	** Return the option element with the given value.
+	** Returns 'null' if a match could not be found.
 	Option? optionByValue(Obj value) {
 		options.find { it.value.equalsIgnoreCase(value.toStr.trim) }
 	}
 
 	** Return the option element with the given text (display value).
+	** Returns 'null' if a match could not be found.
 	Option? optionByText(Obj value) {
 		options.find { it.text.equalsIgnoreCase(value.toStr.trim) }
 	}
 
 	** Return the currently checked option element.
-	Option checked() {
+	** Returns 'null' if no option is checked.
+	Option? checked() {
 		// ensure we only bring back an option for the ONE selectbox
 		findElem
-		return find("option[checked]").toOption
+		option := find("option[checked]").toOption
+		return option.exists ? option : null
 	}
 	
 	** Gets and sets the 'disabled' attribute (inverted).
@@ -71,7 +75,8 @@ const class Option : Element {
 	new makeFromCss		(Str cssSelector) 		: super(cssSelector) { }
 
 	** Gets and sets the 'value' attribute.
-	Str value {
+	** Returns 'null' if the value has not been set.
+	Str? value {
 		get { getAttr("value") }
 		set { setAttr("value", it) }
 	}

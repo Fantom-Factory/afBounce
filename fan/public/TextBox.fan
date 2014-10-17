@@ -14,7 +14,8 @@ const class TextBox : Element {
 	}
 
 	** Gets and sets the 'value' attribute.
-	Str value {
+	** Returns 'null' if the value has not been set.
+	Str? value {
 		get { isTextArea ? text : getAttr("value") }
 		set { 
 			elem := findElem
@@ -39,7 +40,7 @@ const class TextBox : Element {
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
 	
-	** Verify that the hidden element has the given value.
+	** Verify that the textbox has the given value.
 	Void verifyValueEq(Obj expected) {
 		verifyEq(value, expected)	
 	}
