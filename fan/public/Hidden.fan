@@ -1,5 +1,4 @@
 using xml
-using afButter
 
 ** (HTML Element) Represents a form '<input>' of type 'hidden'.
 const class Hidden : Element {
@@ -13,8 +12,9 @@ const class Hidden : Element {
 		getAttr("name")
 	}
 
-	** Gets and sets the 'value' attribute.
-	Str value {
+	** Gets and sets the 'value' attribute. 
+	** Returns 'null' if the value has not been set.
+	Str? value {
 		get { getAttr("value") }
 		set { setAttr("value", it) }
 	}

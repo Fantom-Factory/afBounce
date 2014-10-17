@@ -205,7 +205,7 @@ const class Element {
 		Link(finder)
 	}
 	
-	** Returns this element as a `Link`
+	** Returns this element as an `Option`
 	Option toOption() {
 		Option(finder)
 	}
@@ -223,6 +223,11 @@ const class Element {
 	** Returns this element as a `TextBox`
 	TextBox toTextBox() {
 		TextBox(finder)
+	}
+
+	** Returns this element as a `FormField`
+	FormField toFormField() {
+		FormField(finder)
 	}
 	
 	
