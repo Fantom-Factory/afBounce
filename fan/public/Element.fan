@@ -226,8 +226,8 @@ const class Element {
 	}
 
 	** Returns this element as a `FormField`
-	FormField toFormField() {
-		FormField(finder)
+	FormInput toFormInput() {
+		FormInput(finder)
 	}
 	
 	

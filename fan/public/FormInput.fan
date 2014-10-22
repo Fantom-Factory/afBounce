@@ -1,6 +1,6 @@
 
 ** (HTML Element) Gives a consistent means to get and set the value of *any* form field.  
-const class FormField : Element {
+const class FormInput : Element {
 	
 	@NoDoc
 	new makeFromFinder	(ElemFinder elemFinder)	: super(elemFinder)  { }
