@@ -24,7 +24,7 @@ const class FormInput : Element {
 				case "textarea":
 				    return toTextBox.value
 				case "select":
-				    return toSelectBox.checked.value
+				    return toSelectBox.selected?.value ?: null
 				case "option":
 				    return toOption.value
 				default:
@@ -41,7 +41,9 @@ const class FormInput : Element {
 				case "textarea":
 				    toTextBox.value = it
 				case "select":
-				    toSelectBox.optionByValue(it).checked = true
+					if (toSelectBox.optionByValue(it) == null)
+						fail("There is no <option> with the value: $it\n", false)						
+				    toSelectBox.optionByValue(it).selected = true
 				case "option":
 				    toOption.value = it
 				default:

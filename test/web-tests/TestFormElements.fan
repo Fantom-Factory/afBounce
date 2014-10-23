@@ -207,20 +207,20 @@ internal class TestFormInputs : WebTest {
 		selectbox := SelectBox("#selectbox")
 		
 		verifyEq(selectbox.name, "selectbox")
-		verifyEq(selectbox.checked.value.trim, "herb")
+		verifyEq(selectbox.selected.value.trim, "herb")
 		verifyEq(selectbox.enabled, true)
 		verifyEq(selectbox.disabled, false)
-		selectbox.verifyCheckedValueEq("herb")
-		selectbox.checked.verifyChecked
+		selectbox.verifySelectedValueEq("herb")
+		selectbox.selected.verifySelected
 		
 		res := selectbox.submitForm
 		map := (Map) res.asStr.in.readObj
 		verifyEq(map["selectbox"].toStr.trim, "herb")
 		
 		client.get(`/formTest`)
-		selectbox.optionByText("Herb DUDE").verifyChecked
-		selectbox.optionByValue("hawk").checked = true
-		selectbox.optionByText("Herb DUDE").verifyNotChecked
+		selectbox.optionByText("Herb DUDE").verifySelected
+		selectbox.optionByValue("hawk").selected = true
+		selectbox.optionByText("Herb DUDE").verifyNotSelected
 		map = selectbox.submitForm.asStr.in.readObj
 		verifyEq(map["selectbox"], "hawk")
 
