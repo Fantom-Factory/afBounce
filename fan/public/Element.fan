@@ -313,7 +313,7 @@ const class Element {
 
 		form.select("select").each |elem| {
 			processInput(values, elem) |attr->Str?| {
-				options := SizzleDoc(elem).select("option[checked]")
+				options := SizzleDoc(elem).select("option[selected]")
 				return (options.isEmpty) ? null : Attr(options.first)["value"]
 			}
 		}
