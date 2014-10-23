@@ -33,12 +33,12 @@ const class SelectBox : Element {
 		options.find { it.text.equalsIgnoreCase(value.toStr.trim) }
 	}
 
-	** Return the currently checked option element.
+	** Return the currently selected option element.
 	** Returns 'null' if no option is checked.
-	Option? checked() {
+	Option? selected() {
 		// ensure we only bring back an option for the ONE selectbox
 		findElem
-		option := find("option[checked]").toOption
+		option := find("option[selected]").toOption
 		return option.exists ? option : null
 	}
 	
@@ -55,8 +55,8 @@ const class SelectBox : Element {
 	}
 	
 	** Verify that the value of the checked option is equal to the given 
-	Void verifyCheckedValueEq(Obj expected) {
-		verifyEq(checked.value, expected)	
+	Void verifySelectedValueEq(Obj expected) {
+		verifyEq(selected.value, expected)	
 	}
 
 	override protected XElem findElem() {
@@ -82,15 +82,15 @@ const class Option : Element {
 	}
 	
 	** Gets and sets the 'checked' attribute. If setting to 'true', all other options are set to false. 
-	Bool checked {
-		get { getAttr("checked") != null }
+	Bool selected {
+		get { getAttr("selected") != null }
 		set { 
 			if (it) {
 				SizzleDoc(findSelect).select("option").each |option| {
-					Attr(option)["checked"] = null
+					Attr(option)["selected"] = null
 				}
 			}
-			setAttr("checked", it ? "checked" : null) 
+			setAttr("selected", it ? "selected" : null) 
 		}
 	}
 	
@@ -99,14 +99,14 @@ const class Option : Element {
 		verifyEq(value, expected)	
 	}
 
-	** Verify the option is checked. 
-	Void verifyChecked() {
-		verifyTrue(checked, "Option is NOT checked: ")	
+	** Verify the option is selected. 
+	Void verifySelected() {
+		verifyTrue(selected, "Option is NOT selected: ")	
 	}
 
-	** Verify the option is NOT checked. 
-	Void verifyNotChecked() {
-		verifyTrue(!checked, "Option IS checked: ")
+	** Verify the option is NOT selected. 
+	Void verifyNotSelected() {
+		verifyTrue(!selected, "Option IS selected: ")
 	}
 
 	override protected XElem findElem() {
