@@ -10,11 +10,7 @@ internal class TestHtml5Stuff : WebTest {
 		map := (Map) res.asStr.in.readObj
 		verifyEq(map["submit"], "dex")
 		
-		echo(client.lastRequest.method)
-		echo(client.lastRequest.url)
-		
-		verifyEq(client.lastRequest.method, "WEIRD")
-		verifyEq(client.lastRequest.url, `/printFormAlt`)
+		verifyEq(client.lastRequest.method, "GET")
+		verifyEq(client.lastRequest.url.pathOnly, `/printFormAlt`)
 	}
-	
 }

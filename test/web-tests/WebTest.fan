@@ -10,12 +10,10 @@ internal class WebTest : Test {
 	override Void setup() {
 		Log.get("afIoc").level 		= LogLevel.warn
 		Log.get("afIocEnv").level	= LogLevel.warn
+		Log.get("afBedSheet").level = LogLevel.warn
 		
 		server = BedServer(T_AppModule#).startup
-		client = server.makeClient
-		s:=server.dependencyByType(RegistryStartup#) as RegistryStartup
-		echo(s.printServiceList)
-		
+		client = server.makeClient		
 	}	
 
 	override Void teardown() {
@@ -32,22 +30,24 @@ internal class T_AppModule {
 		config.add(Route(`/formTest`, 	`test/web-tests/formTest.html`.toFile))
 		config.add(Route(`/bounce`, 	`test/web-tests/bounce.html`.toFile))
 		config.add(Route(`/printForm`, 	#printForm, "POST"))
-		config.add(Route(`/printFormAlt`, #printForm, "WEIRD"))
+		config.add(Route(`/printFormAlt`, #printForm, "*"))
 		config.add(Route(`/urlTest`, 	`test/web-tests/urlTest.html`.toFile))
 		config.add(Route(`/printUrl/***`, #printUrl, "*"))
 	}
 	
-	static Text printForm(HttpRequest? req := null) {
-		Text.fromPlain(req.form.toCode)
+	@Inject
+	HttpRequest? req
+	Text printForm() {
+		Text.fromPlain(req.form?.toCode ?: req.url.query.toCode)
 	}
 	
-	static Text printUrl(Uri stuff, HttpRequest? req := null) {
+	Text printUrl(Uri stuff) {
 		Text.fromPlain(req.url.toStr)
 	}
 }
 
 internal const class T_PageHandler {
-	@Inject	private const HttpSession 		session
+	@Inject	private const HttpSession session
 	
 	new make(|This|in) { in(this) }
 	
