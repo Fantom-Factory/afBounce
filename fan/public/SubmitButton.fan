@@ -32,7 +32,7 @@ const class SubmitButton : Element {
 		get { getAttr("disabled") != null }
 		set { setAttr("disabled", it ? "disabled" : null) }
 	}
-	
+
 	** Submits the enclosing form, complete with this button's value.
 	ButterResponse click() {
 		submitForm
@@ -46,20 +46,25 @@ const class SubmitButton : Element {
 	@NoDoc
 	override protected XElem findElem() {
 		elem := super.findElem
-		if (!isSubmitInput(elem) && !isSubmitButton(elem) && !isImageInput(elem))
+		if (!isSubmit(elem))
 			fail("Element is NOT a submit button: ", false)
 		return elem
 	}
-
-	private Bool isSubmitInput(XElem elem) {
-		Attr(elem).name == "input" && Attr(elem)["type"]?.lower == "submit"
+	
+	internal Bool isSubmit(XElem elem) {
+		attr := Attr(elem)
+		return isSubmitInput(attr) || isSubmitButton(attr) && isImageInput(attr)		
 	}
 
-	private Bool isSubmitButton(XElem elem) {
-		Attr(elem).name == "button" && Attr(elem)["type"]?.lower == "submit"
+	private Bool isSubmitInput(Attr elem) {
+		elem.name == "input" && elem["type"]?.lower == "submit"
 	}
 
-	private Bool isImageInput(XElem elem) {
-		Attr(elem).name == "input" && Attr(elem)["type"]?.lower == "image"		
+	private Bool isSubmitButton(Attr elem) {
+		elem.name == "button" && elem["type"]?.lower == "submit"
+	}
+
+	private Bool isImageInput(Attr elem) {
+		elem.name == "input" && elem["type"]?.lower == "image"		
 	}
 }
