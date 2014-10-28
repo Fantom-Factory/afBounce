@@ -280,6 +280,8 @@ v1.0.18 [#v1.0.18]
  - New: Element methods 'hasAttr()', 'verifyAttrExists()' and 'xelem()'.
  - Chg: Form element values may return 'null' if a value has not been set.
  - Chg: Renamed 'Element.classs() -> Element.cssClass()' along with other similar methods.
+ - Chg: 'Link' may also represent a 'SubmitButton'.
+ - Chg: 'Link.href' now returns a 'Uri'.
  - Bug: Select options are now selected and not checked... Duh!
  - Bug: Link clicks and form submits now properly (percent) decode URLs.
 
