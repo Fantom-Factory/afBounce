@@ -53,7 +53,7 @@ const class SubmitButton : Element {
 	
 	internal Bool isSubmit(XElem elem) {
 		attr := Attr(elem)
-		return isSubmitInput(attr) || isSubmitButton(attr) && isImageInput(attr)		
+		return isSubmitInput(attr) || isSubmitButton(attr) || isImageInput(attr)		
 	}
 
 	private Bool isSubmitInput(Attr elem) {

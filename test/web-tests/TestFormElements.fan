@@ -137,7 +137,7 @@ internal class TestFormInputs : WebTest {
 		
 		link := Link("p a")
 		
-		verifyEq(link.href, "/bounce")
+		verifyEq(link.href, `/bounce`)
 		
 		res := link.click
 		Element("h1").verifyTextEq("Bounce")

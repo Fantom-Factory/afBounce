@@ -372,7 +372,7 @@ const class Element {
 			request.method = method
 
 		// favour setting the enctype rather than not
-		if (encType == null && method != "GET")
+		if (encType == null && request.method != "GET")
 			encType = "application/x-www-form-urlencoded"
 		
 		if (encType != null)
@@ -380,17 +380,16 @@ const class Element {
 		
 		if (request.method == "GET")
 			request.url = request.url.plusQuery(values)
-		
 		else if (request.method == "POST") {
 			enc := Uri.encodeQuery(values)
 			request.body.print(enc)
-
-		} else {
-			// TODO: not sure how to encode non-post stuff
-			enc := Uri.encodeQuery(values)
-			request.body.print(enc)
-		}
+		} else 
+			throw Err(ErrMsgs.methodGetOrPostOnly(request.method))
 		
+		// v1.0.18 BugFix: Forms should always have the content-length set
+		if (encType != null)
+			request.headers.contentLength = request.body.size
+
 		return bedClient.sendRequest(request)
 	}
 
