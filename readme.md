@@ -14,7 +14,7 @@ Install `Bounce` with the Fantom Repository Manager ( [fanr](http://fantom.org/d
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afBounce 1.0+"]
+    depends = ["sys 1.0", ..., "afBounce 1.0"]
 
 ## Documentation 
 
