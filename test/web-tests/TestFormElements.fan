@@ -53,17 +53,17 @@ internal class TestFormInputs : WebTest {
 		verifyEq(submit.disabled, false)
 		
 		res := submit.click
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["submit"], "Desoxypipradrol")
 		
 		client.get(`/formTest`)
 		submit.value = "All change!"
-		map = submit.click.asStr.in.readObj
+		map = submit.click.body.str.in.readObj
 		verifyEq(map["submit"], "All change!")
 
 		client.get(`/formTest`)
 		submit.disabled = true
-		map = (Map) submit.click.asStr.in.readObj
+		map = (Map) submit.click.body.str.in.readObj
 		verifyFalse(map.containsKey("submit"))
 	}
 
@@ -72,7 +72,7 @@ internal class TestFormInputs : WebTest {
 		
 		res := SubmitButton("#imgSubmit").click
 		
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["submit"], "1")
 	}
 
@@ -81,7 +81,7 @@ internal class TestFormInputs : WebTest {
 		
 		res := SubmitButton("#btnSubmit").click
 		
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["submit"], "2")
 	}
 
@@ -97,18 +97,18 @@ internal class TestFormInputs : WebTest {
 		checkbox.verifyChecked
 		
 		res := checkbox.submitForm
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["checkbox"], "on")
 		
 		client.get(`/formTest`)
 		checkbox.checked = false
 		checkbox.verifyNotChecked
-		map = (Map) checkbox.submitForm.asStr.in.readObj
+		map = (Map) checkbox.submitForm.body.str.in.readObj
 		verifyFalse(map.containsKey("checkbox"))
 
 		client.get(`/formTest`)
 		checkbox.disabled = true
-		map = (Map) checkbox.submitForm.asStr.in.readObj
+		map = (Map) checkbox.submitForm.body.str.in.readObj
 		verifyFalse(map.containsKey("checkbox"))
 	}
 	
@@ -122,13 +122,13 @@ internal class TestFormInputs : WebTest {
 		hidden.verifyValueEq("Gabapentin")
 		
 		res := hidden.submitForm
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["hidden"], "Gabapentin")
 		
 		client.get(`/formTest`)
 		hidden.value = "I've just upset Emma. :("
 		hidden.verifyValueEq("I've just upset Emma. :(")
-		map = hidden.submitForm.asStr.in.readObj
+		map = hidden.submitForm.body.str.in.readObj
 		verifyEq(map["hidden"], "I've just upset Emma. :(")
 	}
 
@@ -155,18 +155,18 @@ internal class TestFormInputs : WebTest {
 		textbox.verifyValueEq("Dimethyltryptamine")
 		
 		res := textbox.submitForm
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["textbox"], "Dimethyltryptamine")
 		
 		client.get(`/formTest`)
 		textbox.value = "Emma happy again!"
 		textbox.verifyValueEq("Emma happy again!")
-		map = textbox.submitForm.asStr.in.readObj
+		map = textbox.submitForm.body.str.in.readObj
 		verifyEq(map["textbox"], "Emma happy again!")
 
 		client.get(`/formTest`)
 		textbox.disabled = true
-		map = (Map) textbox.submitForm.asStr.in.readObj
+		map = (Map) textbox.submitForm.body.str.in.readObj
 		verifyFalse(map.containsKey("textbox"))
 		
 		// BugFix: check no NullErrs are raised
@@ -186,18 +186,18 @@ internal class TestFormInputs : WebTest {
 		textbox.verifyValueEq("Piperazines")
 		
 		res := textbox.submitForm
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["textarea"].toStr.trim, "Piperazines")
 		
 		client.get(`/formTest`)
 		textbox.value = "Emma happy again!"
 		textbox.verifyValueEq("Emma happy again!")
-		map = textbox.submitForm.asStr.in.readObj
+		map = textbox.submitForm.body.str.in.readObj
 		verifyEq(map["textarea"], "Emma happy again!")
 
 		client.get(`/formTest`)
 		textbox.disabled = true
-		map = (Map) textbox.submitForm.asStr.in.readObj
+		map = (Map) textbox.submitForm.body.str.in.readObj
 		verifyFalse(map.containsKey("textarea"))
 	}
 
@@ -214,19 +214,19 @@ internal class TestFormInputs : WebTest {
 		selectbox.selected.verifySelected
 		
 		res := selectbox.submitForm
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["selectbox"].toStr.trim, "herb")
 		
 		client.get(`/formTest`)
 		selectbox.optionByText("Herb DUDE").verifySelected
 		selectbox.optionByValue("hawk").selected = true
 		selectbox.optionByText("Herb DUDE").verifyNotSelected
-		map = selectbox.submitForm.asStr.in.readObj
+		map = selectbox.submitForm.body.str.in.readObj
 		verifyEq(map["selectbox"], "hawk")
 
 		client.get(`/formTest`)
 		selectbox.disabled = true
-		map = (Map) selectbox.submitForm.asStr.in.readObj
+		map = (Map) selectbox.submitForm.body.str.in.readObj
 		verifyFalse(map.containsKey("selectbox"))
 	}
 
@@ -248,18 +248,18 @@ internal class TestFormInputs : WebTest {
 		radio3.verifyNotChecked
 		
 		res := radio1.submitForm
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["Mescaline"].toStr.trim, "Beer")
 		
 		client.get(`/formTest`)
 		radio1.checked = true
 		radio2.verifyNotChecked
-		map = radio2.submitForm.asStr.in.readObj
+		map = radio2.submitForm.body.str.in.readObj
 		verifyEq(map["Mescaline"], "Water")
 
 		client.get(`/formTest`)
 		radio2.disabled = true
-		map = (Map) radio2.submitForm.asStr.in.readObj
+		map = (Map) radio2.submitForm.body.str.in.readObj
 		verifyFalse(map.containsKey("Mescaline"))
 	}
 }

@@ -7,7 +7,7 @@ internal class TestHtml5Stuff : WebTest {
 		// test formaction and formmethod attributes
 		res := SubmitButton("#submitAlt").click
 		
-		map := (Map) res.asStr.in.readObj
+		map := (Map) res.body.str.in.readObj
 		verifyEq(map["submit"], "dex")
 		
 		verifyEq(client.lastRequest.method, "GET")

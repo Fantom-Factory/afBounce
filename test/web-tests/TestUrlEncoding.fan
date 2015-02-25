@@ -6,7 +6,7 @@ internal class TestUrlEncoding : WebTest {
 
 		res := Link("a").click
 		// check the %20 has been decoded
-		verifyEq(res.asStr, "/printUrl/hello moto")
+		verifyEq(res.body.str, "/printUrl/hello moto")
 	}
 
 	Void testSubmit() {
@@ -14,7 +14,7 @@ internal class TestUrlEncoding : WebTest {
 
 		res := SubmitButton("input").click
 		// check the %20 has been decoded
-		verifyEq(res.asStr, "/printUrl/wot ever")
+		verifyEq(res.body.str, "/printUrl/wot ever")
 	}
 
 }

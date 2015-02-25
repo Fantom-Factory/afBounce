@@ -43,7 +43,7 @@ class BedTerminator : ButterMiddleware {
 
 		// set the Content-Length, if it's not been already
 		if (req.headers.contentLength == null && req.method != "GET") {
-			req.headers.contentLength = req.body.size
+			req.headers.contentLength = req.body.buf.size
 		}
 
 		try {
@@ -86,7 +86,7 @@ class BedTerminator : ButterMiddleware {
 			it.uri		= req.url
 			it.headers	= req.headers.map
 			it.session	= session
-			it.in		= req.body.seek(0).in
+			it.in		= req.body.buf.seek(0).in
 		}
 	}
 }
@@ -211,8 +211,8 @@ internal class BounceWebRes : WebRes {
 		return ButterResponse {
 			it.statusCode 	= myStatusCode
 			it.statusMsg	= myStatusRes ?: "Unknown Status Code"
-			it.body			= buf
-			it.headers 		= myHeaders 
+			it.body.buf		= buf
+//			it.headers 		= myHeaders	// FIXME!! 
 		}
 	}
 }

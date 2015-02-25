@@ -56,7 +56,7 @@ class SizzleMiddleware : ButterMiddleware {
 			if (useHtmlParser && res.headers.contentType.noParams.toStr.equalsIgnoreCase("text/html")) {
 				if (htmlParser == null)
 					htmlParser = HtmlParser()
-				xml := htmlParser.parseDoc(res.asStr)
+				xml := htmlParser.parseDoc(res.body.str)
 				doc = SizzleDoc(xml)
 			}
 			
@@ -64,12 +64,12 @@ class SizzleMiddleware : ButterMiddleware {
 			// it gives better error msgs anyway (for now).
 			if (doc == null) {
 				type = "XML"
-				doc = SizzleDoc(res.asStr)				
+				doc = SizzleDoc(res.body.str)		
 			}
 			
 			return doc
 		} catch (Err e) {
-			Env.cur.err.printLine(res.asStr)
+			Env.cur.err.printLine(res.body.str)
 			throw ParseErr("Response at `${reqUri}` is NOT ${type} - $e.msg", e)
 		}
 	}
