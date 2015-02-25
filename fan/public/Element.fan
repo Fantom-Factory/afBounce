@@ -382,13 +382,13 @@ const class Element {
 			request.url = request.url.plusQuery(values)
 		else if (request.method == "POST") {
 			enc := Uri.encodeQuery(values)
-			request.body.print(enc)
+			request.body.buf.print(enc)
 		} else 
 			throw Err(ErrMsgs.methodGetOrPostOnly(request.method))
 		
 		// v1.0.18 BugFix: Forms should always have the content-length set
 		if (encType != null)
-			request.headers.contentLength = request.body.size
+			request.headers.contentLength = request.body.buf.size
 
 		return bedClient.sendRequest(request)
 	}
