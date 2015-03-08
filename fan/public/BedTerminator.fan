@@ -1,3 +1,4 @@
+using afIoc::Registry
 using afIocConfig
 using afButter
 using afButter::HttpResponseHeaders as ButtHead
@@ -10,7 +11,9 @@ using web::WebMod
 using web::WebReq
 using web::WebRes
 using web::WebSession
-using inet
+using inet::IpAddr
+using inet::SocketOptions
+using inet::TcpSocket
 using concurrent::Actor
 
 ** A 'Butter' terminator that makes requests against a given `BedServer`.
@@ -20,7 +23,6 @@ class BedTerminator : ButterMiddleware {
 
 	** The 'BedServer' this terminator makes calls against.
 	BedServer bedServer
-
 
 	** Create a BedTerminator attached to the given 'BedServer'
 	internal new make(BedServer bedServer) {
@@ -52,7 +54,7 @@ class BedTerminator : ButterMiddleware {
 			Actor.locals["web.req"] = toWebReq(req, session)
 			Actor.locals["web.res"] = bounceWebRes
 
-			pipeline := (MiddlewarePipeline) bedServer.registry.dependencyByType(MiddlewarePipeline#)
+			pipeline := (MiddlewarePipeline) bedServer.serviceById(MiddlewarePipeline#.qname)
 			pipeline.service
 			
 			return bounceWebRes.toButterResponse
@@ -63,11 +65,6 @@ class BedTerminator : ButterMiddleware {
 		}		
 	}
 	
-	** Shuts down the associated 'BedServer' and the running web app.
-	Void shutdown() {
-		bedServer.shutdown
-	}
-
 	** The session used by the client.
 	** 
 	** If a session has not yet been created then it returns 'null' - or creates a new session if 
@@ -80,13 +77,14 @@ class BedTerminator : ButterMiddleware {
 	}
 	
 	internal WebReq toWebReq(ButterRequest req, WebSession session) {
-		BounceWebReq {
+		bod := req.body.buf.seek(0)
+		return BounceWebReq {
 			it.version	= req.version
 			it.method	= req.method
 			it.uri		= req.url
 			it.headers	= req.headers.map
 			it.session	= session
-			it.in		= req.body.buf.seek(0).in
+			it.reqBodyBuf = req.body.buf.seek(0)
 		}
 	}
 }
@@ -96,6 +94,7 @@ class BedTerminator : ButterMiddleware {
 internal class BounceWebReq : WebReq {
 	private static const WebMod webMod := BounceDefaultMod() 
 	
+			 Buf reqBodyBuf
 	override WebMod mod 					:= webMod
 	override IpAddr remoteAddr()			{ IpAddr("127.0.0.1") }
 	override Int remotePort() 				{ 80 }
@@ -106,7 +105,11 @@ internal class BounceWebReq : WebReq {
 	override Uri 		uri
 	override Str:Str 	headers
 	override WebSession	session
-	override InStream 	in
+	override InStream 	in() {
+		if (reqBodyBuf.size == 0)
+			throw Err("Attempt to access WebReq.in with no content")
+		return reqBodyBuf.in
+	}
 	
 	new make(|This|in) { in(this) }
 }
@@ -208,12 +211,7 @@ internal class BounceWebRes : WebRes {
 			it.keyVals = keyVals
 		}
 		
-		return ButterResponse {
-			it.statusCode 	= myStatusCode
-			it.statusMsg	= myStatusRes ?: "Unknown Status Code"
-			it.body.buf		= buf
-//			it.headers 		= myHeaders	// FIXME!! 
-		}
+		return ButterResponse(myStatusCode, myStatusRes ?: "Unknown Status Code", myHeaders, buf)
 	}
 }
 

@@ -17,7 +17,7 @@ internal class WebTest : Test {
 	}	
 
 	override Void teardown() {
-		client.shutdown
+		client?.shutdown
 	}
 }
 
@@ -38,7 +38,7 @@ internal class T_AppModule {
 	@Inject
 	HttpRequest? req
 	Text printForm() {
-		Text.fromPlain(req.form?.toCode ?: req.url.query.toCode)
+		Text.fromPlain(req.body.form?.toCode ?: req.url.query.toCode)
 	}
 	
 	Text printUrl(Uri stuff) {
