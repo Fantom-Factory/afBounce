@@ -1,12 +1,12 @@
 using concurrent::AtomicBool
 using concurrent::AtomicRef
-using afConcurrent::AtomicList
+using afConcurrent::LocalRef
 using afIoc::Registry
 using afIoc::RegistryBuilder
 using wisp::MemWispSessionStore
 using wisp::WispSessionStore
+using afBedSheet::BedSheetBuilder
 using afBedSheet::BedSheetModule
-using afBedSheet::BedSheetWebMod
 using afButter::Butter
 using afButter::HttpTerminator
 
@@ -19,8 +19,14 @@ const class BedServer {
 
 	private const AtomicRef		reg			:= AtomicRef()
 	private const AtomicBool	started		:= AtomicBool()
-	private const AtomicRef		moduleName	:= AtomicRef()
-	private const AtomicList	modules		:= AtomicList()
+	private const LocalRef	 	builderRef	:= LocalRef("bedSheetBuilder")
+
+	** The 'afIoc' registry - read only.
+	BedSheetBuilder bedSheetBuilder {
+		get { builderRef.val }
+		private
+		set { builderRef.val = it }
+	}
 
 	** The 'afIoc' registry - read only.
 	Registry registry {
@@ -28,38 +34,67 @@ const class BedServer {
 		private set { reg.val = it }
 	}
 
-	** Create a instance of 'BedSheet' with the given qname of either a Pod or a Type. 
+	** Returns the options from the IoC 'RegistryBuilder'.
+	** Read only.
+	Str:Obj? options {
+		get { bedSheetBuilder.options }
+		private set { throw Err("Read only") }
+	}
+
+	** Create a 'BedServer' instance with the given qname of either a Pod or a Type. 
 	new makeWithName(Str qname) {
-		this.moduleName.val = qname
+		this.builderRef.val = BedSheetBuilder(qname)
 	}
 
-	** Create a instance of 'BedSheet' with the given IoC module (usually your web app).
+	** Create a 'BedServer' instance with the given IoC module (usually your web app).
 	new makeWithModule(Type iocModule) {
-		this.moduleName.val = iocModule.qname
+		this.builderRef.val = BedSheetBuilder(iocModule.qname)
 	}
 
-	** Create a instance of 'BedSheet' with the given pod (usually your web app).
+	** Create a 'BedServer' instance with the given pod (usually your web app).
 	new makeWithPod(Pod webApp) {
-		this.moduleName.val = webApp.name
+		this.builderRef.val = BedSheetBuilder(webApp.name)
 	}
 
-	** Adds an extra (test) module, should you wish to override service behaviour.
+	** Adds an extra (test) module to the registry, should you wish to override service behaviour.
+	** 
+	** Convenience for 'bedSheetBuilder.addModule()'
 	BedServer addModule(Type iocModule) {
 		checkHasNotStarted
-		this.modules.add(iocModule)
+		bedSheetBuilder.addModule(iocModule)
 		return this
 	}
 
+	** Adds many modules to the registry
+	** 
+	** Convenience for 'bedSheetBuilder.addModules()'
+	This addModules(Type[] moduleTypes) {
+		checkHasNotStarted
+		bedSheetBuilder.addModules(moduleTypes)
+		return this
+	}
+	
+	** Inspects the [pod's meta-data]`docLang::Pods#meta` for the key 'afIoc.module'. This is then 
+	** treated as a CSV list of (qualified) module type names to load.
+	** 
+	** If 'addDependencies' is 'true' then the pod's dependencies are also inspected for IoC 
+	** modules.
+	**  
+	** Convenience for 'bedSheetBuilder.addModulesFromPod()'
+	This addModulesFromPod(Str podName, Bool addDependencies := true) {
+		checkHasNotStarted
+		bedSheetBuilder.addModulesFromPod(podName, addDependencies)
+		return this		
+	}
+	
 	** Startup 'afBedSheet'
 	BedServer startup() {
 		checkHasNotStarted
 		
-		bob := BedSheetWebMod.createBob(moduleName.val, 0)		
-		bob.addModules(modules.list)
-		bob.options["bannerText"]	= "Alien-Factory BedServer v${typeof.pod.version}, IoC v${Registry#.pod.version}" 
-		bob.options["appName"]		= "BedServer"
+		bedSheetBuilder.options["afIoc.bannerText"]		= "Alien-Factory BedServer v${typeof.pod.version}, IoC v${Registry#.pod.version}" 
+		bedSheetBuilder.options["afBedSheet.appName"]	= "BedServer"
 			
-		registry = bob.build.startup
+		registry = bedSheetBuilder.buildRegistry.startup
 		started.val = true
 		return this
 	}
@@ -70,7 +105,6 @@ const class BedServer {
 			registry.shutdown
 		reg.val = null
 		started.val = false
-		modules.clear
 		return this
 	}
 	
@@ -88,26 +122,26 @@ const class BedServer {
 	// ---- Registry Methods ----
 	
 	** Helper method - tap into BedSheet's afIoc registry
-	Obj serviceById(Str serviceId) {
-		checkHasStarted
-		return registry.serviceById(serviceId)
+	Obj serviceById(Str serviceId, Bool checked := true) {
+		checkHasStarted; checkHasNotShutdown
+		return registry.serviceById(serviceId, checked)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
-	Obj dependencyByType(Type dependencyType) {
-		checkHasStarted
-		return registry.dependencyByType(dependencyType)
+	Obj dependencyByType(Type dependencyType, Bool checked := true) {
+		checkHasStarted; checkHasNotShutdown
+		return registry.dependencyByType(dependencyType, checked)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
-	Obj autobuild(Type type, Obj?[] ctorArgs := Obj#.emptyList) {
-		checkHasStarted
-		return registry.autobuild(type, ctorArgs)
+	Obj autobuild(Type type, Obj?[]? ctorArgs := null, [Field:Obj?]? fieldVals := null) {
+		checkHasStarted; checkHasNotShutdown
+		return registry.autobuild(type, ctorArgs, fieldVals)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
 	Obj injectIntoFields(Obj service) {
-		checkHasStarted
+		checkHasStarted; checkHasNotShutdown
 		return registry.injectIntoFields(service)
 	}
 	

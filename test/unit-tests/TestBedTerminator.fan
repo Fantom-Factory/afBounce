@@ -27,7 +27,7 @@ internal class TestBedTerminator : UnitTest {
 
 	Void testCanShutdownWithoutError() {
 		mw := BedTerminator(BedServer(T_AppModule#))
-		mw.shutdown
+		mw.bedServer.shutdown
 	}
 	
 	Void testCanHandleUnknownStatusCodes() {

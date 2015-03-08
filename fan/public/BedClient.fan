@@ -52,7 +52,7 @@ class BedClient : ButterDish {
 	** Shuts down the associated 'BedServer' and the running web app.
 	Void shutdown() {
 		Actor.locals.remove("afBounce.bedClient")
-		bedTerminator.shutdown
+		bedServer.shutdown
 	}
 
 	** The 'BedServer' this terminator makes calls against.
