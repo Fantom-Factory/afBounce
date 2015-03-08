@@ -225,7 +225,7 @@ const class Element {
 		TextBox(finder)
 	}
 
-	** Returns this element as a `FormField`
+	** Returns this element as a `FormInput`
 	FormInput toFormInput() {
 		FormInput(finder)
 	}
