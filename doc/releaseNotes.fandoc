@@ -1,0 +1,76 @@
+Versions
+********
+
+v1.0.20
+=======
+ - New: 'BedServer.addModulesFromPod()' and other builder methods.
+ - Chg: Updated to use [BedSheet v1.4.8]`pod:afBedSheet` and [Butter v1.1.2]`pod:afButter`.
+
+v1.0.18
+=======
+ - New: 'FormInput' for a consistent means to get and set the value of *any* form field element.
+ - New: Element methods 'hasAttr()', 'verifyAttrExists()' and 'xelem()'.
+ - Chg: Form element values may return 'null' if a value has not been set.
+ - Chg: Renamed 'Element.classs() -> Element.cssClass()' along with other similar methods.
+ - Chg: 'Link' may also represent a 'SubmitButton'.
+ - Chg: 'Link.href' now returns a 'Uri'.
+ - Chg: Err is now thrown when submitting a form with a method other than 'GET' or 'POST'.
+ - Bug: Select options are now *selected* and not *checked*... **Duh!**
+ - Bug: Link clicks and form submits now properly (percent) decode URLs.
+ - Bug: Submitting encoded forms now always sets the Content-Length HTTP request header.
+
+v1.0.16
+=======
+ - New: Uses [HtmlParser]`pod:afHtmlParser` to parse documents of content type 'text/html'.
+
+v1.0.14
+=======
+ - Chg: Updated to [IoC 2.0.0]`pod:afIoc` and [IoC Config 1.0.16]`pod:afIocConfig`.
+ - Chg: Improved Element error messages.
+
+v1.0.12
+=======
+ - Chg: Updated to [IoC 1.7.6]`pod:afIoc` and [IoC Config 1.0.14]`pod:afIocConfig`.
+
+v1.0.10
+=======
+ - New: Added 'Link.verifyHrefEq()'.
+ - Chg: 'BedClient.webSession()' now takes a 'Bool create' argument so tests can create web sessions.
+
+v1.0.8
+======
+ - New: Added 'Element.elementName'.
+ - Bug: 'Element.getAtIndex()' threw a 'CastErr' if called on a subclass of 'Element'.
+
+v1.0.6
+======
+ - Bug: Submitting forms from arbitrary elements could cause a 'NullErr'.
+
+v1.0.4
+======
+ - New: Support for HTML5 submit attributes 'formaction', 'formmethod' and 'formenctype'.
+ - New: 'SubmitButton' support for '<input type="image">' and '<button type="submit">'.
+
+v1.0.2
+======
+ - New: Can now use the HTML Elements outside of a [BedSheet]`pod:afBedSheet` application.
+ - Chg: Updated 'WebSession' to work with new [BedSheet 1.3.8]`pod:afBedSheet` changes.
+ - Chg: Form elements with no name now cause warning messages, not Errs.
+
+v1.0.0
+======
+ - Chg: Updated to use [Ioc 1.6.0]`pod:afIoc` and [BedSheet 1.3.6]`pod:afBedSheet`.
+
+v0.0.6
+======
+ - New: HTML 'Element' classes with an abundance of helper and verify methods.
+
+v0.0.4
+======
+ - Chg: 'BedTerminator' more closely follows [Butter's]`pod:afButter` 'HttpTerminator'
+ - Chg: Renamed 'BedClient.select()' to 'BedClient().selectCss()'
+
+v0.0.2
+======
+ - New: Preview Release
+

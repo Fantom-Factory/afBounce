@@ -94,7 +94,7 @@ const class BedServer {
 		bedSheetBuilder.options["afIoc.bannerText"]		= "Alien-Factory BedServer v${typeof.pod.version}, IoC v${Registry#.pod.version}" 
 		bedSheetBuilder.options["afBedSheet.appName"]	= "BedServer"
 			
-		registry = bedSheetBuilder.buildRegistry.startup
+		registry = bedSheetBuilder.build.startup
 		started.val = true
 		return this
 	}
