@@ -1,5 +1,5 @@
-Overview [#overview]
-********************
+Overview
+********
 'Bounce' - use it to test your [BedSheet Apps]`pod:afBedSheet`!
 
 'Bounce' is a testing framework that makes requests to your [Bed App]`pod:afBedSheet` without the
@@ -9,26 +9,8 @@ expensive overhead of starting a web server, opening ports, and making network c
 
 
 
-Install [#Install]
-******************
-Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::Tool.install` ):
-
-  C:\> fanr install -r http://repo.status302.com/fanr/ @{pod.name}
-
-To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
-
-  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}"]
-
-
-
-Documentation [#documentation]
-******************************
-Full API & fandocs are available on the [Status302 repository]`http://repo.status302.com/doc/@{pod.name}/`.
-
-
-
-Quick Start [#quickStart]
-*************************
+Quick Start
+***********
 1. Create a text file called 'Example.fan':
 
     syntax: fantom
@@ -92,8 +74,8 @@ Quick Start [#quickStart]
 
 
 
-Usage [#usage]
-**************
+Usage
+*****
 Use `BedServer` to start an instance of your [Bed App]`pod:afBedSheet`, and then use `BedClient`
 make repeated requests against it. The HTML elements are then used to verify that correct content is rendered.
 
@@ -103,8 +85,8 @@ requests to `BedServer`, which holds the instance of your [Bed App]`pod:afBedShe
 
 
 
-Verify HTML Content [#verifyHtml]
-=================================
+Verify HTML Content
+===================
 When queried, the HTML classes ( `Element`, `TextBox`, etc...) use the last response from the client.
 The client stores itself in the 'Actor.locals()' map, and the HTML elements implicitly use this value.
 This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track
@@ -113,28 +95,27 @@ the response they're querying. Example:
 pre>
 syntax: fantom
 
-    // deinfe your elements
-    title := Element("h1")
-    link  := Element("#page2")
+// deinfe your elements
+title := Element("h1")
+link  := Element("#page2")
 
-    // use them
-    client.get(`/index`)
-    title.verifyTextEq("Home Page")
+// use them
+client.get(`/index`)
+title.verifyTextEq("Home Page")
 
-    link.click
-    title.verifyTextEq("Page2")
+link.click
+title.verifyTextEq("Page2")
 <pre
 
 
 
-Inspect the WebSession [#webSession]
-====================================
+Inspect the WebSession
+======================
 It is often useful to inspect, assert against, or even set values in, a client's web session. As the 'BedClient' holds the
 session, this is easy!
 
 pre>
 syntax: fantom
-
 using afBounce
 
 class TestMyBedApp : Test {
@@ -155,14 +136,13 @@ class TestMyBedApp : Test {
 
 
 
-Inject Services Into Tests [#injectServices]
-============================================
+Inject Services Into Tests
+==========================
 'BedServer' has access to the [IoC]`pod:afIoc` registry used by your Bed App, this lets you
 inject services into your test.
 
 pre>
 syntax: fantom
-
 using afBounce
 using afIoc
 
@@ -184,14 +164,13 @@ class TestMyBedApp : Test {
 
 
 
-Override Services [#overrideServices]
-=====================================
+Override Services
+=================
 'BedServer' lets you specify additional Ioc modules, letting you add custom test modules that override or stub out real
 services with test ones.
 
 pre>
 syntax: fantom
-
 using afBounce
 
 class TestMyBedApp : Test {
@@ -211,26 +190,28 @@ class TestMyBedApp : Test {
 
 
 
-Test REST Apps [#testRestApps]
-******************************
+Test REST Apps
+**************
 'BedClient' extends [ButterDish]`afButter::ButterDish` and so comes complete with convenience methods for calling RESTful services.
 
-GET [#get]
-==========
+GET
+===
 For a simple GET request:
 
 pre>
+syntax: fantom
 client   := bedServer.makeClient
 response := client.get(`http://example.org/`)
 <pre
 
 
 
-POST [#post]
-============
+POST
+====
 To send a POST request:
 
 pre>
+syntax: fantom
 client   := bedServer.makeClient
 jsonObj  := ["wot" : "ever"]
 response := client.postJsonObj(`http://example.org/`, jsonObj)
@@ -238,11 +219,12 @@ response := client.postJsonObj(`http://example.org/`, jsonObj)
 
 
 
-PUT [#put]
-==========
+PUT
+===
 To send a PUT request:
 
 pre>
+syntax: fantom
 client   := bedServer.makeClient
 jsonObj  := ["wot" : "ever"]
 response := client.putJsonObj(`http://example.org/`, jsonObj)
@@ -250,22 +232,24 @@ response := client.putJsonObj(`http://example.org/`, jsonObj)
 
 
 
-DELETE [#delete]
-================
+DELETE
+======
 To send a DELETE request:
 
 pre>
+syntax: fantom
 client   := bedServer.makeClient
 response := client.delete(`http://example.org/`)
 <pre
 
 
 
-Custom [#custom]
-================
+Custom
+======
 For complete control over the HTTP requests, create a [ButterRequest]`afButter::ButterRequest` and set the headers and the body yourself:
 
 pre>
+syntax: fantom
 client   := bedServer.makeClient
 request  := ButterRequest(`http://example.org/`) {
     it.method = "POST"
@@ -277,14 +261,13 @@ response := client.sendRequest(req)
 
 
 
-Test Outside The Box! [#outsideTheBox]
-*************************************
+Test Outside The Box!
+*********************
 By creating 'BedClient' with a 'Butter' stack that ends with a real HTTP terminator, 'Bounce' can also be used to test web
 applications in any environment. Example:
 
 pre>
 syntax: fantom
-
 using afBounce
 using afButter
 
@@ -308,15 +291,14 @@ class TestFantomFactory : Test {
 
 
 
-Not Just for Bed Apps! [#notJustForBedApps]
-*******************************************
+Not Just for Bed Apps!
+**********************
 The HTML element classes ( `Element`, `TextBox`, etc...) are not just for testing Bed Applications!
 By setting a [SizzleDoc]`afSizzle::SizzleDoc` instance in 'Actor.locals()' with the key 'afBounce.sizzleDoc' you can use the
 HTML classes with any HTML:
 
 pre>
 syntax: fantom
-
 using afBounce
 using afSizzle
 
@@ -333,81 +315,4 @@ class TestHtml : Test {
     }
 }
 <pre
-
-
-
-Release Notes [#releaseNotes]
-*****************************
-v1.0.20 [#v1.0.20]
-==================
- - New: 'BedServer.addModulesFromPod()' and other builder methods.
- - Chg: Updated to use [BedSheet v1.4.8]`pod:afBedSheet` and [Butter v1.1.2]`pod:afButter`.
-
-v1.0.18 [#v1.0.18]
-==================
- - New: 'FormInput' for a consistent means to get and set the value of *any* form field element.
- - New: Element methods 'hasAttr()', 'verifyAttrExists()' and 'xelem()'.
- - Chg: Form element values may return 'null' if a value has not been set.
- - Chg: Renamed 'Element.classs() -> Element.cssClass()' along with other similar methods.
- - Chg: 'Link' may also represent a 'SubmitButton'.
- - Chg: 'Link.href' now returns a 'Uri'.
- - Chg: Err is now thrown when submitting a form with a method other than 'GET' or 'POST'.
- - Bug: Select options are now *selected* and not *checked*... **Duh!**
- - Bug: Link clicks and form submits now properly (percent) decode URLs.
- - Bug: Submitting encoded forms now always sets the Content-Length HTTP request header.
-
-v1.0.16 [#v1.0.16]
-==================
- - New: Uses [HtmlParser]`pod:afHtmlParser` to parse documents of content type 'text/html'.
-
-v1.0.14 [#v1.0.14]
-==================
- - Chg: Updated to [IoC 2.0.0]`pod:afIoc` and [IoC Config 1.0.16]`pod:afIocConfig`.
- - Chg: Improved Element error messages.
-
-v1.0.12 [#v1.0.12]
-==================
- - Chg: Updated to [IoC 1.7.6]`pod:afIoc` and [IoC Config 1.0.14]`pod:afIocConfig`.
-
-v1.0.10 [#v1.0.10]
-==================
- - New: Added 'Link.verifyHrefEq()'.
- - Chg: 'BedClient.webSession()' now takes a 'Bool create' argument so tests can create web sessions.
-
-v1.0.8 [#v1.0.8]
-================
- - New: Added 'Element.elementName'.
- - Bug: 'Element.getAtIndex()' threw a 'CastErr' if called on a subclass of 'Element'.
-
-v1.0.6 [#v1.0.6]
-================
- - Bug: Submitting forms from arbitrary elements could cause a 'NullErr'.
-
-v1.0.4 [#v1.0.4]
-================
- - New: Support for HTML5 submit attributes 'formaction', 'formmethod' and 'formenctype'.
- - New: 'SubmitButton' support for '<input type="image">' and '<button type="submit">'.
-
-v1.0.2 [#v1.0.2]
-================
- - New: Can now use the HTML Elements outside of a [BedSheet]`pod:afBedSheet` application.
- - Chg: Updated 'WebSession' to work with new [BedSheet 1.3.8]`pod:afBedSheet` changes.
- - Chg: Form elements with no name now cause warning messages, not Errs.
-
-v1.0.0 [#v1.0.0]
-================
- - Chg: Updated to use [Ioc 1.6.0]`pod:afIoc` and [BedSheet 1.3.6]`pod:afBedSheet`.
-
-v0.0.6 [#v0.0.6]
-================
- - New: HTML 'Element' classes with an abundance of helper and verify methods.
-
-v0.0.4 [#v0.0.4]
-================
- - Chg: 'BedTerminator' more closely follows [Butter's]`pod:afButter` 'HttpTerminator'
- - Chg: Renamed 'BedClient.select()' to 'BedClient().selectCss()'
-
-v0.0.2 [#v0.0.2]
-================
- - New: Preview Release
 

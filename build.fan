@@ -5,12 +5,12 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing BedSheet applications"
-		version = Version("1.0.21")
+		version = Version("1.0.20")
 
 		meta = [
 			"proj.name"		: "Bounce",
-			"tags"			: "testing, web",
-			"repo.private"	: "true"
+			"repo.tags"		: "testing, web",
+			"repo.public"	: "true"
 		]
 
 		depends = [
@@ -36,6 +36,6 @@ class Build : BuildPod {
 		]
 		
 		srcDirs = [`test/`, `test/web-tests/`, `test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`]
-		resDirs = [,]
+		resDirs = [`doc/`]
 	}
 }
