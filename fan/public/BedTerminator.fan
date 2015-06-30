@@ -45,7 +45,7 @@ class BedTerminator : ButterMiddleware {
 
 		// set the Content-Length, if it's not been already
 		if (req.headers.contentLength == null && req.method != "GET") {
-			req.headers.contentLength = req.body.buf.size
+			req.headers.contentLength = req.body.buf?.size ?: 0
 		}
 
 		try {
@@ -77,14 +77,13 @@ class BedTerminator : ButterMiddleware {
 	}
 	
 	internal WebReq toWebReq(ButterRequest req, WebSession session) {
-		bod := req.body.buf.seek(0)
 		return BounceWebReq {
 			it.version	= req.version
 			it.method	= req.method
 			it.uri		= req.url
 			it.headers	= req.headers.map
 			it.session	= session
-			it.reqBodyBuf = req.body.buf.seek(0)
+			it.reqBodyBuf = req.body.buf?.seek(0) ?: Buf()
 		}
 	}
 }
