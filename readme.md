@@ -1,16 +1,16 @@
-#Bounce v1.0.20
+#Bounce v1.0.22
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.20](http://img.shields.io/badge/pod-v1.0.20-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
+[![pod: v1.0.22](http://img.shields.io/badge/pod-v1.0.22-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
 
-`Bounce` - use it to test your [BedSheet Apps](http://pods.fantomfactory.org/pods/afBedSheet)!
+Bounce - use it to test your [BedSheet Apps](http://pods.fantomfactory.org/pods/afBedSheet)!
 
-`Bounce` is a testing framework that makes requests to your [Bed App](http://pods.fantomfactory.org/pods/afBedSheet) without the expensive overhead of starting a web server, opening ports, and making network connections.
+Bounce is a testing framework that makes requests to your [Bed App](http://pods.fantomfactory.org/pods/afBedSheet) without the expensive overhead of starting a web server, opening ports, and making network connections.
 
-`Bounce` uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages.
+Bounce uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages.
 
 ## Install
 
