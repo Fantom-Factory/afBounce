@@ -20,7 +20,7 @@ internal class WebTest : Test {
 	}
 }
 
-
+// if the projects are open in F4, then the meta doesn't get built and the modules don't get added!
 internal const class T_AppModule {
 	@Contribute { serviceType=Routes# }
 	static Void contributeRoutes(Configuration config) {

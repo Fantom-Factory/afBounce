@@ -16,7 +16,7 @@ Bounce uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) an
 
 Install `Bounce` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-    C:\> fanr install -r http://repo.status302.com/fanr/ afBounce
+    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afBounce
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
