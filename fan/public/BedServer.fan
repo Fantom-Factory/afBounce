@@ -94,7 +94,7 @@ const class BedServer {
 		bedSheetBuilder.options["afIoc.bannerText"]		= "Alien-Factory BedServer v${typeof.pod.version}, IoC v${Registry#.pod.version}" 
 		bedSheetBuilder.options["afBedSheet.appName"]	= "BedServer"
 			
-		registry = bedSheetBuilder.build.startup
+		registry = bedSheetBuilder.build	//.startup
 		started.val = true
 		return this
 	}
@@ -124,25 +124,25 @@ const class BedServer {
 	** Helper method - tap into BedSheet's afIoc registry
 	Obj serviceById(Str serviceId, Bool checked := true) {
 		checkHasStarted; checkHasNotShutdown
-		return registry.serviceById(serviceId, checked)
+		return registry.activeScope.serviceById(serviceId, checked)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
 	Obj dependencyByType(Type dependencyType, Bool checked := true) {
 		checkHasStarted; checkHasNotShutdown
-		return registry.dependencyByType(dependencyType, checked)
+		return registry.activeScope.serviceByType(dependencyType, checked)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
 	Obj autobuild(Type type, Obj?[]? ctorArgs := null, [Field:Obj?]? fieldVals := null) {
 		checkHasStarted; checkHasNotShutdown
-		return registry.autobuild(type, ctorArgs, fieldVals)
+		return registry.activeScope.build(type, ctorArgs, fieldVals)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
 	Obj injectIntoFields(Obj service) {
 		checkHasStarted; checkHasNotShutdown
-		return registry.injectIntoFields(service)
+		return registry.activeScope.inject(service)
 	}
 	
 	// ---- helper methods ----

@@ -10,10 +10,11 @@ class TestFantomFactory : Test {
         ))
 
         // make real http requests to your integration environment
+		// make Butter follow some redirects - real life ain't easy!
         client.get(`http://www.fantomfactory.org/pods/afBounce`)
 
         // use sizzle to test
-        tagLine := Element(".jumbotronic h1 + p")
+        tagLine := Element("h1.podHeading .small")
         tagLine.verifyTextEq("A library for testing BedSheet applications")
     }
 }

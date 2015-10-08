@@ -55,7 +55,9 @@ class BedTerminator : ButterMiddleware {
 			Actor.locals["web.res"] = bounceWebRes
 
 			pipeline := (MiddlewarePipeline) bedServer.serviceById(MiddlewarePipeline#.qname)
-			pipeline.service
+			bedServer.registry.rootScope.createChildScope("request") {
+				pipeline.service
+			}
 			
 			return bounceWebRes.toButterResponse
 
@@ -97,7 +99,8 @@ internal class BounceWebReq : WebReq {
 	override WebMod mod 					:= webMod
 	override IpAddr remoteAddr()			{ IpAddr("127.0.0.1") }
 	override Int remotePort() 				{ 80 }
-	override SocketOptions socketOptions()	{ TcpSocket().options }
+	override SocketOptions	socketOptions()	{ TcpSocket().options }
+	override TcpSocket 		socket()		{ TcpSocket() }
 	
 	override Version 	version
 	override Str 		method
@@ -232,6 +235,24 @@ internal class BounceWebSession : WebSession {
 
 	override Void delete() {
 		&map.clear
+	}
+	
+	override Void each(|Obj?, Str| f) {
+		map.each(f)
+	}
+	
+	@Operator
+	override Obj? get(Str name, Obj? def := null) {
+		map.get(name, def)
+	}
+	
+	@Operator
+	override Void set(Str name, Obj? val) {
+		map.set(name, val)
+	}
+	
+	override Void remove(Str name) {
+		map.remove(name)
 	}
 	
 	override Str toStr() {
