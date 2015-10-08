@@ -1,4 +1,3 @@
-using afIoc::Inject
 using afBedSheet
 using afIoc
 
@@ -22,19 +21,21 @@ internal class WebTest : Test {
 }
 
 
-internal class T_AppModule {
+internal const class T_AppModule {
 	@Contribute { serviceType=Routes# }
 	static Void contributeRoutes(Configuration config) {
 		config.add(Route(`/index`,		Text.fromHtml("""<html><p id="title">Sizzle Kicks Ass!</p></html>""")))
 		config.add(Route(`/session`, 	T_PageHandler#countReqs))
 		config.add(Route(`/formTest`, 	`test/web-tests/formTest.html`.toFile))
 		config.add(Route(`/bounce`, 	`test/web-tests/bounce.html`.toFile))
-		config.add(Route(`/printForm`, 	#printForm, "POST"))
-		config.add(Route(`/printFormAlt`, #printForm, "*"))
+		config.add(Route(`/printForm`, 	T_AppThing#printForm, "POST"))
+		config.add(Route(`/printFormAlt`, T_AppThing#printForm, "*"))
 		config.add(Route(`/urlTest`, 	`test/web-tests/urlTest.html`.toFile))
-		config.add(Route(`/printUrl/***`, #printUrl, "*"))
+		config.add(Route(`/printUrl/***`, T_AppThing#printUrl, "*"))
 	}
-	
+}
+
+internal class T_AppThing {
 	@Inject
 	HttpRequest? req
 	Text printForm() {

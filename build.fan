@@ -22,13 +22,14 @@ class Build : BuildPod {
 			"xml        1.0",
 
 			// ---- Core ------------------------
-			"afConcurrent 1.0.6  - 1.0", 
-			"afIoc        2.0.6  - 2.0", 
-			"afIocConfig  1.0.16 - 1.0",
+			"afConcurrent 1.0.6 - 1.0", 
+//			"afIoc        2.0.6 - 2.0", 
+			"afIoc        3.0.0 - 3.0", 
+			"afIocConfig  1.1.0 - 1.1",
 			
 			// ---- Web -------------------------
-			"afBedSheet   1.4.8  - 1.4",
-			"afButter     1.1.8  - 1.1",
+			"afBedSheet   1.5.0  - 1.5",
+			"afButter     1.1.9  - 1.1",	//FIXME! butter 1.1.10 for 1.0.68
 			"afSizzle     1.0.2  - 1.0",
 
 			// ---- Other -------------------------
