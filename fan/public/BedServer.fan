@@ -21,14 +21,14 @@ const class BedServer {
 	private const AtomicBool	started		:= AtomicBool()
 	private const LocalRef	 	builderRef	:= LocalRef("bedSheetBuilder")
 
-	** The 'afIoc' registry - read only.
+	** The underlying 'BedSheetBuilder' instance.
 	BedSheetBuilder bedSheetBuilder {
 		get { builderRef.val }
 		private
 		set { builderRef.val = it }
 	}
 
-	** The 'afIoc' registry - read only.
+	** The IoC registry.
 	Registry registry {
 		get { checkHasStarted; return reg.val }
 		private set { reg.val = it }

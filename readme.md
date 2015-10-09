@@ -1,7 +1,7 @@
-#Bounce v1.0.22
+#Bounce v1.1.0
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.22](http://img.shields.io/badge/pod-v1.0.22-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
+[![pod: v1.1.0](http://img.shields.io/badge/pod-v1.1.0-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -20,7 +20,7 @@ Install `Bounce` with the Fantom Repository Manager ( [fanr](http://fantom.org/d
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afBounce 1.0"]
+    depends = ["sys 1.0", ..., "afBounce 1.1"]
 
 ## Documentation
 
