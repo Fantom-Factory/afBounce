@@ -35,7 +35,7 @@ class Build : BuildPod {
 			"afHtmlParser 0+"
 		]
 		
-		srcDirs = [`test/`, `test/web-tests/`, `test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/public/`, `test/`, `test/unit-tests/`, `test/web-tests/`]
 		resDirs = [`doc/`]
 	}
 }
