@@ -32,7 +32,7 @@ class Build : BuildPod {
 			"afSizzle     1.0.2  - 1.0",
 
 			// ---- Other -------------------------
-			"afHtmlParser 0+"
+			"afHtmlParser 0.0.4  - 0.0"
 		]
 		
 		srcDirs = [`fan/`, `fan/internal/`, `fan/public/`, `test/`, `test/unit-tests/`, `test/web-tests/`]
