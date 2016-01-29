@@ -4,6 +4,7 @@ Versions
 v1.1.0
 ======
  - Chg: Updated to work with Fantom 1.0.68, [IoC v3]`pod:afIoc`, and  [BedSheet 1.5]`pod:afBedSheet`. (Breaking change.)
+ - Chg: Added 'BedServer.removeModule()'
 
 v1.0.22
 =======
