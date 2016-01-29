@@ -87,6 +87,13 @@ const class BedServer {
 		return this		
 	}
 	
+	** Removes modules of the given type. If a module of the given type is subsequently added, it is silently ignored.
+	This removeModule(Type moduleType) {
+		checkHasNotStarted
+		bedSheetBuilder.removeModule(moduleType)
+		return this		
+	}
+
 	** Startup 'afBedSheet'
 	BedServer startup() {
 		checkHasNotStarted
