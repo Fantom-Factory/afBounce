@@ -5,6 +5,7 @@ using afButter::HttpResponseHeaders as ButtHead
 using afBedSheet::BedSheetConfigIds
 using afBedSheet::HttpResponseHeaders
 using afBedSheet::MiddlewarePipeline
+using afBedSheet::SessionValue
 using web::Cookie
 using web::WebOutStream
 using web::WebMod
@@ -219,6 +220,9 @@ internal class BounceWebRes : WebRes {
 
 
 
+** I know HttpSession wraps data up in SessionValues - we do it here too so that direct users of
+** WebSession don't need to know it exists - as used when setting session data directly, 
+** e.g. setting a logged in user
 internal class BounceWebSession : WebSession {
 	static const Cookie sessionCookie	:= Cookie("fanws", "69")
 	
@@ -228,7 +232,14 @@ internal class BounceWebSession : WebSession {
 	}
 	
 	override Str:Obj? map {
-		get { createSession; return &map }
+		get {
+			createSession 
+			map := Str:Obj?[:]
+			&map.each |val, key| {
+				map[key] = val is SessionValue ? ((SessionValue) val).val : val
+			} 
+			return map
+		}
 	}
 	
 	new make() { this.map = Str:Obj?[:] }
@@ -243,16 +254,21 @@ internal class BounceWebSession : WebSession {
 	
 	@Operator
 	override Obj? get(Str name, Obj? def := null) {
-		map.get(name, def)
+		val := &map.get(name, def)
+		return val is SessionValue ? ((SessionValue) val).val : val
 	}
 	
 	@Operator
 	override Void set(Str name, Obj? val) {
-		map.set(name, val)
+		createSession
+		if (val is SessionValue)
+			&map.set(name, val)
+		else
+			&map.set(name, SessionValue(val))
 	}
 	
 	override Void remove(Str name) {
-		map.remove(name)
+		&map.remove(name)
 	}
 	
 	override Str toStr() {
