@@ -397,9 +397,9 @@ const class Element {
 	virtual protected XElem findForm(XElem elem := findElem) {
 		if (elem.name.equalsIgnoreCase("form"))
 			return elem
-		if (elem.parent != null)
+		if (elem.parent is XElem)	// we can end up with null or an XDoc if we search too high
 			return findForm(elem.parent)
-		return fail("Could not find enclosing Form element", true)
+		return fail("Could not find an enclosing <form> for element ", true)
 	}
 	
 	** Sets the attribute. A value of 'null' removes it.
