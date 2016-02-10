@@ -5,6 +5,7 @@ v1.1.0
 ======
  - Chg: Updated to work with Fantom 1.0.68, [IoC v3]`pod:afIoc`, and  [BedSheet 1.5]`pod:afBedSheet`. (Breaking change.)
  - Chg: Added 'BedServer.removeModule()'
+ - Bug: 'CastErr' was thrown when an enclosing form could not be found for an <input>, now it's a test failure.
 
 v1.0.22
 =======

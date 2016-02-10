@@ -255,6 +255,8 @@ internal class BounceWebSession : WebSession {
 	@Operator
 	override Obj? get(Str name, Obj? def := null) {
 		val := &map.get(name, def)
+		// flash is an internal BedSheet thing, as used by BedSheet, so always return the raw value
+		if (name == "afBedSheet.flash") return val
 		return val is SessionValue ? ((SessionValue) val).val : val
 	}
 	
