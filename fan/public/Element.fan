@@ -390,6 +390,9 @@ const class Element {
 		if (encType != null)
 			request.headers.contentLength = request.body.size
 
+		// form submits should have the referrer set
+		request.headers.referrer = bedClient.lastRequest?.url
+		
 		return bedClient.sendRequest(request)
 	}
 

@@ -20,9 +20,12 @@ const class Link : Element {
 	
 	** Sends a GET request to the Bed App with the uri from the 'href' attribute. 
 	ButterResponse click() {
-		toSubmitButton.isSubmit(findElem)
-			? toSubmitButton.click
-			: bedClient.get(href)
+		if (toSubmitButton.isSubmit(findElem))
+			return toSubmitButton.click
+		
+		return bedClient.sendRequest(ButterRequest(href) {
+			headers.referrer = bedClient.lastRequest?.url
+		})
 	}
 	
 	** Verify that the value of the href is equal to the given. 
