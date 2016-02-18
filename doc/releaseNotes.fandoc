@@ -1,5 +1,10 @@
 Versions
 ********
+
+v1.0.24
+=======
+ - Chg: Locked down the version of [Html Parser]`pod:afHtmlParser` and [web]`pod:web`.
+
 v1.0.22
 =======
  - Chg: Updated to be compatible with [Butter v1.1.8]`pod:afButter`.

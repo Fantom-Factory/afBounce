@@ -5,19 +5,19 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing BedSheet applications"
-		version = Version("1.0.23")
+		version = Version("1.0.24")
 
 		meta = [
 			"proj.name"		: "Bounce",
 			"repo.tags"		: "testing, web",
-			"repo.public"	: "false"
+			"repo.public"	: "true"
 		]
 
 		depends = [
 			"sys        1.0",
 			"concurrent 1.0",
 			"wisp       1.0",
-			"web        1.0",
+			"web        1.0 - 1.0.67",
 			"inet       1.0",
 			"xml        1.0",
 
@@ -32,10 +32,10 @@ class Build : BuildPod {
 			"afSizzle     1.0.2  - 1.0",
 
 			// ---- Other -------------------------
-			"afHtmlParser 0+"
+			"afHtmlParser 0.0.4  - 0.0"
 		]
 		
-		srcDirs = [`test/`, `test/web-tests/`, `test/unit-tests/`, `fan/`, `fan/public/`, `fan/internal/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/public/`, `test/`, `test/unit-tests/`, `test/web-tests/`]
 		resDirs = [`doc/`]
 	}
 }

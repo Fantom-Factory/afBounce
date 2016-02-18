@@ -1,7 +1,7 @@
-#Bounce v1.0.22
+#Bounce v1.0.24
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.22](http://img.shields.io/badge/pod-v1.0.22-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
+[![pod: v1.0.24](http://img.shields.io/badge/pod-v1.0.24-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -16,7 +16,7 @@ Bounce uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) an
 
 Install `Bounce` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-    C:\> fanr install -r http://repo.status302.com/fanr/ afBounce
+    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afBounce
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
