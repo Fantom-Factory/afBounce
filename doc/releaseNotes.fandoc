@@ -8,6 +8,10 @@ v1.1.0
  - Chg: 'Referrer' HTTP Header is now set when submitting forms and clicking links.
  - Bug: 'CastErr' was thrown when an enclosing form could not be found for an <input>, now it's a test failure.
 
+v1.0.24
+=======
+ - Chg: Locked down the version of [Html Parser]`pod:afHtmlParser` and [web]`pod:web`.
+
 v1.0.22
 =======
  - Chg: Updated to be compatible with [Butter v1.1.8]`pod:afButter`.
