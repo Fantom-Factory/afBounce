@@ -5,12 +5,12 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A library for testing BedSheet applications"
-		version = Version("1.0.24")
+		version = Version("1.0.25")
 
 		meta = [
 			"proj.name"		: "Bounce",
 			"repo.tags"		: "testing, web",
-			"repo.public"	: "true"
+			"repo.public"	: "false"
 		]
 
 		depends = [
