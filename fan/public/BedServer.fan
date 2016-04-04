@@ -135,21 +135,36 @@ const class BedServer {
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
-	Obj dependencyByType(Type dependencyType, Bool checked := true) {
+	Obj serviceByType(Type serviceType, Bool checked := true) {
 		checkHasStarted; checkHasNotShutdown
-		return registry.activeScope.serviceByType(dependencyType, checked)
+		return registry.activeScope.serviceByType(serviceType, checked)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
-	Obj autobuild(Type type, Obj?[]? ctorArgs := null, [Field:Obj?]? fieldVals := null) {
+	Obj build(Type type, Obj?[]? ctorArgs := null, [Field:Obj?]? fieldVals := null) {
 		checkHasStarted; checkHasNotShutdown
 		return registry.activeScope.build(type, ctorArgs, fieldVals)
 	}
 
 	** Helper method - tap into BedSheet's afIoc registry
-	Obj injectIntoFields(Obj service) {
+	Obj inject(Obj instance) {
 		checkHasStarted; checkHasNotShutdown
-		return registry.activeScope.inject(service)
+		return registry.activeScope.inject(instance)
+	}
+
+	@NoDoc @Deprecated { msg="Use 'serviceById()' instead" }
+	Obj dependencyByType(Type dependencyType, Bool checked := true) {
+		serviceByType(dependencyType, checked)
+	}
+
+	@NoDoc @Deprecated { msg="Use 'build()' instead" }
+	Obj autobuild(Type type, Obj?[]? ctorArgs := null, [Field:Obj?]? fieldVals := null) {
+		build(type, ctorArgs, fieldVals)
+	}
+
+	@NoDoc @Deprecated { msg="Use 'inject()' instead" }
+	Obj injectIntoFields(Obj instance) {
+		inject(instance)
 	}
 	
 	// ---- helper methods ----

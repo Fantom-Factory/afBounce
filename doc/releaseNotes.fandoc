@@ -5,6 +5,8 @@ v1.1.0
 ======
  - Chg: Updated to work with Fantom 1.0.68, [IoC v3]`pod:afIoc`, and  [BedSheet 1.5]`pod:afBedSheet`. (Breaking change.)
  - Chg: Added 'BedServer.removeModule()'
+ - Chg: 'BedServer' methods are now more inline with IoC 3.
+ - Chg: 'BedTerminator' ctor is now public - handy for creating your own Butter middleware stacks.
  - Chg: 'Referrer' HTTP Header is now set when submitting forms and clicking links.
  - Bug: 'CastErr' was thrown when an enclosing form could not be found for an <input>, now it's a test failure.
 
