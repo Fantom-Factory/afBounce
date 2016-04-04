@@ -26,7 +26,7 @@ class BedTerminator : ButterMiddleware {
 	BedServer bedServer
 
 	** Create a BedTerminator attached to the given 'BedServer'
-	internal new make(BedServer bedServer) {
+	new make(BedServer bedServer) {
 		this.bedServer 	= bedServer
 		this.session	= BounceWebSession()
 	}
