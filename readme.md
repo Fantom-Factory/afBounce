@@ -53,9 +53,9 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
         }
         
         ** A Really Simple Bed App!!!
-        class AppModule {
+        const class AppModule {
             @Contribute { serviceType=Routes# }
-            static Void contributeRoutes(OrderedConfig config) {
+            Void contributeRoutes(OrderedConfig config) {
                 config.add(Route(`/index`, Text.fromHtml("""<html><p id="title">Bed Bouncing!</p></html>""")))
             }
         }
