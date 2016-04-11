@@ -76,7 +76,9 @@ class BedTerminator : ButterMiddleware {
 		// the null thing is for bounce clients to know if the session has been created or not. Technically this is not 
 		// perfect wisp behaviour, for if an obj were to be added then immediately removed, a wisp session would still 
 		// be created - pfft! Edge case! 
-		(session.map.isEmpty && !create) ? null : session 
+		isEmpty := true
+		session.each { isEmpty = false }
+		return (isEmpty && !create) ? null : session 
 	}
 	
 	internal WebReq toWebReq(ButterRequest req, WebSession session) {
