@@ -348,6 +348,18 @@ const class Element {
 		formAttrs   := Attr(form.rootElement) 
 		submitAttrs := (submitElem != null) ? Attr(submitElem) : null
 		
+		// add submit value if it was added via a 'form' attr
+		if (submitAttrs?.has("name") ?: true) {
+			nom := submitAttrs["name"]
+			val := submitAttrs["value"]
+			if (!values.containsKey(nom ?: "")) {
+				if (val != null && nom == null)
+					Pod.of(this).log.warn("Form element has NO name: " + getHtml(submitElem))
+				else
+					values[nom] = val
+			}
+		}
+		
 		action := formAttrs["action"] ?: Str.defVal
 		if (action.toStr.isEmpty)
 			action = bedClient.lastRequest?.url?.encode ?: Str.defVal
@@ -400,6 +412,12 @@ const class Element {
 	virtual protected XElem findForm(XElem elem := findElem) {
 		if (elem.name.equalsIgnoreCase("form"))
 			return elem
+		
+		// check for the HTML form attr
+		formId := elem.get("form", false)
+		if (formId != null)
+			return SizzleDoc(elem.doc).select("#${formId}").first
+		
 		if (elem.parent is XElem)	// we can end up with null or an XDoc if we search too high
 			return findForm(elem.parent)
 		return fail("Could not find an enclosing <form> for element ", true)
