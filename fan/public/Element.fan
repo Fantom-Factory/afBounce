@@ -416,7 +416,7 @@ const class Element {
 		// check for the HTML form attr
 		formId := elem.get("form", false)
 		if (formId != null)
-			return SizzleDoc(elem.doc).select("#${formId}").first
+			return SizzleDoc(elem.doc).select("#${formId}").first ?: fail("Form '${formId}' does not exist: ", true)
 		
 		if (elem.parent is XElem)	// we can end up with null or an XDoc if we search too high
 			return findForm(elem.parent)
