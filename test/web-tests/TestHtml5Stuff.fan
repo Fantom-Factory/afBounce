@@ -26,5 +26,10 @@ internal class TestHtml5Stuff : WebTest {
 		res = SubmitButton("#submitAlt3").click
 		map = (Map) res.body.str.in.readObj
 		verifyEq(map["submit"], "")
+
+		verifyErr(Type.find("sys::TestErr")) {
+			client.get(`/formTest`)
+			SubmitButton("#submitAlt4").click
+		}
 	}
 }
