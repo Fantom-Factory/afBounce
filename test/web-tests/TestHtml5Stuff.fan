@@ -15,12 +15,16 @@ internal class TestHtml5Stuff : WebTest {
 	}
 
 	Void testNonParentForm() {
-		client.get(`/formTest`)
+		// test form attributes
 		
-		// test formaction and formmethod attributes
+		client.get(`/formTest`)		
 		res := SubmitButton("#submitAlt2").click
-		
 		map := (Map) res.body.str.in.readObj
 		verifyEq(map["submit"], "dex2")
+
+		client.get(`/formTest`)		
+		res = SubmitButton("#submitAlt3").click
+		map = (Map) res.body.str.in.readObj
+		verifyEq(map["submit"], "")
 	}
 }

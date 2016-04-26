@@ -356,7 +356,7 @@ const class Element {
 				if (val != null && nom == null)
 					Pod.of(this).log.warn("Form element has NO name: " + getHtml(submitElem))
 				else
-					values[nom] = val
+					values[nom] = val ?: ""
 			}
 		}
 		
