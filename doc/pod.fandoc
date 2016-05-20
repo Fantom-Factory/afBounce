@@ -316,3 +316,30 @@ class TestHtml : Test {
 }
 <pre
 
+
+
+Multipart Forms / File Uploads
+******************************
+Bounce also handles file uploads!
+
+Ensure the form has an 'enctype' of 'multipart/form-data' with a 'method' of 'POST', then set any file input values to the OS path of the file you want uploaded. It's that simple!
+
+For example, if the HTML looks like this:
+
+pre>
+syntax: html
+
+<form action="..." method="POST" enctype="multipart/form-data">
+    <input  id="file"   name="file"   type="file" >
+    <button id="submit" name="submit" type="submit">Upload</button>
+</form>
+<pre
+
+Then you can upload a file with:
+
+pre>
+syntax: fantom
+
+FormInput("#file").value = `/tmp/myFile.zip`.toFile.osPath
+SubmitButton("#submit").click
+<pre
