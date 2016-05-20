@@ -302,6 +302,7 @@ const class Element {
 	
 	@NoDoc
 	virtual protected ButterResponse submitEnclosingForm(XElem? submitElem := null) {
+		files	:= Str[,]
 		values	:= [Str:Str][:] { caseInsensitive = true }
 		form	:= SizzleDoc(findForm)
 		
@@ -341,6 +342,9 @@ const class Element {
 				if (type == "radio")
 					return (attr["checked"] == null) ? null : (attr["value"] ?: "") 
 	
+				if (type == "file")
+					files.add(attr["name"])
+				
 				return attr["value"] ?: ""
 			}
 		}
@@ -376,7 +380,7 @@ const class Element {
 		if (submitAttrs?.has("formmethod") ?: false)
 			method = submitAttrs["formmethod"]?.trim
 		
-		encType := formAttrs["formenc"]
+		encType := formAttrs["enctype"]
 		if (submitAttrs?.has("formenctype") ?: false)
 			encType = submitAttrs["formenctype"]
 		
@@ -392,14 +396,24 @@ const class Element {
 		
 		if (request.method == "GET")
 			request.url = request.url.plusQuery(values)
+		
 		else if (request.method == "POST") {
-			enc := Uri.encodeQuery(values)
-			request.body.str = enc
+			if (encType.lower == "multipart/form-data") {
+				request.writeMultipartForm |mform| {
+					values.each |val, nom| {
+						if (files.contains(nom))
+							mform.writeFile(nom, File.os(val))
+						else
+							mform.writeText(nom, val)
+					}
+				}
+			} else
+				request.body.str = Uri.encodeQuery(values)
 		} else 
 			throw Err(ErrMsgs.methodGetOrPostOnly(request.method))
 		
 		// v1.0.18 BugFix: Forms should always have the content-length set
-		if (encType != null)
+		if (encType != null && request.headers.contentLength != null)
 			request.headers.contentLength = request.body.size
 
 		// form submits should have the referrer set

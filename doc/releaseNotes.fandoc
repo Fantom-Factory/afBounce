@@ -2,6 +2,7 @@ Versions
 ********
 v1.1.2
 ======
+ - New: Support for multi-part forms and file uploads.
  - New: HTML5 'form' attribute is honoured on Submit buttons.
 
 v1.1.0
