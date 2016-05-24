@@ -358,16 +358,12 @@ const class Element {
 		submitAttrs := (submitElem != null) ? Attr(submitElem) : null
 		
 		// add submit value if it was added via a 'form' attr
-		if (submitAttrs?.has("name") ?: true) {
-			nom := submitAttrs["name"]
-			val := submitAttrs["value"]
-			if (!values.containsKey(nom ?: "")) {
-				if (val != null && nom == null)
-					Pod.of(this).log.warn("Form element has NO name: " + getHtml(submitElem))
-				else
-					values[nom] = val ?: ""
+		if (submitAttrs != null)
+			if (submitAttrs["disabled"] == null && submitAttrs["name"] != null) {
+				nom := submitAttrs["name"]
+				val := submitAttrs["value"]
+				values[nom] = val ?: ""
 			}
-		}
 		
 		action := formAttrs["action"] ?: Str.defVal
 		if (action.toStr.isEmpty)
