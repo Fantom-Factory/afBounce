@@ -195,6 +195,11 @@ const class Element {
 		CheckBox(finder)
 	}
 	
+	** Returns this element as a `RadioButton` input.
+	RadioButton toRadioButton() {
+		RadioButton(finder)
+	}
+	
 	** Returns this element as a `Hidden` input
 	Hidden toHidden() {
 		Hidden(finder)

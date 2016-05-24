@@ -15,12 +15,19 @@ const class FormInput : Element {
 	** Returns 'null' if the value has not been set.
 	Str? value {
 		get {
+			// special handling for radio buttons which have multiple elements with the same name attr
+			elem := findElems.first
+			if (elem.name == "input" && elem.get("type", false) == "radio")
+				return toRadioButton.checkedButton?.value
+			
 			switch (elementName) {
 				case "input":
-					if (getAttr("type") == "checkbox")
-						return toCheckBox.checked.toStr
-					else
-						return getAttr("value")
+					switch (getAttr("type")) {
+						case "checkbox":
+							return toCheckBox.checked.toStr
+						default:
+							return getAttr("value")
+					}
 				case "textarea":
 				    return toTextBox.value
 				case "select":
@@ -32,12 +39,19 @@ const class FormInput : Element {
 			}
 		}
 		set {
+			// special handling for radio buttons which have multiple elements with the same name attr
+			elem := findElems.first
+			if (elem.name == "input" && elem.get("type", false) == "radio")
+				return toRadioButton.findByValue(it).checked = true
+
 			switch (elementName) {
 				case "input":
-					if (getAttr("type") == "checkbox")
-						toCheckBox.checked = it.toBool
-					else
-						setAttr("value", it)
+					switch (getAttr("type")) {
+						case "checkbox":
+							toCheckBox.checked = it.toBool
+						default:
+							setAttr("value", it)
+					}
 				case "textarea":
 				    toTextBox.value = it
 				case "select":
@@ -54,6 +68,6 @@ const class FormInput : Element {
 	
 	** Verify that the form field has the given value.
 	Void verifyValueEq(Obj expected) {
-		verifyEq(value, expected)	
+		verifyEq(value, expected)
 	}
 }

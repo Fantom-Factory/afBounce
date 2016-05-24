@@ -335,7 +335,7 @@ syntax: html
 </form>
 <pre
 
-Then you can upload a file with:
+Then upload a file with:
 
 pre>
 syntax: fantom
