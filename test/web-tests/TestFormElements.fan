@@ -17,7 +17,7 @@ internal class TestFormInputs : WebTest {
 		// don't so much care for the results - just want to check the code doesn't throw any errors!
 		
 		verifyEq(Element("h1").id, "head1")
-		verifyEq(Element("form").id, null)
+		verifyEq(Element("body").id, null)
 		verifyEq(Element("h1").cssClass, "very")
 		verify(Element("#p").hasCssClass("good"))
 		verify(Element("#p").hasCssClass("see"))
