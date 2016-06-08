@@ -5,6 +5,7 @@ v1.1.2
  - New: Support for multi-part forms and file uploads.
  - New: Support for radio buttons in 'HtmlInput'.
  - New: HTML5 'form' attribute is honoured on Submit buttons.
+ - Chg: Tweaked to compile against [BedSheet 1.5.2]`pod:afBedSheet`.
 
 v1.1.0
 ======

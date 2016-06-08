@@ -27,7 +27,7 @@ class Build : BuildPod {
 			"afIocConfig  1.1.0  - 1.1",
 			
 			// ---- Web -------------------------
-			"afBedSheet   1.5.0  - 1.5",
+			"afBedSheet   1.5.1  - 1.5",
 			"afButter     1.2.1  - 1.2",
 			"afSizzle     1.0.2  - 1.0",
 
