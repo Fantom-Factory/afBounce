@@ -1,7 +1,7 @@
-#Bounce v1.1.0
+#Bounce v1.1.2
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.1.0](http://img.shields.io/badge/pod-v1.1.0-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
+[![pod: v1.1.2](http://img.shields.io/badge/pod-v1.1.2-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -10,7 +10,7 @@ Bounce - use it to test your [BedSheet Apps](http://pods.fantomfactory.org/pods/
 
 Bounce is a testing framework that makes requests to your [Bed App](http://pods.fantomfactory.org/pods/afBedSheet) without the expensive overhead of starting a web server, opening ports, and making network connections.
 
-Bounce uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages.
+Bounce uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages. In fact, it's pretty much a headless browser!
 
 ## Install
 
@@ -284,5 +284,27 @@ class TestHtml : Test {
         Actor.locals.remove("afBounce.sizzleDoc")
     }
 }
+```
+
+## Multipart Forms / File Uploads
+
+Bounce also handles file uploads!
+
+Ensure the form has an `enctype` of `multipart/form-data` with a `method` of `POST`, then set any file input values to the OS path of the file you want uploaded. It's that simple!
+
+For example, if the HTML looks like this:
+
+```
+<form action="..." method="POST" enctype="multipart/form-data">
+    <input  id="file"   name="file"   type="file" >
+    <button id="submit" name="submit" type="submit">Upload</button>
+</form>
+```
+
+Then upload a file with:
+
+```
+FormInput("#file").value = `/tmp/myFile.zip`.toFile.osPath
+SubmitButton("#submit").click
 ```
 
