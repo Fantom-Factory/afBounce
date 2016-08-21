@@ -1,5 +1,9 @@
 Versions
 ********
+v1.1.4
+======
+ - Bug: NPE fix for 'FormInput.get()'
+
 v1.1.2
 ======
  - New: Support for multi-part forms and file uploads.
