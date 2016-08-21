@@ -17,7 +17,7 @@ const class FormInput : Element {
 		get {
 			// special handling for radio buttons which have multiple elements with the same name attr
 			elem := findElems.first
-			if (elem.name == "input" && elem.get("type", false) == "radio")
+			if (elem?.name == "input" && elem.get("type", false) == "radio")
 				return toRadioButton.checkedButton?.value
 			
 			switch (elementName) {
@@ -41,7 +41,7 @@ const class FormInput : Element {
 		set {
 			// special handling for radio buttons which have multiple elements with the same name attr
 			elem := findElems.first
-			if (elem?.name == "input" && elem?.get("type", false) == "radio")
+			if (elem?.name == "input" && elem.get("type", false) == "radio")
 				return toRadioButton.findByValue(it).checked = true
 
 			switch (elementName) {
