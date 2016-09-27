@@ -66,6 +66,18 @@ const class FormInput : Element {
 		}
 	}
 	
+	** Gets and sets the 'disabled' attribute (inverted).
+	Bool enabled {
+		get { getAttr("disabled") == null }
+		set { setAttr("disabled", it ? null : "disabled") }
+	}
+
+	** Gets and sets the 'disabled' attribute.
+	Bool disabled {
+		get { getAttr("disabled") != null }
+		set { setAttr("disabled", it ? "disabled" : null) }
+	}
+
 	** Verify that the form field has the given value.
 	Void verifyValueEq(Obj expected) {
 		verifyEq(value, expected)
