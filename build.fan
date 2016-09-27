@@ -23,7 +23,7 @@ class Build : BuildPod {
 
 			// ---- Core ------------------------
 			"afConcurrent 1.0.12 - 1.0", 
-			"afIoc        3.0.0  - 3.0", 
+			"afIoc        3.0.4  - 3.0", 
 			"afIocConfig  1.1.0  - 1.1",
 			
 			// ---- Web -------------------------
