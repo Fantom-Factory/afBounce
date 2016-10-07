@@ -5,6 +5,7 @@ v1.1.4
  - New: Added 'FormInput.enabled' and 'FormInput.disabled' fields.
  - Chg: Updated code to use [IoC 3.0.4]`pod:afIoc`.
  - Bug: NPE fix for 'FormInput.get()'
+ - Bug: Empty file inputs are not sent to the server.
 
 v1.1.2
 ======

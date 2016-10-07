@@ -347,8 +347,11 @@ const class Element {
 				if (type == "radio")
 					return (attr["checked"] == null) ? null : (attr["value"] ?: "") 
 	
-				if (type == "file")
+				if (type == "file") {
+					if (attr["value"]?.trimToNull == null)
+						return null
 					files.add(attr["name"])
+				}
 				
 				return attr["value"] ?: ""
 			}
