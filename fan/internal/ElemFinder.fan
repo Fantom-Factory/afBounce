@@ -36,8 +36,9 @@ internal const class FindAtIndex : ElemFinder {
 		this.finder = finder
 	}
 	override XElem[] findElems(XElem[]? elems := null) {
-		found := (index < elems.size) ? [elems[index]] : XElem#.emptyList
-		return finder?.findElems(found) ?: found
+		found := elems.getSafe(index)
+		foundList := (found != null) ? [found] : XElem#.emptyList
+		return finder?.findElems(foundList) ?: foundList
 	}
 	override ElemFinder clone(ElemFinder deepFinder) {
 		FindAtIndex(index, (finder == null) ? deepFinder : finder.clone(deepFinder))
