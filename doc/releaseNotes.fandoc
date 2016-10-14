@@ -6,6 +6,7 @@ v1.1.4
  - Chg: Updated code to use [IoC 3.0.4]`pod:afIoc`.
  - Bug: NPE fix for 'FormInput.get()'
  - Bug: Empty file inputs are not sent to the server.
+ - Bug: Better handling / err msgs for dodgy elem indexes.
 
 v1.1.2
 ======
