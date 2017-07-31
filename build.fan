@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A headless browser for testing web sites and BedSheet applications"
-		version = Version("1.1.6")
+		version = Version("1.1.7")
 
 		meta = [
 			"pod.dis"		: "Bounce",
