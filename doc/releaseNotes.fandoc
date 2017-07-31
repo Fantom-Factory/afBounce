@@ -2,7 +2,7 @@
 v1.1.6
 ======
  - New: Added 'BedClient.refresh()' method.
- - Chg: Updated to use [Butter 1.2.4]`pod:afButter`.
+ - Chg: Updated to use [Butter 1.2.6]`pod:afButter`.
 
 v1.1.4
 ======

@@ -15,6 +15,6 @@ class TestFantomFactory : Test {
 
         // use sizzle to test
         tagLine := Element("h1.podHeading .small")
-        tagLine.verifyTextEq("A headless browser for testing BedSheet applications and web sites")
+        tagLine.verifyTextEq("A headless browser for testing web sites and BedSheet applications")
     }
 }

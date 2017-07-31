@@ -5,12 +5,12 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A headless browser for testing web sites and BedSheet applications"
-		version = Version("1.1.5")
+		version = Version("1.1.6")
 
 		meta = [
-			"pod.displayName"	: "Bounce",
-			"repo.tags"			: "testing, web",
-			"repo.public"		: "true"
+			"pod.dis"		: "Bounce",
+			"repo.tags"		: "testing, web",
+			"repo.public"	: "true"
 		]
 
 		depends = [
@@ -28,7 +28,7 @@ class Build : BuildPod {
 			
 			// ---- Web -------------------------
 			"afBedSheet   1.5.6  - 1.5",
-			"afButter     1.2.4  - 1.2",
+			"afButter     1.2.6  - 1.2",
 			"afSizzle     1.0.2  - 1.0",
 
 			// ---- Other -------------------------
