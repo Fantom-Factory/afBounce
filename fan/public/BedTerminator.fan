@@ -86,7 +86,7 @@ class BedTerminator : ButterMiddleware {
 			it.version	= req.version
 			it.method	= req.method
 			it.uri		= req.url
-			it.headers	= req.headers.map
+			it.headers	= req.headers.val
 			it.session	= session
 			it.reqBodyBuf = req.body.buf?.seek(0) ?: Buf()
 		}
@@ -214,7 +214,8 @@ internal class BounceWebRes : WebRes {
 			}
 			it.keyVals = keyVals
 		}
-		return ButterResponse(myStatusCode, myHeaders.map, buf)
+		res:= ButterResponse(myStatusCode, myHeaders.val, buf)
+		return res
 	}
 }
 

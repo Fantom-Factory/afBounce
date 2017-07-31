@@ -1,30 +1,35 @@
-#Bounce v1.1.4
+#Bounce v1.1.6
 ---
-[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.1.4](http://img.shields.io/badge/pod-v1.1.4-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
-![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
+[![pod: v1.1.6](http://img.shields.io/badge/pod-v1.1.6-yellow.svg)](http://www.fantomfactory.org/pods/afBounce)
+![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
 
 ## Overview
 
-Bounce - use it to test your [BedSheet Apps](http://pods.fantomfactory.org/pods/afBedSheet)!
+Bounce - use it to test your [BedSheet Apps](http://eggbox.fantomfactory.org/pods/afBedSheet)!
 
-Bounce is a testing framework that makes requests to your [Bed App](http://pods.fantomfactory.org/pods/afBedSheet) without the expensive overhead of starting a web server, opening ports, and making network connections.
+Bounce is a testing framework that makes requests to your [Bed App](http://eggbox.fantomfactory.org/pods/afBedSheet) without the expensive overhead of starting a web server, opening ports, and making network connections.
 
-Bounce uses rich [CSS selectors](http://pods.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages. In fact, it's pretty much a headless browser!
+Bounce uses rich [CSS selectors](http://eggbox.fantomfactory.org/pods/afSizzle) and a simple API to let you query and verify your web pages. In fact, it's pretty much a headless browser!
 
 ## Install
 
-Install `Bounce` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
+Install `Bounce` with the Fantom Pod Manager ( [FPM](http://eggbox.fantomfactory.org/pods/afFpm) ):
 
-    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afBounce
+    C:\> fpm install afBounce
 
-To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
+Or install `Bounce` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+
+    C:\> fanr install -r http://eggbox.fantomfactory.org/fanr/ afBounce
+
+To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
 
     depends = ["sys 1.0", ..., "afBounce 1.1"]
 
 ## Documentation
 
-Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afBounce/).
+Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afBounce/) - the Fantom Pod Repository.
 
 ## Quick Start
 
@@ -92,13 +97,13 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
 
 ## Usage
 
-Use [BedServer](http://pods.fantomfactory.org/pods/afBounce/api/BedServer) to start an instance of your [Bed App](http://pods.fantomfactory.org/pods/afBedSheet), and then use [BedClient](http://pods.fantomfactory.org/pods/afBounce/api/BedClient) make repeated requests against it. The HTML elements are then used to verify that correct content is rendered.
+Use [BedServer](http://eggbox.fantomfactory.org/pods/afBounce/api/BedServer) to start an instance of your [Bed App](http://eggbox.fantomfactory.org/pods/afBedSheet), and then use [BedClient](http://eggbox.fantomfactory.org/pods/afBounce/api/BedClient) make repeated requests against it. The HTML elements are then used to verify that correct content is rendered.
 
-`BedClient` is a `ButterDish` that wraps a `Butter` instance - all functionality is provided by [Butter](http://pods.fantomfactory.org/pods/afButter) middleware. [BedTerminator](http://pods.fantomfactory.org/pods/afBounce/api/BedTerminator) is the terminator of the stack, which sends requests to [BedServer](http://pods.fantomfactory.org/pods/afBounce/api/BedServer), which holds the instance of your [Bed App](http://pods.fantomfactory.org/pods/afBedSheet).
+`BedClient` is a `ButterDish` that wraps a `Butter` instance - all functionality is provided by [Butter](http://eggbox.fantomfactory.org/pods/afButter) middleware. [BedTerminator](http://eggbox.fantomfactory.org/pods/afBounce/api/BedTerminator) is the terminator of the stack, which sends requests to [BedServer](http://eggbox.fantomfactory.org/pods/afBounce/api/BedServer), which holds the instance of your [Bed App](http://eggbox.fantomfactory.org/pods/afBedSheet).
 
 ### Verify HTML Content
 
-When queried, the HTML classes ( [Element](http://pods.fantomfactory.org/pods/afBounce/api/Element), [TextBox](http://pods.fantomfactory.org/pods/afBounce/api/TextBox), etc...) use the last response from the client. The client stores itself in the `Actor.locals()` map, and the HTML elements implicitly use this value. This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track the response they're querying. Example:
+When queried, the HTML classes ( [Element](http://eggbox.fantomfactory.org/pods/afBounce/api/Element), [TextBox](http://eggbox.fantomfactory.org/pods/afBounce/api/TextBox), etc...) use the last response from the client. The client stores itself in the `Actor.locals()` map, and the HTML elements implicitly use this value. This means you can define your Elements once (in a mixin if need be) and use them over and over without needing to track the response they're querying. Example:
 
 ```
 // deinfe your elements
@@ -138,7 +143,7 @@ class TestMyBedApp : Test {
 
 ### Inject Services Into Tests
 
-`BedServer` has access to the [IoC](http://pods.fantomfactory.org/pods/afIoc) registry used by your Bed App, this lets you inject services into your test.
+`BedServer` has access to the [IoC](http://eggbox.fantomfactory.org/pods/afIoc) registry used by your Bed App, this lets you inject services into your test.
 
 ```
 using afBounce
@@ -184,7 +189,7 @@ class TestMyBedApp : Test {
 
 ## Test REST Apps
 
-`BedClient` extends [ButterDish](http://pods.fantomfactory.org/pods/afButter/api/ButterDish) and so comes complete with convenience methods for calling RESTful services.
+`BedClient` extends [ButterDish](http://eggbox.fantomfactory.org/pods/afButter/api/ButterDish) and so comes complete with convenience methods for calling RESTful services.
 
 ### GET
 
@@ -226,7 +231,7 @@ response := client.delete(`http://example.org/`)
 
 ### Custom
 
-For complete control over the HTTP requests, create a [ButterRequest](http://pods.fantomfactory.org/pods/afButter/api/ButterRequest) and set the headers and the body yourself:
+For complete control over the HTTP requests, create a [ButterRequest](http://eggbox.fantomfactory.org/pods/afButter/api/ButterRequest) and set the headers and the body yourself:
 
 ```
 client   := bedServer.makeClient
@@ -266,7 +271,7 @@ class TestFantomFactory : Test {
 
 ## Not Just for Bed Apps!
 
-The HTML element classes ( [Element](http://pods.fantomfactory.org/pods/afBounce/api/Element), [TextBox](http://pods.fantomfactory.org/pods/afBounce/api/TextBox), etc...) are not just for testing Bed Applications! By setting a [SizzleDoc](http://pods.fantomfactory.org/pods/afSizzle/api/SizzleDoc) instance in `Actor.locals()` with the key `afBounce.sizzleDoc` you can use the HTML classes with any HTML:
+The HTML element classes ( [Element](http://eggbox.fantomfactory.org/pods/afBounce/api/Element), [TextBox](http://eggbox.fantomfactory.org/pods/afBounce/api/TextBox), etc...) are not just for testing Bed Applications! By setting a [SizzleDoc](http://eggbox.fantomfactory.org/pods/afSizzle/api/SizzleDoc) instance in `Actor.locals()` with the key `afBounce.sizzleDoc` you can use the HTML classes with any HTML:
 
 ```
 using afBounce

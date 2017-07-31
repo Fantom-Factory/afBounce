@@ -38,6 +38,6 @@ internal class TestBedTerminator : UnitTest {
 		msg := res.toButterResponse.statusMsg
 		
 		verifyEq(cde, 666)
-		verifyEq(msg, "Unknown Status Code")
+		verifyEq(msg, "Unknown")
 	}
 }
