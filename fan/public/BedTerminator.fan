@@ -207,7 +207,6 @@ internal class BounceWebRes : WebRes {
 	internal ButterResponse toButterResponse() {
 		myStatusCode := &statusCode
 		myCookies 	 := &cookies
-		myStatusRes	 := statusMsg[myStatusCode]
 		myHeaders	 :=	ButtHead {
 			keyVals  := it.convertMap(&headers)
 			myCookies.each |cookie| {
@@ -215,8 +214,7 @@ internal class BounceWebRes : WebRes {
 			}
 			it.keyVals = keyVals
 		}
-		
-		return ButterResponse(myStatusCode, myStatusRes ?: "Unknown Status Code", myHeaders, buf)
+		return ButterResponse(myStatusCode, myHeaders.map, buf)
 	}
 }
 

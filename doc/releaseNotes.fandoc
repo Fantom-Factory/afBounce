@@ -1,5 +1,9 @@
-Versions
-********
+
+v1.1.6
+======
+ - New: Added 'BedClient.refresh()' method.
+ - Chg: Updated to use [Butter 1.2.4]`pod:afButter`.
+
 v1.1.4
 ======
  - New: Added 'FormInput.enabled' and 'FormInput.disabled' fields.
