@@ -27,6 +27,11 @@ class BedClient : ButterDish {
 	}
 
 
+	Void refresh() {
+		if (lastRequest == null)
+			throw Err("There is no 'lastRequest' to refresh!")
+		sendRequest(lastRequest)
+	}
 	
 	// ---- Sizzle Methods ---------------------------------------------------------------------------------------------
 	
