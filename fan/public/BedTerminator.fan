@@ -133,6 +133,10 @@ internal class BounceWebRes : WebRes {
 		this.cookies	= [,]
 	}
 
+	override TcpSocket upgrade(Int statusCode := 101) {
+		throw UnsupportedErr()
+	}
+	
 	override Int statusCode := 200 {
 		set {
 			checkUncommitted
