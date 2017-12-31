@@ -251,10 +251,15 @@ internal class BounceWebSession : WebSession {
 
 	override Void delete() {
 		&map.clear
+
+		// not really sure this helps / is needed
+		webRes := (WebRes?) Actor.locals["web.res"]
+		if (webRes != null)
+			webRes.cookies.remove(sessionCookie)
 	}
 	
 	override Void each(|Obj?, Str| f) {
-		map.each(f)
+		&map.each(f)
 	}
 	
 	@Operator
