@@ -1,6 +1,6 @@
 using afButter
 
-internal class TestBedTerminator : UnitTest {
+internal class TestBedTerminator : Test {
 	
 	Void testUrisMustNotHaveAuth() {
 		mw := BedTerminator(BedServer(T_AppModule#))

@@ -2,7 +2,7 @@ using xml
 using afSizzle
 using concurrent
 
-internal class ElementTest : UnitTest {
+internal class ElementTest : Test {
 	
 	override Void teardown() {
 		Actor.locals.remove("afBounce.sizzleDoc")
