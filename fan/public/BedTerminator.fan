@@ -20,7 +20,7 @@ using concurrent::Actor
 ** A 'Butter' terminator that makes requests against a given `BedServer`.
 class BedTerminator : ButterMiddleware {
 	
-	private WebSession?	session
+	private BounceWebSession?	session
 
 	** The 'BedServer' this terminator makes calls against.
 	BedServer bedServer
@@ -63,8 +63,10 @@ class BedTerminator : ButterMiddleware {
 			return bounceWebRes.toButterResponse
 
 		} finally {
+			((WebReq) Actor.locals["web.req"]).stash.clear
 			Actor.locals.remove("web.req")
 			Actor.locals.remove("web.res")
+			Actor.locals.remove("web.session")
 		}		
 	}
 	
@@ -73,12 +75,14 @@ class BedTerminator : ButterMiddleware {
 	** If a session has not yet been created then it returns 'null' - or creates a new session if 
 	** 'create' is 'true'.
 	WebSession?	webSession(Bool create := false) {
-		// the null thing is for bounce clients to know if the session has been created or not. Technically this is not 
-		// perfect wisp behaviour, for if an obj were to be added then immediately removed, a wisp session would still 
-		// be created - pfft! Edge case! 
-		isEmpty := true
-		session.each { isEmpty = false }
-		return (isEmpty && !create) ? null : session 
+		if (session.exists)
+			return session
+
+		if (create == false)
+			return null
+		
+		session.create
+		return session
 	}
 	
 	internal WebReq toWebReq(ButterRequest req, WebSession session) {
@@ -109,7 +113,13 @@ internal class BounceWebReq : WebReq {
 	override Str 		method
 	override Uri 		uri
 	override Str:Str 	headers
-	override WebSession	session
+	override WebSession	session {
+		get {
+			// Wisp creates the session cookie as soon as the WebSession is returned
+			((BounceWebSession) &session).create
+			return &session
+		}
+	}
 	override InStream 	in() {
 		if (reqBodyBuf.size == 0)
 			throw Err("Attempt to access WebReq.in with no content")
@@ -229,16 +239,16 @@ internal class BounceWebRes : WebRes {
 ** WebSession don't need to know it exists - as used when setting session data directly, 
 ** e.g. setting a logged in user
 internal class BounceWebSession : WebSession {
-	static const Cookie sessionCookie	:= Cookie("fanws", "69")
+	
+	Bool exists
 	
 	override Str id {
-		get { createSession; return "69" }
+		get { sessionCookie?.val ?: "???" }
 		set { }
 	}
 	
 	override Str:Obj? map {
 		get {
-			createSession 
 			map := Str:Obj?[:]
 			&map.each |val, key| {
 				map[key] = val is SessionValue ? ((SessionValue) val).val : val
@@ -252,10 +262,13 @@ internal class BounceWebSession : WebSession {
 	override Void delete() {
 		&map.clear
 
-		// not really sure this helps / is needed
-		webRes := (WebRes?) Actor.locals["web.res"]
-		if (webRes != null)
-			webRes.cookies.remove(sessionCookie)
+		// follow wisp behaviour
+		if (exists) {
+			webRes := (WebRes?) Actor.locals["web.res"]
+			webRes.cookies.add(Cookie("fanws", id) { maxAge=0sec })
+		}
+		
+		exists = false
 	}
 	
 	override Void each(|Obj?, Str| f) {
@@ -272,7 +285,6 @@ internal class BounceWebSession : WebSession {
 	
 	@Operator
 	override Void set(Str name, Obj? val) {
-		createSession
 		if (val is SessionValue)
 			&map.set(name, val)
 		else
@@ -284,20 +296,41 @@ internal class BounceWebSession : WebSession {
 	}
 	
 	override Str toStr() {
-		"id=${id}, ${&map.toStr}"
+		"id=${id}, ${map}"
 	}
 
-	private Void createSession() {
-		webReq := (WebReq?) Actor.locals["web.req"]
-		webRes := (WebRes?) Actor.locals["web.res"]
+	Void create() {
+		if (exists)	return
+
+		webReq := (WebReq?)		Actor.locals["web.req"]
+		webRes := (WebRes?)		Actor.locals["web.res"]
+		webSes := (WebSession?)	Actor.locals["web.session"]
 		
 		if (webReq == null || webRes == null)
 			return
+
+		if (webSes != null)
+			return
 		
-		if (!webReq.cookies.containsKey("fanws")) {
-			if (!webRes.cookies.any { it.name == "fanws" })
-			webRes.cookies.add(sessionCookie)
-		}
+		// note we're now committed to recovering or creating a session
+		if (sessionCookie == null)
+			webRes.cookies.add(Cookie("fanws", Int.random.toHex.upper))
+
+		exists = true
+
+		// this is what Wisp does - bounce / bedsheet doesn't need it
+		Actor.locals["web.session"] = this
+		
+		Err("##############").trace
+	}
+	
+	Cookie? sessionCookie() {
+		webReq := (WebReq?) Actor.locals["web.req"]
+		reqStr := webReq?.cookies?.get("fanws")
+		reqCok := reqStr == null ? null : Cookie("fanws", reqStr)
+		webRes := (WebRes?) Actor.locals["web.res"]
+		resCok := webRes?.cookies?.find { it.name == "fanws" }
+		return reqCok ?: resCok
 	}
 }
 
