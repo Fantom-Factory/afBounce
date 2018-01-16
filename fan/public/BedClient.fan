@@ -71,9 +71,14 @@ class BedClient : ButterDish {
 	** If a session has not yet been created then it returns 'null' - or creates a new session if 
 	** 'create' is 'true'.
 	WebSession?	webSession(Bool create := false) {
-		if (create) 
-			super.stickyCookies.addCookie(BounceWebSession.sessionCookie)
-		return bedTerminator.webSession(create)
+		session := (BounceWebSession?) bedTerminator.webSession(create)
+		if (session == null)
+			return null
+		if (!session.exists && !create)
+			return null
+		if (create)
+			super.stickyCookies.addCookie(session.sessionCookie)
+		return session
 	}
 
 	
