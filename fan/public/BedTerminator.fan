@@ -320,8 +320,6 @@ internal class BounceWebSession : WebSession {
 
 		// this is what Wisp does - bounce / bedsheet doesn't need it
 		Actor.locals["web.session"] = this
-		
-		Err("##############").trace
 	}
 	
 	Cookie? sessionCookie() {
