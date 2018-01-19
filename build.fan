@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afBounce"
 		summary = "A headless browser for testing web sites and BedSheet applications"
-		version = Version("1.1.7")
+		version = Version("1.1.8")
 
 		meta = [
 			"pod.dis"		: "Bounce",
@@ -22,13 +22,13 @@ class Build : BuildPod {
 			"xml        1.0.70 - 1.0",
 
 			// ---- Core ------------------------
-			"afConcurrent 1.0.18 - 1.0", 
+			"afConcurrent 1.0.20 - 1.0", 
 			"afIoc        3.0.4  - 3.0", 
 			"afIocConfig  1.1.0  - 1.1",
 			
 			// ---- Web -------------------------
-			"afBedSheet   1.5.6  - 1.5",
-			"afButter     1.2.6  - 1.2",
+			"afBedSheet   1.5.10 - 1.5",
+			"afButter     1.2.8  - 1.2",
 			"afSizzle     1.0.2  - 1.0",
 
 			// ---- Other -------------------------
