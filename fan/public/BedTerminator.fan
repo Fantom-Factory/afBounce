@@ -12,6 +12,7 @@ using web::WebMod
 using web::WebReq
 using web::WebRes
 using web::WebSession
+using web::WebUtil
 using inet::IpAddr
 using inet::SocketOptions
 using inet::TcpSocket
@@ -229,7 +230,11 @@ internal class BounceWebSession : WebSession {
 	Bool exists
 	
 	override Str id {
-		get { findSessionCookie?.val ?: "???" }
+		get {
+			val := findSessionCookie?.val ?: "???"
+			// try to retain original unquoted session cookie ID for SleepSafe
+			return val[0] != '"' ? val : WebUtil.fromQuotedStr(val)
+		}
 		set { }
 	}
 	
@@ -251,7 +256,7 @@ internal class BounceWebSession : WebSession {
 		// follow wisp behaviour
 		if (exists) {
 			webRes := (WebRes?) Actor.locals["web.res"]
-			webRes.cookies.add(Cookie("fanws", id) { maxAge=0sec })
+			webRes?.cookies?.add(Cookie("fanws", id) { maxAge=0sec })
 		}
 		
 		exists = false
