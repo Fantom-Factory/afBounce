@@ -279,7 +279,7 @@ internal class BounceWebSession : WebSession {
 		if (val is SessionValue)
 			&map.set(name, val)
 		else
-			&map.set(name, SessionValue.coerce(val))
+			&map.set(name, SessionValue.serialise(val))
 	}
 	
 	override Void remove(Str name) {
