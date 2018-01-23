@@ -94,6 +94,12 @@ const class BedServer {
 		return this		
 	}
 
+	** Suppresses surplus logging by 'BedSheetBuilder' and IoC's 'RegistryBuilder'.
+	This silenceBuilder() {
+		bedSheetBuilder.silence
+		return this
+	}
+
 	** Startup 'afBedSheet'
 	BedServer startup() {
 		checkHasNotStarted

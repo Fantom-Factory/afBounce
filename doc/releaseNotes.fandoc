@@ -3,6 +3,7 @@ v1.1
 
 v1.1.8
 ======
+ - New: Added 'BedServer.silenceBuilder()'.
  - Chg: Updated to work with Fantom 1.0.70.
  - Chg: 'BounceSession' more faithfully mimics 'WispSession'.
  - Bug: Could not cleanly delete client web sessions.
