@@ -28,7 +28,7 @@ class Build : BuildPod {
 			
 			// ---- Web -------------------------
 			"afBedSheet   1.5.10 - 1.5",
-			"afButter     1.2.8  - 1.2",
+			"afButter     1.2.9  - 1.2",	// *****
 			"afSizzle     1.0.2  - 1.0",
 
 			// ---- Other -------------------------
