@@ -215,7 +215,7 @@ internal class BounceWebRes : WebRes {
 			}
 			it.keyVals = keyVals
 		}
-		res:= ButterResponse(myStatusCode, myHeaders.val, buf)
+		res := ButterResponse(myStatusCode, myHeaders, buf)
 		return res
 	}
 }
