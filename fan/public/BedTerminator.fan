@@ -256,7 +256,7 @@ internal class BounceWebSession : WebSession {
 		// follow wisp behaviour
 		if (exists) {
 			webRes := (WebRes?) Actor.locals["web.res"]
-			webRes?.cookies?.add(Cookie("fanws", id) { maxAge=0sec })
+			webRes?.cookies?.add(Cookie(cookieName, id) { maxAge=0sec })
 		}
 		
 		exists = false
@@ -304,7 +304,7 @@ internal class BounceWebSession : WebSession {
 
 		// note we're now committed to recovering or creating a session
 		if (findSessionCookie == null)
-			webRes.cookies.add(Cookie("fanws", Int.random.toHex.upper))
+			webRes.cookies.add(Cookie(cookieName, Int.random.toHex.upper))
 
 		// this is what Wisp does - bounce / bedsheet doesn't need it
 		Actor.locals["web.session"] = this
@@ -312,11 +312,15 @@ internal class BounceWebSession : WebSession {
 	
 	Cookie? findSessionCookie() {
 		webReq := (WebReq?) Actor.locals["web.req"]
-		reqStr := webReq?.cookies?.get("fanws")
-		reqCok := reqStr == null ? null : Cookie("fanws", reqStr)
+		reqStr := webReq?.cookies?.get(cookieName)
+		reqCok := reqStr == null ? null : Cookie(cookieName, reqStr)
 		webRes := (WebRes?) Actor.locals["web.res"]
-		resCok := webRes?.cookies?.find { it.name == "fanws" }
+		resCok := webRes?.cookies?.find { it.name == cookieName }
 		return reqCok ?: resCok
+	}
+	
+	private once Str cookieName() {
+		Env.cur.config(WebSession#.pod, "sessionCookieName", "fanws")
 	}
 }
 
