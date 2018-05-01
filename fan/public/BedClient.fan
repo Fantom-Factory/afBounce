@@ -78,8 +78,9 @@ class BedClient : ButterDish {
 			return null
 		
 		session.create
+		cookieName := Env.cur.config(WebSession#.pod, "sessionCookieName", "fanws")
 		// cookie is null if we're not part of a web request - which would be the norm
-		cookie := session.findSessionCookie ?: Cookie("fanws", Int.random.toHex.upper)
+		cookie := session.findSessionCookie ?: Cookie(cookieName, Int.random.toHex.upper)
 		super.stickyCookies.addCookie(cookie)
 
 		return session
