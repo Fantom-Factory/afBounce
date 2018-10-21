@@ -42,7 +42,7 @@ const class FormInput : Element {
 			// special handling for radio buttons which have multiple elements with the same name attr
 			elem := findElems.first
 			if (elem?.name == "input" && elem.get("type", false) == "radio")
-				return toRadioButton.findByValue(it).checked = true
+				return (toRadioButton.findByValue(it) ?: throw Err("Could not find RadioButton with value: $it")).checked = true
 
 			switch (elementName) {
 				case "input":

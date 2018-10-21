@@ -4,6 +4,7 @@ v1.1
 v1.1.10
 =======
  - Chg: Session cookie name is taken from web config as per Fantom 1.0.71.
+ - Chg: 'FormInput' throws a better Err msg when a RadioButton valus could not be found.
  - Bug: Could not set multiple Cookie values at once.
 
 v1.1.8
