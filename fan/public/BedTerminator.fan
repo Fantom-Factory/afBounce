@@ -95,6 +95,8 @@ internal class BounceWebReq : WebReq {
 	override Int remotePort() 				{ 80 }
 	override SocketOptions	socketOptions()	{ TcpSocket().options }
 	override TcpSocket 		socket()		{ TcpSocket() }
+	override Bool			isGet()			{ method == "GET" }
+	override Bool			isPost()		{ method == "POST" }
 	
 	override Version 	version
 	override Str 		method
