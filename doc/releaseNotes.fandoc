@@ -1,6 +1,12 @@
 v1.1
 ****
 
+v1.1.12
+=======
+ - Chg: Updated to work with [BedSheet 1.5.16]`pod:afBedSheet`.
+ - Chg: Now uses the new [HtmlParser 0.2.6]`pod:afHtmlParser` based on the awesome [Pegger 1.1.0]`pod:afPegger`.
+ - Chg: Deleted the internal 'ErrMsgs' class.
+
 v1.1.10
 =======
  - Chg: Updated to work with Fantom-1.0.73 (new methods 'isGet()' and 'isPost()' in 'WebReq').

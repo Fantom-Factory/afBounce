@@ -58,7 +58,7 @@ class BedTerminator : ButterMiddleware {
 			Actor.locals["web.res"] = bounceWebRes
 
 			pipeline := (MiddlewarePipeline) bedServer.serviceById(MiddlewarePipeline#.qname)
-			bedServer.registry.rootScope.createChild("request") {
+			bedServer.registry.rootScope.createChild("httpRequest") {
 				pipeline.service
 			}
 			

@@ -1,8 +1,7 @@
 using afButter
-using afSizzle
-using afHtmlParser
-using xml
-using concurrent
+using afSizzle::SizzleDoc
+using afHtmlParser::HtmlParser
+using xml::XElem
 
 ** Middleware that lets you make CSS selector queries against the HTTP response.
 ** 

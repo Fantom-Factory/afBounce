@@ -414,7 +414,7 @@ const class Element {
 			} else
 				request.body.str = Uri.encodeQuery(values)
 		} else 
-			throw Err(ErrMsgs.methodGetOrPostOnly(request.method))
+			throw Err("Form method attribute should be GET or POST only: ${request.method}")
 		
 		// v1.0.18 BugFix: Forms should always have the content-length set
 		if (encType != null && request.headers.contentLength != null)

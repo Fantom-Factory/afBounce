@@ -29,9 +29,9 @@ internal const class T_AppModule {
 		config.add(Route(`/formTest`, 	`test/web-tests/formTest.html`.toFile))
 		config.add(Route(`/bounce`, 	`test/web-tests/bounce.html`.toFile))
 		config.add(Route(`/printForm`, 	T_AppThing#printForm, "POST"))
-		config.add(Route(`/printFormAlt`, T_AppThing#printForm, "*"))
+		config.add(Route(`/printFormAlt`, T_AppThing#printForm, "GET POST"))
 		config.add(Route(`/urlTest`, 	`test/web-tests/urlTest.html`.toFile))
-		config.add(Route(`/printUrl/***`, T_AppThing#printUrl, "*"))
+		config.add(Route(`/printUrl/**`, T_AppThing#printUrl, "GET POST"))
 	}
 }
 

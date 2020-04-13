@@ -61,7 +61,8 @@ const class SubmitButton : Element {
 	}
 
 	private Bool isSubmitButton(Attr elem) {
-		elem.name == "button" && elem["type"]?.lower == "submit"
+		// buttons default to be being "submit" buttons
+		elem.name == "button" && (elem.has("type") == false || elem["type"]?.lower == "submit")
 	}
 
 	private Bool isImageInput(Attr elem) {
