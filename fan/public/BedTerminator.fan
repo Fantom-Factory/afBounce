@@ -235,7 +235,7 @@ internal class BounceWebSession : WebSession {
 		get {
 			val := findSessionCookie?.val ?: "???"
 			// try to retain original unquoted session cookie ID for SleepSafe
-			return val[0] != '"' ? val : WebUtil.fromQuotedStr(val)
+			return val.getSafe(0) == '"' && val.getSafe(-1) == '"' ? WebUtil.fromQuotedStr(val) : val
 		}
 		set { }
 	}
