@@ -1,6 +1,10 @@
 v1.1
 ****
 
+v1.1.14
+=======
+ - Chg: Treat absolute 'localhost' URLs as if they were relative. Sometimes it's hard to avoid absolute URLs.
+
 v1.1.12
 =======
  - Chg: Updated to work with [BedSheet 1.5.16]`pod:afBedSheet`.

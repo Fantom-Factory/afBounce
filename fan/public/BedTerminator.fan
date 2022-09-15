@@ -34,9 +34,12 @@ class BedTerminator : ButterMiddleware {
 	}
 
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		if (!req.url.isRel)
+		// sometimes we can't avoid abs urls
+		if (req.url.isRel == false && req.url.host == "localhost")
+			req.url = req.url.relToAuth
+		if (req.url.isRel == false)
 			throw Err("Request URIs for Bed App testing should only be a path, e.g. `/index` vs `${req.url}`")
-		if (!req.url.isPathAbs)
+		if (req.url.isPathAbs == false)
 			throw Err("Request URIs for Bed App testing should start with a slash, e.g. `/index` vs `${req.url}`")
 
 		// set the Host (as configured in BedSheet), if it's not been already
