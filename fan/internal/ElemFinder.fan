@@ -8,7 +8,7 @@ abstract const class ElemFinder {
 	abstract XElem[] findElems(XElem[]? elems := null)
 	abstract ElemFinder clone(ElemFinder deepFinder)
 }
-
+ 
 internal const class FindFromSizzleThreadLocal : ElemFinder {
 	const Str css
 	const |->SizzleDoc| sizzleDocFunc
